@@ -1,6 +1,9 @@
 #!/bin/bash
 
-while read lig nb
+while read prenom nom notes
 do
-	echo $nb
-done < test.txt
+	nbNotes=`echo $notes | wc -w`
+	somme=`echo $notes | sed -e 's/ /+/g' | bc`
+	moyenne=`echo "$somme/$nbNotes" | bc`
+	echo $prenom $nom $moyenne
+done < "$1"
