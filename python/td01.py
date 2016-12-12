@@ -1,4 +1,4 @@
-#Python3.X utilise
+print("Ce script utilise Python3")
 
 ##### Exercice 1
 
