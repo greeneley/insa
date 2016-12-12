@@ -1,3 +1,5 @@
+# !/usr/bin/python3
+# utf-8
 print("Ce script utilise Python3")
 
 ##### Exercice 1
