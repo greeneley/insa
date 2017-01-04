@@ -1,0 +1,9 @@
+package geometrie;
+
+public class Rectangle extends Quadrilatere 
+{
+   public Rectangle()
+   {
+	   
+   }
+}
