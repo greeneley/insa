@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" size="977,536" id="coffreSimple" metadata="uml2-1.0" initialized="true" tag="1000" key="32303037303533312D3130303020436F666672652F63656963686C6572">
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.1/@sourceConnections.0 //@children.3/@sourceConnections.0" name="Pierre" location="420,75" size="127,122" id="coffreSimple/Pierre" runTimeClassModel="valeur,volume,Pierre(D),expertiser()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="104,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="valeur" id="coffreSimple/Pierre#valeur"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="volume" id="coffreSimple/Pierre#volume"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="85,36">
+      <children xsi:type="editmodel:MethodEditModel" name="Pierre" id="coffreSimple/Pierre#Pierre(D)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="expertiser" id="coffreSimple/Pierre#expertiser()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.2/@sourceConnections.0" name="Coffre" location="45,15" size="129,230" id="coffreSimple/Coffre" runTimeClassModel="fermeture(),valeur,estPlein(),Coffre(),volumeMax,ouvert,retirerPierre(LcoffreSimple.Pierre;),ajouterPierre(LcoffreSimple.Pierre;),Coffre(I),ouverture()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="106,54">
+      <children xsi:type="editmodel:AttributeEditModel" name="ouvert" id="coffreSimple/Coffre#ouvert"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="valeur" id="coffreSimple/Coffre#valeur"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="volumeMax" id="coffreSimple/Coffre#volumeMax"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="100,126">
+      <children xsi:type="editmodel:MethodEditModel" name="Coffre" id="coffreSimple/Coffre#Coffre(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="Coffre" id="coffreSimple/Coffre#Coffre()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="ajouterPierre" id="coffreSimple/Coffre#ajouterPierre(LcoffreSimple.Pierre;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="estPlein" id="coffreSimple/Coffre#estPlein()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="fermeture" id="coffreSimple/Coffre#fermeture()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="ouverture" id="coffreSimple/Coffre#ouverture()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="retirerPierre" id="coffreSimple/Coffre#retirerPierre(LcoffreSimple.Pierre;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:AssociationEditModel" autoLocated="true" id="coffreSimple/Coffre@monCoffre+coffreSimple/Pierre@mesPierres" source="//@children.1" target="//@children.0" targetEnd="//@children.1/@sourceConnections.0/@children.2" label="//@children.1/@sourceConnections.0/@children.0" sourceEnd="//@children.1/@sourceConnections.0/@children.1" connectionRouterKind="Manhattan">
+      <children xsi:type="editmodel:WireLabelEditModel" size="0,13" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" name="monCoffre" location="129,121" id="coffreSimple/Coffre@monCoffre+coffreSimple/Pierre@mesPierres|coffreSimple/Coffre#monCoffre" attachSource="true" multiplicityLabel="//@children.1/@sourceConnections.0/@children.1/@children.1" roleLabel="//@children.1/@sourceConnections.0/@children.1/@children.0" navigable="true">
+        <children xsi:type="editmodel:LabelEditModel" name=" - monCoffre" location="181,116" size="66,13" anchorKind="FirstPart"/>
+        <children xsi:type="editmodel:LabelEditModel" name="0..1" location="181,143" size="20,13" anchorKind="FirstPart"/>
+      </children>
+      <children xsi:type="editmodel:AssociationEndEditModel" name="mesPierres" location="0,61" id="coffreSimple/Coffre@monCoffre+coffreSimple/Pierre@mesPierres|coffreSimple/Pierre#mesPierres" multiplicityLabel="//@children.1/@sourceConnections.0/@children.2/@children.1" roleLabel="//@children.1/@sourceConnections.0/@children.2/@children.0" navigable="true" orderingKind="1">
+        <children xsi:type="editmodel:LabelEditModel" name=" - mesPierres" location="343,116" size="70,13" anchorKind="LastPart"/>
+        <children xsi:type="editmodel:LabelEditModel" name="*" location="408,143" size="5,13" anchorKind="LastPart"/>
+      </children>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="CoffreACode" location="270,300" size="136,158" id="coffreSimple/CoffreACode" runTimeClassModel="CoffreACode(),ouverture(Ljava.lang.String;),CoffreACode(I),setMonCode(Ljava.lang.String;Ljava.lang.String;),monCode,ouverture()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="110,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="monCode" id="coffreSimple/CoffreACode#monCode"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="98,90">
+      <children xsi:type="editmodel:MethodEditModel" name="CoffreACode" id="coffreSimple/CoffreACode#CoffreACode()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="CoffreACode" id="coffreSimple/CoffreACode#CoffreACode(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="ouverture" id="coffreSimple/CoffreACode#ouverture(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="ouverture" id="coffreSimple/CoffreACode#ouverture()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setMonCode" id="coffreSimple/CoffreACode#setMonCode(Ljava.lang.String;Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="coffreSimple/Coffre&lt;-coffreSimple/CoffreACode" source="//@children.2" target="//@children.1" targetEnd="//@children.2/@sourceConnections.0/@children.1" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,5" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="129,186"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Topaze" location="705,135" size="108,86" id="coffreSimple/Topaze" runTimeClassModel="Topaze(D),expertiser()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="85,36">
+      <children xsi:type="editmodel:MethodEditModel" name="Topaze" id="coffreSimple/Topaze#Topaze(D)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="expertiser" id="coffreSimple/Topaze#expertiser()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="coffreSimple/Pierre&lt;-coffreSimple/Topaze" source="//@children.3" target="//@children.0" targetEnd="//@children.3/@sourceConnections.0/@children.1" sourceEnd="//@children.3/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,30" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="127,90"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" properties="wireOptions=3;Product=eUML2" autoName="false"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>

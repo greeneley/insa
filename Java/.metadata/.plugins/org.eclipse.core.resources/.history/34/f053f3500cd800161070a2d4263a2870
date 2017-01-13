@@ -1,0 +1,11 @@
+package geometrie;
+
+public class Pentagone extends Polygone {
+	
+	/* Methodes */
+	public void String toString()
+	{
+		//
+	}
+
+}
