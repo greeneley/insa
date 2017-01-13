@@ -3,9 +3,9 @@ package geometrie;
 public class Quadrilatere extends Polygone {
 	int code;
 
-	/** 
-	 * @uml.property name="lesSegments"
-	 * @uml.associationEnd multiplicity="(0 -1)" dimension="1" ordering="true" inverse="quadrilatere:geometrie.Segment"
+	/**
+	 * @uml.property  name="lesSegments"
+	 * @uml.associationEnd  multiplicity="(0 -1)"
 	 */
 	private Segment[] lesSegments = new Segment[4];
 

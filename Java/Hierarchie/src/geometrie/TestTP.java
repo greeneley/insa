@@ -64,8 +64,8 @@ public class TestTP {
 		System.out.println("Demi-grand axe de l'ellipse : "+ellipse.getA());
 		System.out.println("Demi-petit axe de l'ellipse : "+ellipse.getB());
 		System.out.println("Distance au foyer de l'ellipse : "+ellipse.getDistFoyer());
-		System.out.println("Couleur du cercle : "+cercle.getCouleur());
-		System.out.println("Texture du cercle : "+cercle.getTexture());
+		System.out.println("Couleur de l'ellipse : "+ellipse.getCouleur());
+		System.out.println("Texture de l'ellipse : "+ellipse.getTexture());
 		
 		System.out.println("\n ====== Exercice 4 ======");
 		System.out.println("\nQuestion b)");

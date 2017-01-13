@@ -3,8 +3,8 @@ package geometrie;
 
 public class Point {
 
-	/** 
-	 * @uml.property name="x"
+	/**
+	 * @uml.property  name="x"
 	 */
 	private double x;
 
@@ -17,8 +17,8 @@ public class Point {
 		return x;
 	}
 
-	/** 
-	 * @uml.property name="y"
+	/**
+	 * @uml.property  name="y"
 	 */
 	private double y;
 

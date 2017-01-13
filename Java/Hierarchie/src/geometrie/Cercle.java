@@ -1,10 +1,20 @@
 package geometrie;
 
+/**
+ * @author  tluu
+ */
 public class Cercle extends Conique {
 	int code;
+	/**
+	 * @uml.property  name="rayon"
+	 */
 	private double rayon;
 	
 	/* Setters */
+	/**
+	 * @param r
+	 * @uml.property  name="rayon"
+	 */
 	public void setRayon(double r)
 	{
 		this.rayon = r;
@@ -12,6 +22,10 @@ public class Cercle extends Conique {
 	
 	
 	/* Getters */
+	/**
+	 * @return
+	 * @uml.property  name="rayon"
+	 */
 	public double getRayon()
 	{
 		return this.rayon;

@@ -1,28 +1,53 @@
 package geometrie;
 
+/**
+ * @author  tluu
+ */
 public class Ellipse extends Conique
 {
+	/**
+	 * @uml.property  name="a"
+	 */
 	private double a; //demi grand axe
+	/**
+	 * @uml.property  name="b"
+	 */
 	private double b; //demi petit axe
 	// On pourrait definir un private double foyer si on s'en sert beaucoup
 	
 	/* Setters */
+	/**
+	 * @param a
+	 * @uml.property  name="a"
+	 */
 	public void setA(double a)
 	{
 		this.a = a;
 	}
 	
+	/**
+	 * @param b
+	 * @uml.property  name="b"
+	 */
 	public void setB(double b)
 	{
 		this.b = b;
 	}
 	
 	/* Getters */
+	/**
+	 * @return
+	 * @uml.property  name="a"
+	 */
 	public double getA()
 	{
 		return this.a;
 	}
 	
+	/**
+	 * @return
+	 * @uml.property  name="b"
+	 */
 	public double getB()
 	{
 		return this.b;

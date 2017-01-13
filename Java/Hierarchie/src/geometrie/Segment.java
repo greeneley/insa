@@ -20,7 +20,7 @@ public class Segment {
 
 	/**
 	 * @uml.property  name="debut"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="segment:geometrie.Point"
+	 * @uml.associationEnd  
 	 */
 	private Point debut = new geometrie.Point();
 
@@ -47,7 +47,7 @@ public class Segment {
 
 	/**
 	 * @uml.property  name="fin"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="segment:geometrie.Point"
+	 * @uml.associationEnd  
 	 */
 	private Point fin = new geometrie.Point();
 

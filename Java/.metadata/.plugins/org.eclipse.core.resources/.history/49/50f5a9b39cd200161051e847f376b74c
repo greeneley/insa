@@ -1,6 +1,0 @@
-package geometrie;
-
-public class Rectangle extends Quadrilatere 
-{
-
-}

@@ -1,10 +1,7 @@
 package geometrie;
 
-public class Polygone extends FigureGeometrique 
-{
+public abstract class Polygone extends FigureGeometrique 
+{	
 	/* Methodes */
-	public String toString()
-	{
-		return "";
-	}
+	public abstract String toString();
 }
