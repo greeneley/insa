@@ -1,0 +1,5 @@
+package eqsimple;
+
+public interface Operations {
+
+}

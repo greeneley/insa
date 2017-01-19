@@ -1,0 +1,25 @@
+package eqsimple;
+
+public class Complexe<T> extends Rationnel<T> implements Operations{
+
+	public Object addition(Object a, Object b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object soustraction(Object a, Object b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object multiplication(Object a, Object b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object division(Object a, Object b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

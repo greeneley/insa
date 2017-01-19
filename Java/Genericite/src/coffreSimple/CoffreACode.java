@@ -37,6 +37,10 @@ public class CoffreACode extends Coffre {
 	 */
 	public void setMonCode(String nveauCode, String ancienCode){
 		if(ancienCode==monCode) monCode=nveauCode;
+		else
+		{
+			System.err.println("L'ancien code ne correspond pas !");
+		}
 	}
 	
 	/**
@@ -45,8 +49,12 @@ public class CoffreACode extends Coffre {
 	 */
 	public void ouverture(String code){
 		if(code==monCode) super.ouverture();
-		System.err.println("Mauvais code!");
-		//msg d'erreur
+		else
+		{
+			//msg d'erreur
+			System.err.println("Mauvais code!");
+		}
+		
 	}
 	
 	@Override

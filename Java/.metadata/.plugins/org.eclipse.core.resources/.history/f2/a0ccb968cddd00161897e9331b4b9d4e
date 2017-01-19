@@ -1,0 +1,66 @@
+package eqsimple;
+
+public class Rationnel{
+
+	private int a = 0;
+	private int b = 0;
+	
+	/* Setters */
+	public void setA(int nb)
+	{
+		this.a = nb;
+	}
+	
+	public void setB(int nb)
+	{
+		if(b!=0)
+		{
+		this.b = nb;
+		}
+		else
+		{
+			System.out.println("Erreur b est nul !");
+		}
+	}
+	
+	/* Getters */
+	public int getA()
+	{
+		return this.a:
+	}
+	
+	public int getB()
+	{
+		return this.b;
+	}
+	
+	public double getValeur()
+	{
+		if(b!=0)
+		{
+			double result = (this.a)/(this.b);
+			return result;
+		}
+		else
+		{
+			System.out.println("Valeur non definie !");
+			return 0;
+		}
+	}
+	
+	/* Constructeur */
+	public Rationnel()
+	{
+		this.setA(0);
+		this.setB(1);
+	}
+	
+	public Rationnel(int nbA, int nbB)
+	{
+		this.setA(nbA);
+		this.setB(nbB);
+	}
+
+	
+
+}

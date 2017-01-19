@@ -1,0 +1,12 @@
+package eqsimple;
+
+public class EqDegUnGenSimple<T> {
+	//aX + b = 0
+	private T a;
+	private T b;
+	
+	/* Setters */
+	
+	/* Getters */
+
+}

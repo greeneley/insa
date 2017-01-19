@@ -1,0 +1,8 @@
+package eqsimple;
+
+public interface Operations {
+	public double addition(T a, T b);
+	public  soustraction(T a, T b);
+	public  multiplication(T a, T b);
+	public  division(T a, T b);
+}

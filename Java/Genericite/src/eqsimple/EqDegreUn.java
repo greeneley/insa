@@ -4,9 +4,6 @@
 
 package eqsimple;
 
-/**
- * @author  tluu
- */
 public class EqDegreUn {
 
 	/**

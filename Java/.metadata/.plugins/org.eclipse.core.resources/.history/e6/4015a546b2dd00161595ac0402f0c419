@@ -1,0 +1,5 @@
+package coffreGenerique;
+
+public interface objetsPrecieux {
+
+}

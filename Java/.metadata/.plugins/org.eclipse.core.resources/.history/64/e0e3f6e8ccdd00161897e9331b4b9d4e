@@ -1,0 +1,44 @@
+package eqsimple;
+
+public class Rationnel{
+
+	private int a;
+	private int b;
+	
+	/* Setters */
+	public void setA(int nb)
+	{
+		this.a = nb;
+	}
+	
+	public void setB(int nb)
+	{
+		if(b!=0)
+		{
+		this.b = nb;
+		}
+		else
+		{
+			
+		}
+	}
+	
+	/* Getters */
+	public int getA()
+	{
+		return this.a:
+	}
+	
+	public int getB()
+	{
+		return this.b;
+	}
+	
+	public double getValeur()
+	{
+		
+	}
+
+	
+
+}

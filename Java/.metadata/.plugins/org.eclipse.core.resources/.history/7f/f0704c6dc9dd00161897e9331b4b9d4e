@@ -1,0 +1,30 @@
+package eqsimple;
+
+public class Rationnel implements Operations<T>{
+
+	private 
+	
+	/* Methodes */
+	public T addition(T a, T b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public T soustraction(T a, T b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public T multiplication(T a, T b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public T division(T a, T b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+}

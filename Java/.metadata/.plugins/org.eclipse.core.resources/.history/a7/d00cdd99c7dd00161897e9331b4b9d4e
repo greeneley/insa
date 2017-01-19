@@ -1,0 +1,5 @@
+package eqsimple;
+
+public class Complexe<T> extends Rationnel implements Operations{
+
+}

@@ -1,0 +1,6 @@
+package coffreGenerique;
+
+public interface objetsPrecieux{
+	public double getValeur();
+	public void ajouterObjet();
+}

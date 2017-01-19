@@ -19,7 +19,7 @@ public class Coffre {
 	 * Valeur du contenu du coffre, nul à l'init
 	 * @uml.property  name="valeur"
 	 */
-	private double valeur = 0;
+	private double valeur = 0.0;
 	/**
 	 * Contenance max du coffre (en nombre de pierre)
 	 * @uml.property  name="volumeMax"
@@ -61,7 +61,7 @@ public class Coffre {
 		
 		
 		//On va prendre un peu d'avance sur le parcours de collection...
-		this.valeur=0;
+		this.valeur=0.0;
 		for(Pierre maPierre: this.getMesPierres())
 		{
 			this.valeur += maPierre.getValeur();
@@ -162,20 +162,27 @@ public class Coffre {
 	{
 		Pierre maPierre = null;
 		boolean presence = false;
-		//while(!presence)
-		//{
-		 
-		//}
-		
+
 		ArrayList<Pierre> alp = this.getMesPierres();
-		for(ListIterator<Pierre> iter = alp.listIterator(); iter.hasNext() && presence;)
+		if(alp == null)
 		{
-			if(((Pierre)iter).getValeur()==valeur)
+			System.out.println("Il n'y a pas de pierres !");
+			return null;
+		}
+		
+		for(ListIterator<Pierre> iter = alp.listIterator(); iter.hasNext() && !presence;)
+		{
+			Pierre tmp = iter.next();
+			if(tmp.getValeur()==valeur)
 			{
-				System.out.println("test");
-				maPierre = (Pierre)iter;
+				System.out.println("Une pierre correspondante a ete trouvee");
+				maPierre = tmp;
 				presence = true;
 			}
+		}
+		if(maPierre == null)
+		{
+			System.out.println("Aucune pierre ne correspond !");
 		}
 		return maPierre;
 		
