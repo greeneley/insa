@@ -1,0 +1,59 @@
+   1ere partie
+
+a) La commande rpcinfo -p donne le resultat suivant :
+
+program no_version protocole  no_port
+100000    4   tcp    111  portmapper
+100000    3   tcp    111  portmapper
+100000    2   tcp    111  portmapper
+100000    4   udp    111  portmapper
+100000    3   udp    111  portmapper
+100000    2   udp    111  portmapper
+100024    1   udp  51814  status
+100024    1   tcp  38344  status
+100021    1   udp  51816  nlockmgr
+100021    3   udp  51816  nlockmgr
+100021    4   udp  51816  nlockmgr
+100021    1   tcp  55992  nlockmgr
+100021    3   tcp  55992  nlockmgr
+100021    4   tcp  55992  nlockmgr
+
+Nous relevons trois RPC:
+portmapper : utilise le port 111
+status
+nlockmgr
+
+b) La commande netstat -alnp | grep 111 donne le resultat :
+(Tous les processus ne peuvent être identifiés, les infos sur les processus
+non possédés ne seront pas affichées, vous devez être root pour les voir toutes.)
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      -               
+tcp6       0      0 :::111                  :::*                    LISTEN      -               
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           -               
+udp6       0      0 :::111                  :::*                                -               
+unix  3      [ ]         STREAM     CONNECTE      24111    8455/dbus-daemon    @/tmp/dbus-yts6vM7HMM
+unix  3      [ ]         STREAM     CONNECTE      22111    8455/dbus-daemon    @/tmp/dbus-yts6vM7HMM
+
+On voit qu'il y a des LISTEN sur le port 111, qui est le port par défaut de la méthode utilisant portmap.
+
+c) On obtient en effet deux binaires executables : 
+rdictdemon, utilise cote serveur
+rdict, utilise cote client
+
+d) Apres execution de rditcdemon, on obtient
+Cannot register service: RPC: Authentication error; why = Client credential too weak
+
+Le serveur n'arrive donc pas a enregistrer le programme RPC aupres du portmapper. La raison est : "Client credential too weak"
+
+e) Dans le cas d'une connexion UDP, le serveur ne s'enregistre pas pour 
+IPPROTO_UDP = 17
+Selon le man, il faut desactiver l'utilisation par le portmapper, pour cela on doit mettre IPPROTO_UDP = 0 et IPPROTO_TCP = 0
+
+f) Apres compilation, le test montre que le serveur arrive a s'enregistrer.
+
+g) L'utilisation de netstat -tlp, on remarque la ligne
+Proto Recv-Q Send-Q Adresse locale          Adresse distante        Etat        PID/Program name         
+tcp        0      0 *:45991                 *:*                     LISTEN      9602/rdictdemon 
+
+Le port est donc 45991
+
+h) 
