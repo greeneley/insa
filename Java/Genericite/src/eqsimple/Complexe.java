@@ -1,7 +1,7 @@
 package eqsimple;
 
 
-public class Complexe<T> implements Operations<T>
+public class Complexe implements Operations<Complexe>
 {
 	private double reel;
 	private double imaginaire;
@@ -32,34 +32,34 @@ public class Complexe<T> implements Operations<T>
 	
 	
 	/* Methodes */
+	public Complexe addition(Complexe b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Complexe soustraction(Complexe b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Complexe multiplication(Complexe b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Complexe division(Complexe b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Complexe inverser(Complexe b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Complexe opposer(Complexe b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	public T addition(T b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public T soustraction(T b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public T multiplication(T b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public T division(T b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public T inverser(T b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public T opposer(T b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
