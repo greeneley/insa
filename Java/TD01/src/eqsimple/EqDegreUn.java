@@ -7,8 +7,7 @@ package eqsimple;
 public class EqDegreUn {
 
 	/**
-	 * @return  the coeffA
-	 * @uml.property  name="coeffA"
+	 * @return the coeffA
 	 */
 	public float getCoeffA() {
 		return coeffA;
@@ -16,8 +15,7 @@ public class EqDegreUn {
 
 	/**
 	 * Setter of coeffA, whose modification may lead the equation to be unsolved
-	 * @param coeffA  the coeffA to set
-	 * @uml.property  name="coeffA"
+	 * @param coeffA the coeffA to set
 	 */
 	public void setCoeffA(float coeffA) {
 		if(this.coeffA!=coeffA){
@@ -28,17 +26,15 @@ public class EqDegreUn {
 	}
 
 	/**
-	 * Setter of coeffA, whose modification may lead the equation to be unsolved
-	 * @return  the coeffB
-	 * @uml.property  name="coeffB"
+	 *  Setter of coeffA, whose modification may lead the equation to be unsolved
+	 * @return the coeffB
 	 */
 	public float getCoeffB() {
 		return coeffB;
 	}
 
 	/**
-	 * @param coeffB  the coeffB to set
-	 * @uml.property  name="coeffB"
+	 * @param coeffB the coeffB to set
 	 */
 	public void setCoeffB(float coeffB) {
 		if(this.coeffB!=coeffB){
@@ -48,16 +44,14 @@ public class EqDegreUn {
 	}
 
 	/**
-	 * @return  the solved
-	 * @uml.property  name="solved"
+	 * @return the solved
 	 */
 	public boolean isSolved() {
 		return solved;
 	}
 
 	/**
-	 * @return  the solution
-	 * @uml.property  name="solution"
+	 * @return the solution
 	 */
 	public float getSolution() {
 		solve();  // Discutable si on pense qu'un getter ne modifie pas l'objet.
@@ -66,24 +60,20 @@ public class EqDegreUn {
 
 	/**
 	 * Coefficient a
-	 * @uml.property  name="coeffA"
 	 */
 	private float coeffA;
 	/**
 	 * Coefficient b
-	 * @uml.property  name="coeffB"
 	 */
 	private float coeffB;
 	
 	/**
 	 * Booléen précisant si la solution actuelle est correcte
-	 * @uml.property  name="solved"
 	 */
 	private boolean solved;
 	
 	/**
 	 * Solution de l'équation
-	 * @uml.property  name="solution"
 	 */
 	private float solution;
 

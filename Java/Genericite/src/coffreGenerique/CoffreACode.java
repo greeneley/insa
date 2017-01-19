@@ -1,12 +1,12 @@
 /**
  * 
  */
-package coffreSimple;
+package coffreGenerique;
 
 /** 
  * @author ceichler
  */
-public class CoffreACode extends Coffre {
+public class CoffreACode<T extends ObjetsPrecieux> extends Coffre<T>{
 
 	/**
 	 * Constructeur par défaut de Coffre, le Code est initialisé à "1234"

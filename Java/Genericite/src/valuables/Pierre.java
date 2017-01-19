@@ -1,8 +1,9 @@
 package valuables;
 
+import coffreGenerique.ObjetsPrecieux;
 import coffreSimple.Coffre;
 
-public abstract class Pierre {
+public abstract class Pierre implements ObjetsPrecieux {
 	
 
 	
@@ -28,7 +29,7 @@ public abstract class Pierre {
 	 * @uml.property  name="valeur"
 	 */
 	public double getValeur() {
-		return valeur;
+		return this.valeur;
 	}
 
 	/**

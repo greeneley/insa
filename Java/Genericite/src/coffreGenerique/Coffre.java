@@ -1,19 +1,21 @@
 /**
  * 
  */
-package coffreSimple;
+package coffreGenerique;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
 
 import valuables.Pierre;
+import valuables.Topaze;
+import valuables.Diamant;
 
 
 /**
  * Un coffre simple, sans code
  * @author  ceichler
  */
-public class Coffre {
+public class Coffre<T extends ObjetsPrecieux> implements ObjetsPrecieux{
 
 	/**
 	 * Valeur du contenu du coffre, nul à l'init
@@ -38,7 +40,7 @@ public class Coffre {
 	 * Instancie un coffre par défaut; son volume maximum est 1
 	 */
 	public Coffre() {
-		volumeMax=1;
+		this.volumeMax=1;
 		System.out.println("Constructeur de coffre par défaut");
 	}
 
@@ -48,7 +50,7 @@ public class Coffre {
 	 * @param maxVol volume maximal du coffre
 	 */
 	public Coffre(int maxVol) {
-		volumeMax=maxVol;
+		this.volumeMax=maxVol;
 		System.out.println("Constructeur de coffre avec volume");
 	}
 
@@ -57,14 +59,10 @@ public class Coffre {
 	 * @uml.property  name="valeur"
 	 */
 	public double getValeur() {
-		//Si return valeur, pas terrible, on ne change jamais la valeur!
-		
-		
-		//On va prendre un peu d'avance sur le parcours de collection...
 		this.valeur=0.0;
-		for(Pierre maPierre: this.getMesPierres())
+		for(T monObjet: this.getMesObjets())
 		{
-			this.valeur += maPierre.getValeur();
+			this.valeur += monObjet.getValeur();
 		}
 		
 		return this.valeur;
@@ -75,7 +73,7 @@ public class Coffre {
 	 * @uml.property  name="volumeMax"
 	 */
 	public int getVolumeMax() {
-		return volumeMax;
+		return this.volumeMax;
 	}
 
 
@@ -85,7 +83,7 @@ public class Coffre {
 	 * @uml.property  name="ouvert"
 	 */
 	public boolean isOuvert() {
-		return ouvert;
+		return this.ouvert;
 	}
 
 	/**
@@ -105,19 +103,19 @@ public class Coffre {
 	}
 
 	/**
-	 * @uml.property  name="mesPierres"
-	 * @uml.associationEnd  multiplicity="(0 -1)" dimension="1" ordering="true" inverse="monCoffre:coffreSimple.Pierre"
+	 * @uml.property  name="mesObjets"
+	 * @uml.associationEnd  multiplicity="(0 -1)" dimension="1" ordering="true" inverse="monCoffre:coffreSimple.Objet"
 	 */
-	private ArrayList<Pierre> mesPierres = new ArrayList<Pierre>();
+	private ArrayList<T> mesObjets = new ArrayList<T>();
 
 
 	/**
-	 * Getter of the property <tt>mesPierres</tt>
-	 * @return  Returns the mesPierres.
-	 * @uml.property  name="mesPierres"
+	 * Getter of the property <tt>mesObjets</tt>
+	 * @return  Returns the mesObjets.
+	 * @uml.property  name="mesObjets"
 	 */
-	public ArrayList<Pierre> getMesPierres() {
-		return mesPierres;
+	public ArrayList<T> getMesObjets() {
+		return this.mesObjets;
 	}
 
 		
@@ -127,29 +125,29 @@ public class Coffre {
 	 */
 	
 	public boolean estPlein(){
-		return this.mesPierres.size()==this.volumeMax;			
+		return this.mesObjets.size()==this.volumeMax;			
 	}
 
 	/**
-	 * Ajoute une Pierre au coffre
-	 * @param pierre la pierre à ajouter
+	 * Ajoute une Objet au coffre
+	 * @param T l'objet a ajouter
 	 */
 	
-	public void ajouterPierre(Pierre pierre){
-		if(!ouvert) System.out.println("Impossible d'ajouter une Pierre; le coffre est fermé!");
-		else if(estPlein()) System.out.println("Impossible d'ajouter une Pierre; le coffre est plein!");
-		else mesPierres.add(pierre);
+	public void ajouterObjet(T p1){
+		if(!ouvert) System.out.println("Impossible d'ajouter un objet precieux; le coffre est fermé!");
+		else if(estPlein()) System.out.println("Impossible d'ajouter un objet precieux; le coffre est plein!");
+		else mesObjets.add(p1);
 	}
 	
 	/**
-	 * Retire une Pierre du coffre
-	 * @param pierre la pierre à retirer
+	 * Retire une Objet du coffre
+	 * @param T l'objet a retirer
 	 */
 	
-	public void retirerPierre(Pierre pierre){
-		if(!ouvert)System.out.println("Impossible de retirer une Pierre; le coffre est fermé!");
-		else if(mesPierres.contains(pierre))System.out.println("Impossible de retirer la pierre spécifiée; elle n'est pas dans ce coffre!");
-		else mesPierres.remove(pierre);
+	public void retirerObjet(T objet){
+		if(!ouvert)System.out.println("Impossible de retirer un objet precieux; le coffre est fermé!");
+		else if(mesObjets.contains(objet))System.out.println("Impossible de retirer l'objet precieux spécifiee; il n'est pas dans ce coffre!");
+		else mesObjets.remove(objet);
 	}
 	
 
@@ -158,33 +156,33 @@ public class Coffre {
 	 * @param valeur La valeur de la pierre à rechercher
 	 * @return true si la pierre est présente. false sinon
 	 */
-	public Pierre recherchePierre(double valeur)
+	public T rechercheObjet(double valeur)
 	{
-		Pierre maPierre = null;
+		T monObjet = null;
 		boolean presence = false;
 
-		ArrayList<Pierre> alp = this.getMesPierres();
+		ArrayList<T> alp = this.getMesObjets();
 		if(alp == null)
 		{
 			System.out.println("Il n'y a pas de pierres !");
 			return null;
 		}
 		
-		for(ListIterator<Pierre> iter = alp.listIterator(); iter.hasNext() && !presence;)
+		for(ListIterator<T> iter = alp.listIterator(); iter.hasNext() && !presence;)
 		{
-			Pierre tmp = iter.next();
+			T tmp = iter.next();
 			if(tmp.getValeur()==valeur)
 			{
 				System.out.println("Une pierre correspondante a ete trouvee");
-				maPierre = tmp;
+				monObjet = tmp;
 				presence = true;
 			}
 		}
-		if(maPierre == null)
+		if(monObjet == null)
 		{
 			System.out.println("Aucune pierre ne correspond !");
 		}
-		return maPierre;
+		return (T)monObjet;
 		
 	}
 }
