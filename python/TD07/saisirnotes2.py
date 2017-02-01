@@ -13,6 +13,7 @@ def show_entry_fields():
 		f.write("Nom : %s Note : %s\n" % (listeEntry[i][0].get(), listeEntry[i][1].get()))
 
 master = Tk()
+master.title("Test")
 listeEntry = [None]*25
 
 for i in range(25):
