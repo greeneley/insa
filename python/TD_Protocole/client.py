@@ -63,6 +63,14 @@ def printAide():
 
 
 def aide(cmd):
+	"""
+		Fonction d'aide pour connaitre les proprietes des fonctions.
+
+		PS1: Attendez... 
+		PS2: Oui c'est vrai, je ne reve pas...
+		PS3: Vous avez vraiment tape HELP HELP ?...
+		PS4: Vous etes serieux la ?
+	"""
 	if(cmd==b"DEL"):
 		help("server.delete")
 	elif(cmd==b"EXPORT"):

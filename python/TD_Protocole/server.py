@@ -4,7 +4,7 @@
 
 import socket
 from os import chdir
-from tkinter import *
+#from tkinter import *
 
 #################################
 ##### Variables constantes ######
@@ -98,8 +98,7 @@ def main():
 				upload(0, arg1, 0)
 				conn.send(b"\nUpload effectue !")
 			else:
-				conn.send(b"Precisez un nom de module ou d'eleve !")
-				conn.send(b"\nUpload echoue !")
+				conn.send(b"Precisez un nom de module ou d'eleve !\nUpload echoue !")
 		elif(cmd==b"EXIT"):
 			conn.send(b"\nFermeture de la connexion...")
 			conn.close()
@@ -141,8 +140,8 @@ def export(conn, nom=""):
 			f=open(nom, "w+")
 			conn.send(bytearray("\nCreation et ecriture dans le fichier '"+arg1+"'' reussite.", "utf8"))
 	except IOError as e:
-		conn.send(bytearray(""+e, "utf8"))
-		break
+			conn.send(bytearray(""+e, "utf8"))
+			pass
 
 	for module in DICT_MODULE:
 		f.write("%s : " % (module))
@@ -178,20 +177,20 @@ def importer(conn, nom, chemin=""):
 			chdir(chemin)
 		except OSError as e:
 			conn.send(bytearray(""+e))
-			break
+			return
 
 	try:
 		f=open(nom, "r")
 	except IOError as e:
 		conn.send(bytearray(""+e))
-		break
+		return
 
 	for ligne in f:
 		if(ligne[-1] == ':'):
 			DICT_MODULE[ligne] = {}
 		else:
+			pass
 			# TODO : memo module + ecrire
-
 	pass
 
 def delete(conn, arg1, arg2=""):
@@ -240,8 +239,8 @@ def max(conn, arg1=""):
 		Affiche la note maximale generale, d'un module ou d'un eleve.
 
 
-		socket conn : La socket stockant la connexion actuelle.
-		str    arg1 : [option] Cible de suppression de la fonction.
+			socket conn : La socket stockant la connexion actuelle.
+			str    arg1 : [option] Cible de suppression de la fonction.
 
 
 		Par defaut si 'arg1' est vide, la fonction fonction renvoie la note maximale generale, tout module et eleve compris.
@@ -249,9 +248,9 @@ def max(conn, arg1=""):
 		Si 'arg1' ne correspond pas a un module, alors on renvoie la meilleure note d'un eleve parmis ses modules.
 
 		[Utilisation cliente]
-		MAX
-		MAX module
-		MAX eleve
+			MAX
+			MAX module
+			MAX eleve
 	"""
 	global DICT_MODULE
 
@@ -306,8 +305,8 @@ def min(conn, arg1=""):
 		Affiche la note minimale generale, d'un module ou d'un eleve.
 
 
-		socket conn : La socket stockant la connexion actuelle.
-		str    arg1 : [option] Cible de suppression de la fonction.
+			socket conn : La socket stockant la connexion actuelle.
+			str    arg1 : [option] Cible de suppression de la fonction.
 
 
 		Par defaut si 'arg1' est vide, la fonction fonction renvoie la note minimale generale, tout module et eleve compris.
@@ -316,9 +315,9 @@ def min(conn, arg1=""):
 
 
 		[Utilisation cliente]
-		MAX
-		MAX module
-		MAX eleve
+			MAX
+			MAX module
+			MAX eleve
 	"""
 	global DICT_MODULE
 
@@ -471,7 +470,7 @@ def reset(conn, arg1=""):
 		conn.send(bytearray("\nLes notes de l'eleve "+arg1+" ont bien reinitialisees !", "utf8"))
 	pass
 
-def upload(nombre, nom, mode):
+#def upload(nombre, nom, mode):
 	"""
 	Permet d'envoyer des notes au serveur pour un module particulier ou un eleve via une GUI.
 
@@ -485,7 +484,7 @@ def upload(nombre, nom, mode):
 		UPLOAD etudiant
 		UPLOAD nombre module
 	"""
-	global INCR
+	"""global INCR
 
 	master = Tk()
 	resetEntry()
@@ -522,7 +521,7 @@ def upload(nombre, nom, mode):
 		boutonValider.grid(row=(INCR+2), column=1, sticky=E, pady=4)
 
 	master.mainloop()
-	pass
+	pass"""
 
 
 #################################
@@ -587,7 +586,7 @@ def ecrireDictionnaire(nom, nombre, mode=MODULE):
 				DICT_MODULE[nomModule][nom] = int(LISTE_ENTRY[i][1].get())
 	pass
 
-def ajoutEntry(master, boutonAjout, boutonQuit, boutonValider):
+#def ajoutEntry(master, boutonAjout, boutonQuit, boutonValider):
 	"""
 	Fonction auxiliaire pour ajouter un champ d'entry.
 
@@ -604,7 +603,7 @@ def ajoutEntry(master, boutonAjout, boutonQuit, boutonValider):
 	[Syntaxe cliente]
 		Aucun acces explicite depuis le client.
 	"""
-	global INCR
+	"""global INCR
 
 	INCR+=1
 	boutonAjout.grid(row=INCR, column=0)
@@ -620,7 +619,7 @@ def ajoutEntry(master, boutonAjout, boutonQuit, boutonValider):
 
 	INCR+=1
 	pass
-
+"""
 
 if(__name__ == "__main__"):
 	main()
