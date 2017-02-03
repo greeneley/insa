@@ -9,8 +9,8 @@ from tkinter import *
 #################################
 ##### Variables constantes ######
 #################################
-MODULE = 1
-ELEVE = 0
+MODULE = True
+ELEVE = False
 #################################
 
 
@@ -28,12 +28,23 @@ INCR        = 0
 #################################
 
 def main():
+	"""
+		Fonction main recuperant les differentes commandes du client pour les traiter.
+
+
+			Argument null
+
+
+		Cette fonction se charge de recuperer les donnees recues du client.
+		L'idee est de split() la chaine de caractere envoyee par le client et de ne recuperer que les trois premieres chaines.
+		Afin d'eviter les doublons, on utilise  
+	"""
+
 	TCP_IP = "127.0.0.1"
 	TCP_PORT = 1337
 	BUFFER_SIZE = 2048
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	print(s)
 	s.bind((TCP_IP, TCP_PORT))
 	s.listen(1)
 
@@ -64,19 +75,19 @@ def main():
 			arg2 = ""
 
 		if(cmd==b"DEL"):
-			delete(arg1, arg2, conn)
+			delete(conn, arg1, arg2)
 		elif(cmd==b"EXPORT"):
-			export(arg1, conn)
+			export(conn, arg1)
 		elif(cmd==b"HELP"):
 			conn.send(bytearray(arg1, "utf8"))
 		elif(cmd==b"MAX"):
-			max(arg1, conn)
+			max(conn, arg1)
 		elif(cmd==b"MIN"):
-			min(arg1, conn)
+			min(conn, arg1)
 		elif(cmd==b"MOYENNE"):
-			moyenne(arg1, conn)
+			moyenne(conn, arg1)
 		elif(cmd==b"RESET"):
-			reset(arg1, conn)
+			reset(conn, arg1)
 		elif(cmd==b"SHOW"):
 			printDico(conn)
 		elif(cmd==b"UPLOAD"):
@@ -101,38 +112,111 @@ def main():
 ##### Fonctions principales #####
 #################################
 
-def export(arg1, conn):
+def export(conn, nom=""):
 	"""
-
-	EXPORT
-	EXPORT monfichier.txt
+		Exporte la base de donnees des notes dans un fichier texte dans le dossier courant.
+	
+	
+			socket conn   : La socket stockant la connexion actuelle.
+			str    nom    : [option] Dossier ou exporter le fichier texte.
+	
+	
+		La fonction enregistre le fichier sous le nom 'dict_td8_thanh_luu.txt' si aucun nom n'est passe en argument.
+		La fonction enregistre sous le nom entre en argument si ce dernier est present.
+		Ne prend pas en charge d'eventuelles erreurs de place ou droit.
+	
+		[Utilisation cliente]
+			EXPORT
+			EXPORT monfichier.txt
 	"""
 	global DICT_MODULE
 
-	chdir("/tmp")
+	chdir('.')
 
-	if(arg1 == ""):
-		f=open("dict_td8_thanh_luu.txt", "w+")
-	else:
-		f=open(arg1, "w+")
+	try:	
+		if(nom == ""):
+			f=open("dict_td8_thanh_luu.txt", "w+")
+			conn.send(b"Creation et criture dans le fichier 'dict_td8_thanh_luu.txt' reussite.")	
+		else:
+			f=open(nom, "w+")
+			conn.send(bytearray("\nCreation et ecriture dans le fichier '"+arg1+"'' reussite.", "utf8"))
+	except IOError as e:
+		conn.send(bytearray(""+e, "utf8"))
+		break
 
 	for module in DICT_MODULE:
 		f.write("%s : " % (module))
 		for eleve in DICT_MODULE[module]:
-			f.write("%s;%d" % (eleve, DICT_MODULE[module][eleve]))
+			f.write("%s;%d\n" % (eleve, DICT_MODULE[module][eleve]))
 	f.close()
 	pass
 
-def delete(arg1, arg2, conn):
-	"""
 
-	DEL module
-	DEL eleve
-	DEL eleve module
+def importer(conn, nom, chemin=""):
+	"""
+		Permet a l'utilisateur d'importer une base de donnees de notes.
+
+
+			socket conn   : La socket de la connexion actuelle.
+			str    nom    : Nom du fichier.
+			str    chemin : [option] Chemin pour atteindre le dossier contenant le fichier.
+
+
+		Si aucun 'chemin' n'est precise, alors importer va essayer d'ouvrir un fichier dans le dossier courant.
+		Dans le cas contraire, on ouvre le fichier present dans le dossier indique.
+
+		[Syntaxe cliente]
+			IMPORT fichier
+			IMPORT fichier chemin
 	"""
 	global DICT_MODULE
 
-	print(DICT_MODULE)
+	if(chemin == ""):
+		chdir(".")
+	else:
+		try:
+			chdir(chemin)
+		except OSError as e:
+			conn.send(bytearray(""+e))
+			break
+
+	try:
+		f=open(nom, "r")
+	except IOError as e:
+		conn.send(bytearray(""+e))
+		break
+
+	for ligne in f:
+		if(ligne[-1] == ':'):
+			DICT_MODULE[ligne] = {}
+		else:
+			# TODO : memo module + ecrire
+
+	pass
+
+def delete(conn, arg1, arg2=""):
+	"""
+		Fonction de suppression d'un module, eleve ou d'un eleve precis d'un module.
+	
+	
+			socket conn : La socket stockant la connexion actuelle.
+			str    arg1 : nom du module ou de l'eleve a cibler.
+			str    arg2 : [option] nom du module a cible pour l'eleve entre en arg1.
+	
+	
+		L'algorithme de la fonction va, en priorite, chercher a supprimer un module.
+		La fonction va donc essayer de supprimer 'arg1' de la liste des modules.
+		Si 'arg1' n'est pas reconnu comme un module, les notes de tous les eleves correspondant a 'arg1' seront supprimes.
+		'arg2' peut etre precise afin de cibler un module particulier pour un eleve particulier.
+	
+	
+		[Utilisation cliente]
+			DEL module
+			DEL eleve
+			DEL eleve module
+	"""
+	global DICT_MODULE
+
 	if(arg1 in DICT_MODULE):
 		DICT_MODULE.pop(arg1)
 		conn.send(bytearray("\nSuppression du module "+arg1+" effectuee !", "utf8"))
@@ -151,12 +235,23 @@ def delete(arg1, arg2, conn):
 			pass
 	pass
 
-def max(arg1, conn):
+def max(conn, arg1=""):
 	"""
+		Affiche la note maximale generale, d'un module ou d'un eleve.
 
-	MAX
-	MAX module
-	MAX eleve
+
+		socket conn : La socket stockant la connexion actuelle.
+		str    arg1 : [option] Cible de suppression de la fonction.
+
+
+		Par defaut si 'arg1' est vide, la fonction fonction renvoie la note maximale generale, tout module et eleve compris.
+		Si 'arg1' possede une valeur, max() va en priorite, chercher la note dans un module.
+		Si 'arg1' ne correspond pas a un module, alors on renvoie la meilleure note d'un eleve parmis ses modules.
+
+		[Utilisation cliente]
+		MAX
+		MAX module
+		MAX eleve
 	"""
 	global DICT_MODULE
 
@@ -206,12 +301,24 @@ def max(arg1, conn):
 			conn.send(bytearray(module+"; ", "utf8"))
 	pass
 
-def min(arg1, conn):
+def min(conn, arg1=""):
 	"""
+		Affiche la note minimale generale, d'un module ou d'un eleve.
 
-	MIN
-	MIN module
-	MIN eleve
+
+		socket conn : La socket stockant la connexion actuelle.
+		str    arg1 : [option] Cible de suppression de la fonction.
+
+
+		Par defaut si 'arg1' est vide, la fonction fonction renvoie la note minimale generale, tout module et eleve compris.
+		Si 'arg1' possede une valeur, min() va en priorite, chercher la note dans un module.
+		Si 'arg1' ne correspond pas a un module, alors on renvoie la plus basse note d'un eleve parmis ses modules.
+
+
+		[Utilisation cliente]
+		MAX
+		MAX module
+		MAX eleve
 	"""
 	global DICT_MODULE
 
@@ -262,9 +369,18 @@ def min(arg1, conn):
 	pass
 	
 
-def moyenne(arg1, conn):
+def moyenne(conn, arg1=""):
 	"""
-		int nombre, str module
+		Affiche la moyenne generale, d'un module ou d'un eleve.
+
+
+		socket conn : La socket stockant la connexion actuelle.
+		str    arg1 : [option] Cible de suppression de la fonction.
+
+
+		Par defaut si 'arg1' est vide, la fonction fonction renvoie la moyenne generale, tout module et eleve compris.
+		Si 'arg1' possede une valeur, max() va en priorite, cibler un module.
+		Si 'arg1' ne correspond pas a un module, alors on calcule la moyenne d'un eleve.
 
 		moyenne module
 		moyenne eleve
@@ -300,7 +416,17 @@ def moyenne(arg1, conn):
 		conn.send(b"\nImpossible de calculer la moyenen de l'eleve !\nIl n'y a pas de notes !")
 	pass
 
+
 def printDico(conn):
+	"""	
+		Affiche le contenue du dictionnaire de notes au client.
+
+			socket conn : La socket stockant la connexion actuelle.
+
+		[Syntaxe cliente]
+			SHOW
+
+	"""
 	global DICT_MODULE
 
 	conn.send(bytearray("\nModules et notes actuellement en memoire :", "utf8"))
@@ -310,10 +436,20 @@ def printDico(conn):
 			conn.send(bytearray("\n\t"+eleve+" : "+str(DICT_MODULE[module][eleve]), "utf8"))
 	pass
 
-def reset(arg1, conn):
+def reset(conn, arg1=""):
 	"""
-		int nombre, str module
+	Permet de reinitialiser le dictionnaire, un module ou un eleve.
 
+
+		socket conn : La socket stockant la connexion actuelle.
+		str    arg1 : [option] Cible de la reinitialisation.
+
+
+	Si 'arg1' vide, reinitialise completement le dictionnaire.
+	Sinon, verifie si 'arg1' est un module et dans ce cas, reinitialise le module.
+	Dans le cas contraire, reinitialise (en realite, supprime) les notes de l'eleve.
+
+	[Syntaxe cliente]
 		RESET
 		RESET module
 		RESET eleve
@@ -337,15 +473,17 @@ def reset(arg1, conn):
 
 def upload(nombre, nom, mode):
 	"""
-	Permet d'envoyer des notes au serveur pour un module particulier ou un eleve via une GUI
+	Permet d'envoyer des notes au serveur pour un module particulier ou un eleve via une GUI.
 
-		int nombre    : le nombre de notes a entrer
-		str nom       : le nom du module ou de l'eleve
-		int mode      : indique si l'on entre des notes pour un module ou un eleve
 
-	[Syntaxe client]
-		UPLOAD nombre module
+		int nombre    : le nombre de notes a entrer.
+		str nom       : le nom du module ou de l'eleve.
+		int mode      : indique si l'on entre des notes pour un module ou un eleve.
+
+
+	[Syntaxe cliente]
 		UPLOAD etudiant
+		UPLOAD nombre module
 	"""
 	global INCR
 
@@ -366,7 +504,6 @@ def upload(nombre, nom, mode):
 		Button(master, text="Valider", command=lambda:ecrireDictionnaire(nom, nombre, MODULE)).grid(row=(nombre+1), column=1, sticky=E, pady=4)
 
 	else: # C'est un eleve
-		print(nom)
 		master.title("Notes pour l'eleve : "+nom)
 		INCR = 0
 
@@ -393,12 +530,39 @@ def upload(nombre, nom, mode):
 #################################
 
 def resetEntry():
+	"""
+	Fonction auxiliaire pour vider la liste globale d'entries.
+
+
+		Arguments null
+
+
+	[Syntaxe cliente]
+		Aucun acces explicite depuis le client.
+	"""
 	global LISTE_ENTRY
 	LISTE_ENTRY = []
 	pass
 
 
 def ecrireDictionnaire(nom, nombre, mode=MODULE):
+	"""
+	Fonction auxiliaire pour écrire dans le dictionnaire de notes.
+
+
+		str     nom    : Nom de l'eleve ou du module a ecrire.
+		str     nombre : Nombre de notes a entrer s'il s'agit d'un module.
+		bool    mode   : Indique si l'on ecrit pour un eleve ou un module.
+
+
+	La fonction verifie d'abord le mode d'ecriture et agit en consequence.
+	Si l'on est dans le mode MODULE, alors elle verifie l'existence ou non du module. 
+	En cas d'inexistence, elle cree un nouveau dictionnaire et y ajoute a l'interieur les notes entrees.
+	Dans le cas contraire, on est dans le ELEVE. On ecrase alors simplement toutes les notes existentes et/ou ajoute les nouvelles.
+
+	[Syntaxe cliente]
+		Aucun acces explicite depuis le client.
+	"""
 	global DICT_MODULE
 
 	if(mode):
@@ -424,6 +588,22 @@ def ecrireDictionnaire(nom, nombre, mode=MODULE):
 	pass
 
 def ajoutEntry(master, boutonAjout, boutonQuit, boutonValider):
+	"""
+	Fonction auxiliaire pour ajouter un champ d'entry.
+
+
+		<type> master : Fenetre principale dont les nouveaux champs seront les fils.
+		<type> boutonAjout : Bouton d'ajout du parent a deplacer.
+		<type> boutonQuit : Bouton quitter du parent a deplacer.
+		<type> boutonValider : Bouton valider du parent a deplacer.
+
+
+	Ajoute deux nouveaux champs d'entry dans la GUI du client pour lui permettre de rentrer plus de donnees.
+	Deplace alors les trois boutons en argument d'un cran vers le bas pour eviter que les nouveaux champs les chevauchent.
+
+	[Syntaxe cliente]
+		Aucun acces explicite depuis le client.
+	"""
 	global INCR
 
 	INCR+=1

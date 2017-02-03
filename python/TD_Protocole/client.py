@@ -50,6 +50,7 @@ def printAide():
 	print("Liste des commandes")
 	print("DEL         - Supression d'une entree")
 	print("EXPORT      - Enregistre les notes dans un fichier texte")
+	print("IMPORT      - Importe des notes depuis un fichier texte")
 	print("HELP        - Affiche une aide sur les commandes")
 	print("MAX         - Obtenir la note maximale")
 	print("MIN         - Obtenir la note minimale")
