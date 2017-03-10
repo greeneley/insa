@@ -3,6 +3,8 @@
 #include <signal.h>
 #include <unistd.h>
 
+#define _XOPEN_SOURCE
+
 int main (void)
 {
 	int i;
