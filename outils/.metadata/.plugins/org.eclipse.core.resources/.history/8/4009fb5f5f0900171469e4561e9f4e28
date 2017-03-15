@@ -1,0 +1,18 @@
+import junit.framework.TestCase;
+
+
+public class testUnitaireBaclBox extends TestCase {
+
+	public void testJohnBetterPPCM() {
+		fail("Not yet implemented");
+	}
+
+	public void testJohnFaultyPPCM() {
+		fail("Not yet implemented");
+	}
+
+	public void testJohnCorrectPPCM() {
+		fail("Not yet implemented");
+	}
+
+}
