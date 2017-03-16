@@ -1,0 +1,94 @@
+.lien12
+{
+	color: white;
+}
+
+#lien3
+{
+	color: red;
+}
+
+#lien3:hover
+{
+	text-decoration: underline;
+}
+
+.lien4
+{
+	color: yellow;
+}
+
+.lien4:active
+{
+	color: orange;
+	font-size: 2em;
+}
+
+.lien5
+{
+	font-size: 5px;
+}
+
+.lien6
+{
+	color: yellow;
+}
+
+.lien6:active
+{
+	color: orange;
+	font-size: 2em;
+}
+
+.image
+{
+	max-width: 150px;
+	max-height: 100px;
+	border: 3px dashed orange;
+}
+
+body 
+{
+	background-color:silver;
+	color:#000;
+	text-align: justify;
+}
+
+h2 
+{
+	font-size: 2em;
+	color: green;
+	text-decoration: underline;
+}
+
+p 
+{
+	text-indent: 2em;
+	text-align: justify;
+}
+
+cite 
+{
+	font-variant: small-caps;
+	letter-spacing: 0.1em;
+}
+
+abbr 
+{
+	cursor: help;
+}
+
+em 
+{
+	text-decoration: bold;
+}
+
+ul
+{
+	list-style-type: disc;
+}
+
+mark
+{
+	background-color: pink;
+}
