@@ -1,0 +1,19 @@
+import johnArithmetics.MathsUtils;
+import junit.framework.TestCase;
+
+
+public class TestBlackBox extends TestCase {
+
+	public void testJohnBetterPPCM() {
+		assertEquals(0, MathsUtils.johnBetterPPCM(0, 0));
+	}
+
+	public void testJohnFaultyPPCM() {
+		fail("Not yet implemented");
+	}
+
+	public void testJohnCorrectPPCM() {
+		fail("Not yet implemented");
+	}
+
+}

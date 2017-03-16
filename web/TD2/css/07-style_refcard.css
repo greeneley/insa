@@ -47,6 +47,24 @@
 	border: 3px dashed orange;
 }
 
+.monTableau
+{
+	border: 1px solid black;
+	border-collapse: collapse;
+	text-align: right;
+}
+
+.enteteTab
+{
+	text-decoration: bold;
+}
+
+table td, table th
+{
+	border: 1px solid black;
+	padding: 0.5em;
+}
+
 body 
 {
 	background-color:silver;
@@ -54,11 +72,29 @@ body
 	text-align: justify;
 }
 
+caption 
+{
+	font-style: italic;
+	caption-side: bottom;
+	font-size: 0.7em;
+}
+
+h1
+{
+	font-family: 'Gochi Hand', cursive;
+}
+
 h2 
 {
 	font-size: 2em;
 	color: green;
 	text-decoration: underline;
+}
+
+h2::first-letter
+{
+	font-size: 1.5em;
+	color: white;
 }
 
 p 
