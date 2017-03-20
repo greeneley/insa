@@ -4,17 +4,19 @@
 // (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
 // http://www.logilin.fr
 // ------------------------------------------------------------------
-//#define	_XOPEN_SOURCE
-#define	_GNU_SOURCE
+#define	_XOPEN_SOURCE
+//#define	_GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 
+//int i;
+
 void gestionnaire (int numero)
 {
 	int i;
-	signal(numero, gestionnaire);
+	//signal(numero, gestionnaire);
 	fprintf(stdout, "debut du gestionnaire de signal %d\n", numero);
 	for (i = 1; i < 4; i ++) {
 		fprintf(stdout, "%d\n", i);
@@ -31,6 +33,9 @@ int main (void)
 		kill(getppid(), SIGUSR1);
 		sleep(1);
 		kill(getppid(), SIGUSR1);
+		sleep(1);
+		kill(getppid(), SIGUSR1);
+		for(;;);
 	} else {
 		while (1)
 			pause();

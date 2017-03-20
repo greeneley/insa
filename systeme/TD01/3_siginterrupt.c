@@ -24,8 +24,8 @@ int main (int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
-	signal(SIGINT, gestionnaire);
-	siginterrupt(SIGINT, i);
+	signal(SIGINT, gestionnaire); // On installe le signal dans le gestionnaire
+	siginterrupt(SIGINT, i); //Pour ce signal, indique s'il sera reentrant ou non
 
 	while (1) {
 		fprintf(stdout, "appel read()\n");
