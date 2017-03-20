@@ -36,21 +36,24 @@ int main (void)
 					(long) getpid(), i);
 
 	/* On bloque tout sauf SIGINT */
-	sigfillset(& ensemble);
-	sigdelset(& ensemble, SIGINT);
+	sigfillset(& ensemble); /* On remplit tous les signaux de 1 */
+	sigdelset(& ensemble, SIGINT);  /* On passe a 0 celui du SIGINT */
+	/* On installe le masque de signaux avec l'action liee au premier arguùent */
 	sigprocmask(SIG_BLOCK, & ensemble, NULL);
 
 	/* un appel systeme lent bloque */
 	read(0, & i, sizeof(int));
 	
 	/* Voyons maintenant qui est en attente */
+	/* Recopie dans le masque de signaux, ceux dont les iterations sont arrivees */
 	sigpending(& ensemble);
-	for (i = 1; i < NB_SIG_CLASSIQUES; i ++)
+	for (i = 1; i < NSIG; i ++)
 		if (sigismember(& ensemble, i))
 			fprintf(stdout, "en attente %d (%s)\n", 
 				i, sys_siglist[i]);
 
 	/* On debloque tous les signaux pour les voir arriver */
+	/* Le but est de savoir dans quel ordre les signaux seront lachés */
 	sigemptyset(& ensemble);
 	sigprocmask(SIG_SETMASK, & ensemble, NULL);
 	

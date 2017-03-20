@@ -17,9 +17,12 @@ int main (void)
 {
 	struct sigaction action;
 
+	/*
 	signal(SIGUSR1, gestionnaire);
 	sigaction(SIGUSR1, NULL, & action);
-	
+	*/
+	signal(SIGTSTP, gestionnaire);
+	sigaction(SIGTSTP, NULL, & action);
 	if (action.sa_handler == gestionnaire)
 		fprintf(stdout, "Meme adresse\n");
 	else

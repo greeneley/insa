@@ -15,6 +15,7 @@ int main (void)
 	int i;
 	struct sigaction action;
 	for (i = 1; i < NSIG; i ++) {
+		/* On teste à l'instant t le comportement des signaux */
 		if (sigaction(i, NULL, & action) != 0)
 			fprintf(stderr, "%d : Erreur\n", i);
 		if (action.sa_handler != SIG_DFL) {
