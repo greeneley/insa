@@ -1,0 +1,24 @@
+h1 
+{
+	color: red;
+	text-decoration: bold;
+	text-align: center;
+	text-decoration: underline;
+}
+
+h2
+{
+	color: blue;
+	text-align: center;
+}
+
+h3
+{
+	color: green;
+	text-align: center;
+}
+
+p 
+{
+	text-align: center;
+}
