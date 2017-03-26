@@ -1,3 +1,22 @@
+.blanc
+{
+	background-color: rgb(255, 255, 255);
+}
+
+.vert
+{
+	background-color: rgb(150, 255, 150);
+}
+
+.rouge
+{
+	background-color: rgb(255, 150, 150);
+}
+
+#date_modif
+{
+	text-align: center;
+}
 h1 
 {
 	color: red;
