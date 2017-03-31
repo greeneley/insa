@@ -24,13 +24,13 @@
 
 
 /* name of the POSIX object referencing the queue */
-#define MSGQOBJ_NAME    "/myqueue123"
+#define MSGQOBJ_NAME    "/myqueue123" //
 /* max length of a message (just for this process) */
 #define MAX_MSG_LEN     10000
 
 
 int main(int argc, char *argv[]) {
-    mqd_t msgq_id;
+    mqd_t msgq_id; //descripteur de fichier
     char msgcontent[MAX_MSG_LEN];
     int msgsz;
     unsigned int sender;
@@ -38,17 +38,22 @@ int main(int argc, char *argv[]) {
     
     
     /* opening the queue        --  mq_open() */
-    msgq_id = mq_open(MSGQOBJ_NAME, O_RDWR);
+    // premier arg == chaine de caractere qui contient le nom
+    msgq_id = mq_open(MSGQOBJ_NAME, O_RDWR | O_CREAT);
     if (msgq_id == (mqd_t)-1) {
         perror("In mq_open()");
         exit(1);
     }
 
     /* getting the attributes from the queue        --  mq_getattr() */
+    // on recupere les reglages par defaut de la file de messages
     mq_getattr(msgq_id, &msgq_attr);
     printf("Queue \"%s\":\n\t- stores at most %ld messages\n\t- large at most %ld bytes each\n\t- currently holds %ld messages\n", MSGQOBJ_NAME, msgq_attr.mq_maxmsg, msgq_attr.mq_msgsize, msgq_attr.mq_curmsgs);
+
+for(;;);
+
 if ( msgq_attr.mq_curmsgs==0) {
-printf("destruction\n");			 
+printf("destruction\n"); //de la file de messages			 
 mq_close(msgq_id);
 			mq_unlink(MSGQOBJ_NAME);
 			return(1);

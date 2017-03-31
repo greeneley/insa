@@ -45,6 +45,8 @@ erreur("erreur lors du ftok m‚moire partag‚e");
 if ((clef_sem= ftok(NOM,PROJ_FTOK_SEM))==-1)
 erreur("erreur lors du ftok s‚maphore");
 
+// on ne voit pes flags comme CREAT car le lecteur n'est pas cense initialiser de semahores
+// ou d'ensemble de semaphores
 if ((shmid=shmget(clef_mem,TAILLE,0))==-1)
    erreur("erreur lors du shmget");
 if ((semid=semget(clef_sem,2,0))==-1)
@@ -58,9 +60,10 @@ int i;
 
 if ((addr=shmat(shmid,NULL,SHM_RDONLY))==(char *)-1)
 erreur ("erreur lors du shmat");
- sleep(1);
- for(i=0;i<4;i++)
- lecture(addr,buf,20);
+ for(i=0;i<4;i++){
+  sleep(1);
+  lecture(addr,buf,20);
+ }
  exit(0);
  }
 void main (int argc, char *argv[])

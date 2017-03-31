@@ -178,7 +178,21 @@ function retirer()
 /* Exercice 3 */
 function animer(e)
 {
-    document.write("lol");
+    var monCarre = document.getElementById("carre");
+    if(e.KeyCode == 37) //gauche
+    {
+        monCarre.style.right += 10;
+    }
+    else if(e.KeyCode == 38) //haut
+    {
+        monCarre.style.bottom += 10;
+    }
+    else if(e.KeyCode == 39) //droite
+    {
+        monCarre.style.left += 10;
+    }
+    else if(e.KeyCode == 40) //bas
+    {
+        monCarre.style.up += 10;
+    }
 }
-
-document.getElementById("container").addEventListener("onkeydown", animer);
