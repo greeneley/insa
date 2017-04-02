@@ -179,20 +179,131 @@ function retirer()
 function animer(e)
 {
     var monCarre = document.getElementById("carre");
-    if(e.KeyCode == 37) //gauche
+    switch(e.keyCode)
     {
-        monCarre.style.right += 10;
-    }
-    else if(e.KeyCode == 38) //haut
-    {
-        monCarre.style.bottom += 10;
-    }
-    else if(e.KeyCode == 39) //droite
-    {
-        monCarre.style.left += 10;
-    }
-    else if(e.KeyCode == 40) //bas
-    {
-        monCarre.style.up += 10;
+        case 37:
+            if(isNaN(parseInt(monCarre.style.right, 10)))
+            {
+                monCarre.style.right = "10px";
+            }
+            else
+            {
+                var valAv = parseInt(monCarre.style.right, 10);
+                var valAp = valAv + 10;
+                monCarre.style.right = valAp + "px";
+            }
+            break
+        case 38:
+            if(isNaN(parseInt(monCarre.style.bottom, 10)))
+            {
+                monCarre.style.bottom = "10px";
+            }
+            else
+            {
+                var valAv = parseInt(monCarre.style.bottom, 10);
+                var valAp = valAv + 10;
+                monCarre.style.bottom = valAp + "px";
+            }
+            break
+        case 39:
+            if(isNaN(parseInt(monCarre.style.right, 10)))
+            {
+                monCarre.style.right = "-10px";
+            }
+            else
+            {
+                var valAv = parseInt(monCarre.style.right, 10);
+                var valAp = valAv - 10;
+                monCarre.style.right = valAp + "px";
+            }
+            break
+        case 40:
+            if(isNaN(parseInt(monCarre.style.bottom, 10)))
+            {
+                monCarre.style.bottom = "-10px";
+            }
+            else
+            {
+                var valAv = parseInt(monCarre.style.bottom, 10);
+                var valAp = valAv - 10;
+                monCarre.style.bottom = valAp + "px";
+            }
+            break
     }
 }
+
+/* Exercice 4 */
+
+/*
+
+var animal = {
+    init:function(type)
+    {
+        this.type = type;    
+    },
+    
+    sound:"the voice",
+    
+    talk:function()
+    {
+        console.log("sound : "+this.sound.toUpperCase());    
+    },
+    eat:function()
+    {
+        console.log("manger : "+this.type);
+    }  
+    
+};
+
+var duck = Object.create(animal);
+duck.init("carrot");
+duck.eat();
+duck.talk()
+
+*/
+
+/*
+var animal = function(type)
+{
+    this.type = type;
+    this.eat = function()
+    {
+        console.log("eat : "+this.type);
+    }
+};
+
+var terrier = new animal("os");
+terrier.eat();
+
+animal.prototype.talk = function()
+{
+    console.log("wouf wouf");
+};
+
+terrier.talk()
+*/
+
+var compte = function()
+{
+    var transactions = 
+    [
+        {
+            idt:    123,
+            amount: 1000
+        },
+        {
+            idt:    124,
+            amount: -500
+        }        
+    ];
+    
+    var amount = 0;
+    this.ga = function getAmount()
+    {
+        transactions.forEach(function(record)
+        {
+            amount += transactions.amount;
+        });
+        return amount;
+    };
+};
