@@ -283,27 +283,82 @@ animal.prototype.talk = function()
 terrier.talk()
 */
 
-var compte = function()
+var Compte = function()
 {
-    var transactions = 
-    [
-        {
-            idt:    123,
-            amount: 1000
-        },
-        {
-            idt:    124,
-            amount: -500
-        }        
-    ];
-    
-    var amount = 0;
-    this.ga = function getAmount()
+    this.transactions = [];
+    this.idt          = 0;
+
+    this.addTrans = function(e)
     {
+        var montant = document.getElementById("inputMontant").value;
+        if(!(isNaN(montant)))
+        {
+            this.transactions.push({"idt: ":this.idt, "amount: ":montant})
+            this.idt++;
+            document.getElementById("inputMontant").value = "";
+        }
+        else
+        {
+            document.getElementById("inputMontant").value = "";
+        }
+    };
+    
+    this.getAmount = function()
+    {
+        var amount = 0;
         transactions.forEach(function(record)
         {
             amount += transactions.amount;
         });
         return amount;
     };
+
+    this.printCompte = function(e)
+    {
+        var div = document.getElementById("printCompte");
+        div.innerHTML = "";
+
+        for(var i=0; i<this.idt; i++)
+        {
+            var lab = document.createElement("label");
+            lab.innerHTML = "idt: "+this.transactions[i]["idt: "]+" amount: "+this.transactions[i]["amount: "];
+            div.appendChild(lab);
+            div.appendChild(document.createElement("br"));
+        }
+    }
+};
+
+var monCompte = new Compte();
+
+function initCompte()
+{
+    var boutonInit = document.getElementById("bInit");
+    boutonInit.setAttribute("value", "Reinitialiser le compte");
+
+    var lab = document.createElement("label");
+    lab.innerHTML = "Ajouter une transaction ";
+
+    var inpM = document.createElement("input");
+    inpM.setAttribute("id", "inputMontant");
+    inpM.setAttribute("action", "monCompte.addTrans(event)");
+
+    var bInp = document.createElement("input");
+    bInp.setAttribute("type", "button");
+    bInp.setAttribute("onclick", "monCompte.addTrans(event)");
+    bInp.setAttribute("value", "ajouter");
+
+    var bPrint = document.createElement("input");
+    bPrint.setAttribute("type", "button");
+    bPrint.setAttribute("value", "Afficher compte");
+    bPrint.setAttribute("onclick", "monCompte.printCompte(event)");
+
+    var div = document.getElementById("divCompte");
+    div.innerHTML = "";
+    div.appendChild(lab);
+    div.appendChild(inpM);
+    div.appendChild(bInp);
+    div.appendChild(document.createElement("br"));
+    div.appendChild(bPrint);
+
+    document.getElementById("printCompte").innerHTML = "";
 };
