@@ -1,0 +1,11 @@
+Pour le fichier zip
+https://www.turnkeylinux.org/download?file=turnkey-lamp-14.1-jessie-amd64-vmdk.zip
+
+Première chose à faire : update le systeme
+apt-get update
+apt-get install console-setup
+
+Ensuite, récupérer l'IP de la machine avec
+ifconfig
+
+Webshell
