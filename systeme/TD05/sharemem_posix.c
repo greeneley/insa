@@ -22,6 +22,8 @@ if (ftruncate(fd, sizeof(int)) == -1) {
 perror("ftruncate");
 exit(1);}
 /* “mapper” le segment en R/W partagé */
+// memoire partafee sur 4 octets ici car on va partager un int
+// version POSIX de la fonction SystemV mattach
 if ((sp = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0))== MAP_FAILED) {
 perror("mmap");
 exit(1);}
