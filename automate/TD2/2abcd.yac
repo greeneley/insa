@@ -1,0 +1,22 @@
+%{
+#include <stdio.h>
+
+int yylex();
+
+%}
+
+double valDble;
+
+%token <valDble> REAL
+
+%%
+
+%%
+int main(){
+  	yyparse();
+}
+
+yyerror (char *s)
+{
+	
+}

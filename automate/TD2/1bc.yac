@@ -1,0 +1,54 @@
+%{
+#include <stdio.h>
+
+int yylex();
+
+%}
+
+%union {
+	double valDble;
+	int valInt;
+}
+
+%token <valDble> REAL
+%token <valInt> INTEGER
+%type  <valDble> E
+%type  <valDble> F
+%type  <valDble> T
+
+%%
+S : E ';'  {printf ("Expression reconnue %lf\n", yyval.valDble);}
+  ;
+
+E : E '+' T  {$$ = $1 + $3; printf("E -> E+T\n");}
+  | E '-' T  {$$ = $1 - $3; printf("E -> E-T\n");}
+  | T        {printf("E -> T\n"); }
+  ;
+
+T : T '*' F  {$$ = $1 * $3; printf("T -> T * F\n");}
+  | T '/' F  {if($3 == 0)
+  			  {
+  			    printf("Erreur division par zero\n");
+  			    return;
+  			  }
+  			  else
+  			  {
+  			  	$$ = $1 / $3; printf("T -> T / F\n");
+  			  }}
+  | F        {printf("T -> F\n"); } 
+  ;
+
+F : '(' E ')' {$$ = $2; printf("F ->  ( E )\n"); } 
+  | INTEGER   {$$ = $1; printf("F -> INTEGER (%d)\n", $1); } 
+  | REAL      {$$ = $1; printf("F -> REAL (%lf)\n", $1); } 
+  ;
+
+%%
+int main(){
+  	yyparse();
+}
+
+yyerror (char *s)
+{
+	
+}
