@@ -378,10 +378,10 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[14] =
+static yyconst flex_int16_t yy_accept[13] =
     {   0,
-        2,    2,    5,    3,    1,    4,    3,    2,    1,    2,
-        0,    2,    0
+        0,    0,    5,    3,    1,    4,    2,    1,    2,    2,
+        2,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -418,31 +418,31 @@ static yyconst flex_int32_t yy_ec[256] =
 
 static yyconst flex_int32_t yy_meta[6] =
     {   0,
-        1,    2,    1,    3,    4
+        1,    2,    1,    1,    3
     } ;
 
-static yyconst flex_int16_t yy_base[17] =
+static yyconst flex_int16_t yy_base[15] =
     {   0,
-        0,    0,   11,   12,    0,   12,    0,    2,    0,    0,
-        0,    0,   12,    8,    5,    5
+        0,    0,   11,   12,    0,   12,    2,    0,    5,    0,
+        0,   12,    7,    5
     } ;
 
-static yyconst flex_int16_t yy_def[17] =
+static yyconst flex_int16_t yy_def[15] =
     {   0,
-       13,    1,   13,   13,   14,   13,   15,   13,   14,   16,
-       15,    8,    0,   13,   13,   13
+       12,    1,   12,   12,   13,   12,   12,   13,    7,    7,
+       14,    0,   12,   12
     } ;
 
 static yyconst flex_int16_t yy_nxt[18] =
     {   0,
-        4,    5,    6,    7,    8,   11,   12,   11,   10,    9,
-       13,    3,   13,   13,   13,   13,   13
+        4,    5,    6,    4,    7,    9,   10,   11,    8,   11,
+       12,    3,   12,   12,   12,   12,   12
     } ;
 
 static yyconst flex_int16_t yy_chk[18] =
     {   0,
-        1,    1,    1,    1,    1,    8,    8,   16,   15,   14,
-        3,   13,   13,   13,   13,   13,   13
+        1,    1,    1,    1,    1,    7,    7,   14,   13,    9,
+        3,   12,   12,   12,   12,   12,   12
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -459,10 +459,10 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "1bc.lex"
-#line 2 "1bc.lex"
+#line 1 "2abcd.lex"
+#line 2 "2abcd.lex"
 #include "y.tab.h"
-#line 8 "1bc.lex"
+#line 8 "2abcd.lex"
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
@@ -683,7 +683,7 @@ YY_DECL
 		}
 
 	{
-#line 17 "1bc.lex"
+#line 17 "2abcd.lex"
 
 #line 689 "lex.yy.c"
 
@@ -712,7 +712,7 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 14 )
+				if ( yy_current_state >= 13 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -744,23 +744,23 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 18 "1bc.lex"
+#line 18 "2abcd.lex"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "1bc.lex"
+#line 19 "2abcd.lex"
 { sscanf(yytext, "%lf", &yylval.valDble);
              return REAL;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "1bc.lex"
+#line 22 "2abcd.lex"
 {return yytext[0];}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "1bc.lex"
+#line 23 "2abcd.lex"
 ECHO;
 	YY_BREAK
 #line 767 "lex.yy.c"
@@ -1056,7 +1056,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 14 )
+			if ( yy_current_state >= 13 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1084,11 +1084,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 14 )
+		if ( yy_current_state >= 13 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 13);
+	yy_is_jam = (yy_current_state == 12);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1758,7 +1758,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 22 "1bc.lex"
+#line 22 "2abcd.lex"
 
 
 

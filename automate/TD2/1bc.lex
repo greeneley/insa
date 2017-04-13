@@ -2,7 +2,8 @@
 #include "y.tab.h"
 %}
 
-real ([0-9]*("."[0-9])*)
+chiffres [0-9]
+real ([0-9]*("."[0-9])+)
 
 %{
 #include <stdio.h>
@@ -16,7 +17,9 @@ real ([0-9]*("."[0-9])*)
 
 %%
 [ \t]+	;
-{real}    { sscanf(yytext, "%lf", &yylval.valDble);
+{chiffres} { sscanf(yytext, "%d", &yylval.valInt);
+             return INTEGER;}
+{real}     { sscanf(yytext, "%lf", &yylval.valDble);
              return REAL;}
 
 .    {return yytext[0];}
