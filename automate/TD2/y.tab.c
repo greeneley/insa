@@ -62,14 +62,16 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "1bc.yac" /* yacc.c:339  */
+#line 1 "2abcd.yac" /* yacc.c:339  */
 
 #include <stdio.h>
+#include <math.h>
 
 int yylex();
+int boolX = 0;
+double varX = 0;
 
-
-#line 73 "y.tab.c" /* yacc.c:339  */
+#line 75 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -104,25 +106,22 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    REAL = 258,
-    INTEGER = 259
+    REAL = 258
   };
 #endif
 /* Tokens.  */
 #define REAL 258
-#define INTEGER 259
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 8 "1bc.yac" /* yacc.c:355  */
+#line 10 "2abcd.yac" /* yacc.c:355  */
 
-	double valDble;
-	int valInt;
+    double valDble;
 
-#line 126 "y.tab.c" /* yacc.c:355  */
+#line 125 "y.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -137,7 +136,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 141 "y.tab.c" /* yacc.c:358  */
+#line 140 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -377,23 +376,23 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  9
+#define YYFINAL  15
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   17
+#define YYLAST   38
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  12
+#define YYNTOKENS  14
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  5
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  11
+#define YYNRULES  16
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  20
+#define YYNSTATES  32
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   259
+#define YYMAXUTOK   258
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -406,8 +405,12 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      10,    11,     8,     6,     2,     7,     2,     9,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     5,
+      10,    11,     7,     5,     2,     6,     2,     9,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     4,
+       2,    13,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    12,     2,
+       2,     2,     2,     2,     8,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -423,19 +426,15 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4
+       2,     2,     2,     2,     2,     2,     1,     2,     3
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    20,    20,    23,    24,    25,    28,    29,    38,    41,
-      42,    43
+       0,    23,    23,    24,    27,    29,    31,    35,    37,    39,
+      49,    53,    55,    57,    59,    61,    65
 };
 #endif
 
@@ -444,8 +443,9 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "REAL", "INTEGER", "';'", "'+'", "'-'",
-  "'*'", "'/'", "'('", "')'", "$accept", "S", "E", "T", "F", YY_NULLPTR
+  "$end", "error", "$undefined", "REAL", "';'", "'+'", "'-'", "'*'",
+  "'^'", "'/'", "'('", "')'", "'X'", "'='", "$accept", "ligne", "polynome",
+  "operation", "terme", "init", YY_NULLPTR
 };
 #endif
 
@@ -454,15 +454,15 @@ static const char *const yytname[] =
    (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,    59,    43,    45,    42,    47,
-      40,    41
+       0,   256,   257,   258,    59,    43,    45,    42,    94,    47,
+      40,    41,    88,    61
 };
 # endif
 
-#define YYPACT_NINF -7
+#define YYPACT_NINF -14
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-7)))
+  (!!((Yystate) == (-14)))
 
 #define YYTABLE_NINF -1
 
@@ -473,8 +473,10 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -7,    -7,    -3,     6,     5,    -6,    -7,    -2,    -7,
-      -7,    -3,    -3,    -3,    -3,    -7,    -6,    -6,    -7,    -7
+       0,   -11,    17,    17,    -6,     9,    20,    23,   -14,    17,
+     -14,   -14,   -14,    10,    17,   -14,   -14,    17,    17,    17,
+      17,    17,    29,   -14,    32,    23,    23,   -14,   -14,   -14,
+     -14,   -14
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -482,20 +484,22 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    11,    10,     0,     0,     0,     5,     8,     0,     1,
-       2,     0,     0,     0,     0,     9,     3,     4,     6,     7
+       0,    15,     0,     0,    13,     0,     0,     6,    10,     0,
+      14,    13,    12,     0,     0,     1,     3,     0,     0,     0,
+       0,     0,     0,    11,     0,     4,     5,     7,     8,     9,
+       2,    16
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7,    12,     2,     3
+     -14,   -14,    -1,   -13,    -2,   -14
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     6,     7
+      -1,     5,     6,     7,     8,     9
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -503,36 +507,42 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       1,     2,    13,    14,    11,    12,     9,     3,     0,    15,
-      10,    11,    12,    16,    17,     8,    18,    19
+      12,    10,    13,     1,    25,    26,     2,    14,    22,    15,
+       3,     0,     4,    24,     0,    17,    18,    27,    28,    29,
+       1,    23,     0,     2,    16,    17,    18,     3,     0,    11,
+      19,    20,    21,    30,    17,    18,    31,    17,    18
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     4,     8,     9,     6,     7,     0,    10,    -1,    11,
-       5,     6,     7,    11,    12,     3,    13,    14
+       2,    12,     3,     3,    17,    18,     6,    13,     9,     0,
+      10,    -1,    12,    14,    -1,     5,     6,    19,    20,    21,
+       3,    11,    -1,     6,     4,     5,     6,    10,    -1,    12,
+       7,     8,     9,     4,     5,     6,     4,     5,     6
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     4,    10,    13,    14,    15,    16,    14,     0,
-       5,     6,     7,     8,     9,    11,    15,    15,    16,    16
+       0,     3,     6,    10,    12,    15,    16,    17,    18,    19,
+      12,    12,    18,    16,    13,     0,     4,     5,     6,     7,
+       8,     9,    16,    11,    16,    17,    17,    18,    18,    18,
+       4,     4
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    12,    13,    14,    14,    14,    15,    15,    15,    16,
-      16,    16
+       0,    14,    15,    15,    16,    16,    16,    17,    17,    17,
+      17,    18,    18,    18,    18,    18,    19
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     2,     3,     3,     1,     3,     3,     1,     3,
-       1,     1
+       0,     2,     3,     2,     3,     3,     1,     3,     3,     3,
+       1,     3,     2,     1,     2,     1,     4
 };
 
 
@@ -1209,75 +1219,118 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 20 "1bc.yac" /* yacc.c:1646  */
-    {printf ("Expression reconnue %lf\n", yyval.valDble);}
-#line 1215 "y.tab.c" /* yacc.c:1646  */
+#line 23 "2abcd.yac" /* yacc.c:1646  */
+    {printf("\n=====\nPolynome reconnu de valeur        : P(%.2lf) = %.2lf\n", varX,(yyvsp[-1].valDble));}
+#line 1225 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 23 "1bc.yac" /* yacc.c:1646  */
-    {(yyval.valDble) = (yyvsp[-2].valDble) + (yyvsp[0].valDble); printf("E -> E+T\n");}
-#line 1221 "y.tab.c" /* yacc.c:1646  */
+#line 24 "2abcd.yac" /* yacc.c:1646  */
+    {printf("\n=====\nPolynome reconnu de valeur        : P() = %.2lf\n",(yyvsp[-1].valDble));}
+#line 1231 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 24 "1bc.yac" /* yacc.c:1646  */
-    {(yyval.valDble) = (yyvsp[-2].valDble) - (yyvsp[0].valDble); printf("E -> E-T\n");}
-#line 1227 "y.tab.c" /* yacc.c:1646  */
+#line 27 "2abcd.yac" /* yacc.c:1646  */
+    {printf("polynome  -> polynome + operation : %.2lf + %.2lf\n", (yyvsp[-2].valDble), (yyvsp[0].valDble));
+                                    (yyval.valDble) = (yyvsp[-2].valDble) + (yyvsp[0].valDble);}
+#line 1238 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 25 "1bc.yac" /* yacc.c:1646  */
-    {printf("E -> T\n"); }
-#line 1233 "y.tab.c" /* yacc.c:1646  */
+#line 29 "2abcd.yac" /* yacc.c:1646  */
+    {printf("polynome  -> polynome - operation : %.2lf - %.2lf\n", (yyvsp[-2].valDble), (yyvsp[0].valDble));
+                                    (yyval.valDble) = (yyvsp[-2].valDble) - (yyvsp[0].valDble);}
+#line 1245 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 28 "1bc.yac" /* yacc.c:1646  */
-    {(yyval.valDble) = (yyvsp[-2].valDble) * (yyvsp[0].valDble); printf("T -> T * F\n");}
-#line 1239 "y.tab.c" /* yacc.c:1646  */
+#line 31 "2abcd.yac" /* yacc.c:1646  */
+    {printf("polynome  -> operation            : %.2lf\n", (yyvsp[0].valDble));
+                                    (yyval.valDble) = (yyvsp[0].valDble);}
+#line 1252 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 29 "1bc.yac" /* yacc.c:1646  */
-    {if((yyvsp[0].valDble) == 0)
-  			  {
-  			    printf("Erreur division par zero\n");
-  			    return;
-  			  }
-  			  else
-  			  {
-  			  	(yyval.valDble) = (yyvsp[-2].valDble) / (yyvsp[0].valDble); printf("T -> T / F\n");
-  			  }}
-#line 1253 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 8:
-#line 38 "1bc.yac" /* yacc.c:1646  */
-    {printf("T -> F\n"); }
+#line 35 "2abcd.yac" /* yacc.c:1646  */
+    {printf("operation -> operation * terme    : %.2lf*%.2lf\n", (yyvsp[-2].valDble), (yyvsp[0].valDble));
+                                  (yyval.valDble) = (yyvsp[-2].valDble) * (yyvsp[0].valDble);}
 #line 1259 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 8:
+#line 37 "2abcd.yac" /* yacc.c:1646  */
+    {printf("operation -> operation ^ terme    : %.2lf*%.2lf\n", (yyvsp[-2].valDble), (yyvsp[0].valDble));
+                                  (yyval.valDble) = pow((yyvsp[-2].valDble),(yyvsp[0].valDble));}
+#line 1266 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 9:
-#line 41 "1bc.yac" /* yacc.c:1646  */
-    {(yyval.valDble) = (yyvsp[-1].valDble); printf("F ->  ( E )\n"); }
-#line 1265 "y.tab.c" /* yacc.c:1646  */
+#line 39 "2abcd.yac" /* yacc.c:1646  */
+    {if((yyvsp[0].valDble) == 0)
+                                 {
+                                    printf("Erreur division par zero    : %.2lf/%.2lf", (yyvsp[-2].valDble), (yyvsp[0].valDble));
+                                    return;
+                                 }
+                                 else
+                                 {
+                                    printf("operation -> operation / terme    : %.2lf/%.2lf\n", (yyvsp[-2].valDble), (yyvsp[0].valDble));
+                                    (yyval.valDble) = (yyvsp[-2].valDble) / (yyvsp[0].valDble);
+                                 }}
+#line 1281 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 42 "1bc.yac" /* yacc.c:1646  */
-    {(yyval.valDble) = (yyvsp[0].valInt); printf("F -> INTEGER (%d)\n", (yyvsp[0].valInt)); }
-#line 1271 "y.tab.c" /* yacc.c:1646  */
+#line 49 "2abcd.yac" /* yacc.c:1646  */
+    {printf("operation -> terme                : %.2lf\n", (yyvsp[0].valDble));
+                                  (yyval.valDble) = (yyvsp[0].valDble);}
+#line 1288 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 43 "1bc.yac" /* yacc.c:1646  */
-    {(yyval.valDble) = (yyvsp[0].valDble); printf("F -> REAL (%lf)\n", (yyvsp[0].valDble)); }
-#line 1277 "y.tab.c" /* yacc.c:1646  */
+#line 53 "2abcd.yac" /* yacc.c:1646  */
+    {printf("terme    -> ( polynome )          : %.2lf\n", (yyvsp[-1].valDble));
+                                (yyval.valDble) = (yyvsp[-1].valDble);}
+#line 1295 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 55 "2abcd.yac" /* yacc.c:1646  */
+    {printf("terme    -> - terme               : -%.2lf\n", (yyvsp[0].valDble));
+                                (yyval.valDble) = -(yyvsp[0].valDble);}
+#line 1302 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 57 "2abcd.yac" /* yacc.c:1646  */
+    {printf("terme    -> X                     : %.2lf\n", varX);
+                                (yyval.valDble) = varX;}
+#line 1309 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 59 "2abcd.yac" /* yacc.c:1646  */
+    {printf("terme    -> REAL X                : %.2lf*%.2lf\n", (yyvsp[-1].valDble), varX);
+                                (yyval.valDble) = (yyvsp[-1].valDble) * varX;}
+#line 1316 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 61 "2abcd.yac" /* yacc.c:1646  */
+    {printf("terme    -> REAL                  : %.2lf\n", (yyvsp[0].valDble));
+                                (yyval.valDble) = (yyvsp[0].valDble);}
+#line 1323 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 65 "2abcd.yac" /* yacc.c:1646  */
+    {printf("\n=====\nVariable reconnue                 : X = %.2lf\n=====\n", (yyvsp[-1].valDble));
+                                boolX = 1; varX = (yyvsp[-1].valDble);}
+#line 1330 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1281 "y.tab.c" /* yacc.c:1646  */
+#line 1334 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1505,13 +1558,20 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 46 "1bc.yac" /* yacc.c:1906  */
+#line 68 "2abcd.yac" /* yacc.c:1906  */
+
 
 int main(){
-  	yyparse();
+    //printf("(facultatif) Initialiser X=nombre;\nSinon : entrer votre expression arithmetique\n");
+    yyparse();
+    //if(boolX)
+    //{
+    //  puts("Entrer maintenant votre polynome");
+    //  yyparse();
+    //}
 }
 
 yyerror (char *s)
 {
-	
+    
 }

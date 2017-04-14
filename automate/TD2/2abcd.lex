@@ -2,7 +2,7 @@
 #include "y.tab.h"
 %}
 
-real ([0-9]*("."[0-9])*)
+real ([0-9]+"."*([0-9])*)
 
 %{
 #include <stdio.h>

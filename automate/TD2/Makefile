@@ -6,4 +6,4 @@
 2:
 	yacc -d 2abcd.yac
 	lex 2abcd.lex
-	gcc -o 2abcd lex.yy.c y.tab.c -lfl
+	gcc -o 2abcd lex.yy.c y.tab.c -lfl -lm

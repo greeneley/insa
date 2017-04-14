@@ -1,22 +1,83 @@
 %{
 #include <stdio.h>
+#include <math.h>
 
 int yylex();
-
+int boolX = 0;
+double varX = 0;
 %}
 
-double valDble;
+%union{
+    double valDble;
+}
 
 %token <valDble> REAL
+%type  <valDble> ligne
+%type  <valDble> polynome
+%type  <valDble> terme
+%type  <valDble> init
+%type  <valDble> operation
 
 %%
 
+ligne    : init polynome ';'  {printf("\n=====\nPolynome reconnu de valeur        : P(%.2lf) = %.2lf\n", varX,$2);}
+         | polynome ';'       {printf("\n=====\nPolynome reconnu de valeur        : P() = %.2lf\n",$1);}
+         ;
+
+polynome : polynome '+' operation {printf("polynome  -> polynome + operation : %.2lf + %.2lf\n", $1, $3);
+                                    $$ = $1 + $3;}
+         | polynome '-' operation {printf("polynome  -> polynome - operation : %.2lf - %.2lf\n", $1, $3);
+                                    $$ = $1 - $3;}
+         | operation              {printf("polynome  -> operation            : %.2lf\n", $1);
+                                    $$ = $1;}
+         ;
+
+operation : operation '*' terme {printf("operation -> operation * terme    : %.2lf*%.2lf\n", $1, $3);
+                                  $$ = $1 * $3;}
+         | operation '^' terme  {printf("operation -> operation ^ terme    : %.2lf*%.2lf\n", $1, $3);
+                                  $$ = pow($1,$3);}
+         | operation '/' terme  {if($3 == 0)
+                                 {
+                                    printf("Erreur division par zero    : %.2lf/%.2lf", $1, $3);
+                                    return;
+                                 }
+                                 else
+                                 {
+                                    printf("operation -> operation / terme    : %.2lf/%.2lf\n", $1, $3);
+                                    $$ = $1 / $3;
+                                 }}
+         | terme                {printf("operation -> terme                : %.2lf\n", $1);
+                                  $$ = $1;}
+         ;
+
+terme    : '(' polynome ')'   {printf("terme    -> ( polynome )          : %.2lf\n", $2);
+                                $$ = $2;}
+         | '-' terme          {printf("terme    -> - terme               : -%.2lf\n", $2);
+                                $$ = -$2;}
+         | 'X'                {printf("terme    -> X                     : %.2lf\n", varX);
+                                $$ = varX;}
+         | REAL 'X'           {printf("terme    -> REAL X                : %.2lf*%.2lf\n", $1, varX);
+                                $$ = $1 * varX;}
+         | REAL               {printf("terme    -> REAL                  : %.2lf\n", $1);
+                                $$ = $1;}
+         ;
+
+init     : 'X' '=' polynome ';'  {printf("\n=====\nVariable reconnue                 : X = %.2lf\n=====\n", $3);
+                                boolX = 1; varX = $3;}
+         ;
 %%
+
 int main(){
-  	yyparse();
+    //printf("(facultatif) Initialiser X=nombre;\nSinon : entrer votre expression arithmetique\n");
+    yyparse();
+    //if(boolX)
+    //{
+    //  puts("Entrer maintenant votre polynome");
+    //  yyparse();
+    //}
 }
 
 yyerror (char *s)
 {
-	
+    
 }
