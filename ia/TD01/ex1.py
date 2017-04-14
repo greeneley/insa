@@ -30,29 +30,37 @@ with open("iris.data", "r") as fd:
 			arrayT[-1].append(1.0)
 		else:
 			arrayT[-1].append(-1.0)
-		for val in split[:-1]:
-			arrayX[-1].append(val)
+		for val in split[:-2]:
+			arrayX[-1].append(float(val))
 
 arrayX = numpy.array(arrayX)
 arrayT = numpy.array(arrayT)
 
-print(arrayX)
-print(arrayT)
+#print(arrayX)
+#print(arrayT)
 #Algorithme 1
 
 omega = [1]
-w     = [[random.random()]]*4
+w     = numpy.array([[random.random()]]*4)
 dW    = 0
 N     = 75
+eta   = 0.1
+tau   = 0
 
 while(omega!=[]):
 	omega = []
 	for i in range(1, N+1):
-		somme = numpy.sum((t[i][0]*numpy.dot(numpy.transpose(w), arrayX[i])))
+		A = arrayT[i][0]*numpy.transpose(w)
+		somme = 0
+		for k in range(4):
+			somme += A[0][k] * arrayX[i][k]
 		if(somme <= 0):
 			omega.append(arrayX[i])
-			dW += (-t[i][0]*x[i])
+			dW += (-arrayT[i][0]*arrayX[i])
 		#EndIf
 	#EndFor
-	#w
+	w = w - eta*dW
+	tau+=1
 #EndWhile
+
+print(w)
