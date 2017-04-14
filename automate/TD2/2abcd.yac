@@ -3,7 +3,6 @@
 #include <math.h>
 
 int yylex();
-int boolX = 0;
 double varX = 0;
 %}
 
@@ -50,34 +49,29 @@ operation : operation '*' terme {printf("operation -> operation * terme    : %.2
                                   $$ = $1;}
          ;
 
-terme    : '(' polynome ')'   {printf("terme    -> ( polynome )          : %.2lf\n", $2);
+terme    : '(' polynome ')'   {printf("terme     -> ( polynome )         : %.2lf\n", $2);
                                 $$ = $2;}
-         | '-' terme          {printf("terme    -> - terme               : -%.2lf\n", $2);
+         | '-' terme          {printf("terme     -> - terme              : -%.2lf\n", $2);
                                 $$ = -$2;}
-         | 'X'                {printf("terme    -> X                     : %.2lf\n", varX);
+         | 'X'                {printf("terme     -> X                    : %.2lf\n", varX);
                                 $$ = varX;}
-         | REAL 'X'           {printf("terme    -> REAL X                : %.2lf*%.2lf\n", $1, varX);
+         | REAL 'X'           {printf("terme     -> REAL X               : %.2lf*%.2lf\n", $1, varX);
                                 $$ = $1 * varX;}
-         | REAL               {printf("terme    -> REAL                  : %.2lf\n", $1);
+         | REAL               {printf("terme     -> REAL                 : %.2lf\n", $1);
                                 $$ = $1;}
          ;
 
 init     : 'X' '=' polynome ';'  {printf("\n=====\nVariable reconnue                 : X = %.2lf\n=====\n", $3);
-                                boolX = 1; varX = $3;}
+                                   varX = $3;}
          ;
 %%
 
 int main(){
-    //printf("(facultatif) Initialiser X=nombre;\nSinon : entrer votre expression arithmetique\n");
+    printf("(facultatif) Initialiser X=nombre;\nSinon : entrer votre expression arithmetique\n");
     yyparse();
-    //if(boolX)
-    //{
-    //  puts("Entrer maintenant votre polynome");
-    //  yyparse();
-    //}
 }
 
 yyerror (char *s)
 {
-    
+    printf("Erreur de reconnaissance\n");
 }

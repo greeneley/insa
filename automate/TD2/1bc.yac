@@ -50,5 +50,5 @@ int main(){
 
 yyerror (char *s)
 {
-	
+	printf("\nErreur de reconnaissance\n");
 }
