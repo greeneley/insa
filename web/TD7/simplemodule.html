@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="SimpleModule">
+	<head>
+		<title> Module SImple </title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+		<script src="controllers/simplemodule.js"></script>
+	</head>
+
+	<body ng-controller='MyController'>
+		<br>
+		<h1>Demo {{title}} </h1>
+		<div>
+			<p>
+				<label for="valA">Valeur de A:</label>
+				<input type="number" id="valA" ng-model="valA">
+			</p>
+			<p>
+				<label for="valB">Valeur de B:</label>
+				<input type="number" id="valB" ng-model="valB">
+			</p>
+			<p>
+				Result: {{result}}
+			</p>
+			<p>
+				<button ng-click="add(valA, valB)">Additionner</button>
+				<button ng-click="multiple(valA,valB)">Multiplier</button>
+			</p>
+		</div>
+	</body>
+</html>
