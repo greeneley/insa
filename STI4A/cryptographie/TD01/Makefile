@@ -6,3 +6,6 @@ cesar:
 
 vigenere:
 	echo "A FAIRE"
+
+test:
+	gcc test.c -o test -Wall
