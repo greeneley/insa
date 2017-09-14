@@ -44,6 +44,54 @@ void free_TableauInt(TableauInt* toDestroy)
 }
 
 /*
+ *  Chiffrement utilisant le ou exclusif
+ */
+void xor_crypt(char* key, char* texte, char* chiffre)
+{
+	if(key == NULL || texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
+
+	FILE *fi, *fo;
+	char *cp;
+	int c;
+
+	if((cp = key))
+	{
+		if((fi = fopen(texte, "rb")) != NULL)
+		{
+			if((fo = fopen(chiffre, "wb")) != NULL)
+			{
+				printf("Cryptage XOR...\n");
+				while((c=getc(fi)) != EOF)
+				{
+					if(*cp == '\0')
+					{
+						cp = key;
+					}
+					c  ^= *(cp++);
+					putc(c, fo);
+				}
+				fclose(fo);
+			}
+			fclose(fi);
+		}
+	}
+	printf("Fin du programme.\n");
+}
+
+/*
+ *  Dechiffrement utilisant le ou exclusif
+ */
+void xor_decrypt(char* key, char* chiffre, char* clair)
+{
+	xor_crypt(key, chiffre, clair);
+}
+
+
+/*
  *  Chiffrement utilisant cesar
  */
 void cesar_crypt(int decalage, char* texte, char* chiffre)
@@ -359,8 +407,10 @@ void vigenere_decrypt(char* key, char* chiffre, char* clair)
 
 int main(int argc, char const *argv[])
 {
-	cesar_crypt(57, "plaintext", "encrypted");
-	cesar_decrypt(57, "encrypted", "uncrypted");
+	xor_crypt("djzdu", "plaintext", "encrypted");
+	xor_decrypt("djzdu", "encrypted", "uncrypted");
+	//cesar_crypt(-57, "plaintext", "encrypted");
+	//cesar_decrypt(-57, "encrypted", "uncrypted");
 	//vigenere_crypt("BaCheLIEr", "plaintext", "encrypted");
 	//vigenere_decrypt("BaCheLIEr", "encrypted", "uncrypted");
 
