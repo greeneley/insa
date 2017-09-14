@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 	if(argc != 4 && argc != 5)
 	{
 		printf("Erreur de syntaxe\nUsage : cesar_crypt key input_file output_file [decrypt]\n");
-		printf("key         : integer\ninput_file  : filename\noutput_file : filename\n");
+		printf("key         : integer\ninput_file  : file path\noutput_file : file path\n");
 		printf("decrypt     : str [optional]\n");
 		return 1;
 	}

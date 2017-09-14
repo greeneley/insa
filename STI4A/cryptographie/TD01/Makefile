@@ -4,8 +4,5 @@ xor:
 cesar:
 	gcc cesar_crypt.c -o cesar_crypt -Wall
 
-vigenere:
-	echo "A FAIRE"
-
 test:
 	gcc test.c -o test -Wall
