@@ -44,6 +44,119 @@ void free_TableauInt(TableauInt* toDestroy)
 }
 
 /*
+ *  Chiffrement utilisant cesar
+ */
+void cesar_crypt(int decalage, char* texte, char* chiffre)
+{
+	if(texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
+
+	/* Declaration variables */
+	FILE *fi, *fo;
+	int c, cle;
+
+	/* Initialisation variables */
+	/* On s'assure que les nombres negatifs deviennent positifs */
+	cle = ((decalage%26)+26)%26;
+
+	if((fi = fopen(texte, "rb")) != NULL)
+	{
+		if((fo = fopen(chiffre, "wb")) != NULL)
+		{
+			printf("Encryptage Cesar...\n");
+			while((c=getc(fi)) != EOF)
+			{
+				/* Cryptage du caractere */
+				if('a' <= c && c <= 'z')
+				{
+					c = ((c-'a'+cle)%26)+'a';
+				}
+				else if('A' <= c && c <= 'Z')
+				{
+					c = ((c-'A'+cle)%26)+'A';
+				}
+				else
+				{
+					/* Sinon caractere special : on encrypte naivement */
+					c += cle;
+				}
+				putc(c, fo);
+			}
+			fclose(fo);
+		}
+		else
+		{
+			printf("Erreur d'ecriture du fichier output.\n");
+		}
+		fclose(fi);
+	}
+	else
+	{
+		printf("Erreur de lecture du fichier input.\n");
+	}
+	printf("Fin du programme\n");
+}
+
+/*
+ *  Dechiffrement utilisant cesar
+ */
+void cesar_decrypt(int decalage, char* chiffre, char* clair)
+{
+	if(chiffre == NULL || clair == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
+
+	/* Declaration variables */
+	FILE *fi, *fo;
+	int c, cle;
+
+	cle = ((decalage%26)+26)%26;
+
+	if((fi = fopen(chiffre, "rb")) != NULL)
+	{
+		if((fo = fopen(clair, "wb")) != NULL)
+		{
+			printf("Decryptage Cesar...\n");
+			while((c=getc(fi)) != EOF)
+			{
+				/* Decryptage du caractere */
+				if('a' <= c && c <= 'z')
+				{
+					c = ((c-'a'+26-cle)%26)+'a';
+				}
+				else if('A' <= c && c <= 'Z')
+				{
+					c = ((c-'A'+26-cle)%26)+'A';
+				}
+				else
+				{
+					/* Sinon caractere special : on decrypte naivement */
+					c -= cle;
+				}
+				putc(c, fo);
+			}
+			fclose(fo);
+		}
+		else
+		{
+			printf("Erreur d'ecriture du fichier output.\n");
+		}
+		fclose(fi);
+	}
+	else
+	{
+		printf("Erreur de lecture du fichier input.\n");
+	}
+	printf("Fin du programme\n");
+}
+
+
+/*
  *  Chiffrement utilisant vigenere
  */
 void vigenere_crypt(char* key, char* texte, char* chiffre)
@@ -91,7 +204,7 @@ void vigenere_crypt(char* key, char* texte, char* chiffre)
 		{
 			if((fo = fopen(chiffre, "wb")) != NULL)
 			{
-				printf("Encryptage...\n");
+				printf("Encryptage Vigenere...\n");
 				while((c=getc(fi)) != EOF)
 				{
 					/* Si on est en fin de cle, on recommence au debut */
@@ -193,7 +306,7 @@ void vigenere_decrypt(char* key, char* chiffre, char* clair)
 		{
 			if((fo = fopen(clair, "wb")) != NULL)
 			{
-				printf("Decryptage...\n");
+				printf("Decryptage Vigenere...\n");
 				while((c=getc(fi)) != EOF)
 				{
 					/* Si on est en fin de cle, on recommence au debut */
@@ -246,9 +359,10 @@ void vigenere_decrypt(char* key, char* chiffre, char* clair)
 
 int main(int argc, char const *argv[])
 {
-	
-	vigenere_crypt("BaCheLIEr", "plaintext", "encrypted");
-	vigenere_decrypt("BaCheLIEr", "encrypted", "uncrypted");
+	cesar_crypt(57, "plaintext", "encrypted");
+	cesar_decrypt(57, "encrypted", "uncrypted");
+	//vigenere_crypt("BaCheLIEr", "plaintext", "encrypted");
+	//vigenere_decrypt("BaCheLIEr", "encrypted", "uncrypted");
 
 	return 0;
 }

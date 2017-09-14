@@ -28,12 +28,12 @@ void xor_decrypt(char* key, char* chiffre, char* clair);
 /*
  *  Chiffrement utilisant cesar
  */
-void cesar_crypt(int decallage, char* texte, char* chiffre);
+void cesar_crypt(int decalage, char* texte, char* chiffre);
 
 /*
  *  Dechiffrement utilisant cesar
  */
-void cesar_decrypt(int decallage, char* chiffre, char* clair);
+void cesar_decrypt(int decalage, char* chiffre, char* clair);
 
 /*
  *  Chiffrement utilisant vigenere
