@@ -1,0 +1,66 @@
+/* Lulu ou loup ou chevre ou chou ou baton ou feu  */
+S1=[g,d] {
+	  etat=2;
+	  init=0;
+	  0=g;
+	  1=d;
+	  0->1 [gd];
+	  1->0 [dg];
+};;
+
+systeme = <S1 lulu, S1 loup, S1 chevre, S1 chou, S1 feu, S1 baton> {
+	<gd,_,_,_,_,_> -> lulu_seule;
+	<gd,gd,_,_,_,_> -> loup;
+	<gd,_,gd,_,_,_> -> chevre;
+	<gd,_,_,gd,_,_> -> chou;
+	<gd,_,_,_,gd,_> -> feu;
+	<gd,_,_,_,_,gd> -> baton;
+	<gd,gd,gd,_,_,_> -> loup_chevre;
+	<gd,gd,_,gd,_,_> -> loup_chou;
+	<gd,gd,_,_,gd,_> -> loup_feu;
+	<gd,gd,_,_,_,gd> -> loup_baton;
+	<gd,_,gd,gd,_,_> -> chevre_chou;
+	<gd,_,gd,_,gd,_> -> chevre_feu;
+	<gd,_,gd,_,_,gd> -> chevre_baton;
+	<gd,_,_,gd,gd,_> -> chou_feu;
+	<gd,_,_,gd,_,gd> -> chou_baton;
+	<gd,_,_,_,gd,gd> -> feu_baton;
+
+	<dg,_,_,_,_,_> -> lulu_seule;
+	<dg,dg,_,_,_,_> -> loup;
+	<dg,_,dg,_,_,_> -> chevre;
+	<dg,_,_,dg,_,_> -> chou;
+	<dg,_,_,_,dg,_> -> feu;
+	<dg,_,_,_,_,dg> -> baton;
+	<dg,dg,dg,_,_,_> -> loup_chevre;
+	<dg,dg,_,dg,_,_> -> loup_chou;
+	<dg,dg,_,_,dg,_> -> loup_feu;
+	<dg,dg,_,_,_,dg> -> loup_baton;
+	<dg,_,dg,dg,_,_> -> chevre_chou;
+	<dg,_,dg,_,dg,_> -> chevre_feu;
+	<dg,_,dg,_,_,dg> -> chevre_baton;
+	<dg,_,_,dg,dg,_> -> chou_feu;
+	<dg,_,_,dg,_,dg> -> chou_baton;
+	<dg,_,_,_,dg,dg> -> feu_baton;
+
+};;
+
+
+todot S1.dot S1;;
+todot ex2.dot systeme;;
+
+
+reduit = systeme | !(chevre.g && (chou.g || loup.g) && lulu.d
+|| baton.g && (loup.g || feu.g) && lulu.d
+|| chevre.d && (chou.d || loup.d) && lulu.g
+|| baton.d && (loup.d || feu.d) && lulu.g
+);;
+
+todot reduit.dot reduit;;
+
+chemin = reduit -> lulu.d && loup.d && chevre.d && chou.d && baton.d && feu.d;;
+todot solution.dot chemin;;
+
+
+
+
