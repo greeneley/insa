@@ -1,0 +1,29 @@
+/* lombric, millepattes, sauterelle */
+
+S1=[g,d] {
+	  etat=2;
+	  init=0;
+	  0=g;
+	  1=d;
+	  0->1 [gd];
+	  1->0 [dg];
+};;
+
+systeme = <S1 f, S1 l, S1 m, S1 s> {
+	<gd,gd,_,_> -> lombric;
+	<gd,_,gd,_> -> millepattes;
+	<gd,_,_,gd> -> sauterelle;
+	<gd,_,gd,gd> -> millepattes_sauterelle;
+
+	<dg,dg,_,_> -> lombric;
+	<dg,_,dg,_> -> millepattes;
+	<dg,_,_,dg> -> sauterelle;
+	<dg,_,dg,dg> -> millepattes_sauterelle;
+};;
+
+
+todot S1.dot S1;;
+todot feuille.dot systeme;;
+
+chemin = systeme -> f.d && l.d && m.d && s.d;;
+todot solution.dot chemin;;
