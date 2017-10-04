@@ -10,6 +10,11 @@
 #include <pwd.h>
 #include <signal.h>
 
+/* Include pour le serveur TCP */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+
 /* Change this to whatever your daemon is called */
 #define DAEMON_NAME "daemon_impression"
 
@@ -122,6 +127,65 @@ static void daemonize( const char *lockfile )
     kill( parent, SIGUSR1 );
 }
 
+static int lireOctet(int socketClient)
+{
+    int n;
+    char buffer[256];
+    char buffDest[256];
+    char buffLect[1024];
+
+    bzero(buffer, sizeof(buffer));
+    FILE *fp;
+
+
+    n = read(socketClient,buffer, 256);
+    if(n < 0)
+    {
+        syslog( LOG_ERR, "Erreur LECTURE socket ou ECRITURE buffer, code %d (%s)",
+                errno, strerror(errno) );
+        return -1;
+    }
+
+    syslog( LOG_NOTICE, "Fichier a lire : %s", buffer);
+
+    /* Alors le n-2, je pense que c'est du a la touche "entree"
+     * qui doit etre interpretee comme une combinaison de deux lettres
+     */
+    strncpy(buffDest, buffer, n-2);
+
+    fp = fopen(buffDest, "rb");
+    if(fp == NULL)
+    {
+        syslog( LOG_ERR, "Erreur LECTURE fichier, code %d (%s)",
+                errno, strerror(errno) );
+
+        if((write(socketClient, "Erreur lecture du fichier\n", 26)) == -1)
+        {
+            syslog( LOG_ERR, "Erreur ECRITURE socket cliente, code %d (%s)",
+                errno, strerror(errno) );
+            return -1;
+        }
+        return 1;
+    }
+
+    n = fread(buffLect, sizeof(char), 1024, fp);
+    syslog( LOG_NOTICE, "Octects lus : %d", n);
+
+    if(write(socketClient,buffLect,n) < 0)
+    {
+        syslog( LOG_ERR, "Erreur ECRITURE socket cliente, code %d (%s)",
+                errno, strerror(errno) );
+        return -1;
+    }
+
+    if(fp != NULL)
+    {
+        fclose(fp);
+    }
+
+    return 1;
+}
+
 int main( int argc, char *argv[] ) {
     /* Initialize the logging interface */
     openlog( DAEMON_NAME, LOG_PID, LOG_LOCAL5 );
@@ -133,9 +197,66 @@ int main( int argc, char *argv[] ) {
     daemonize( "/var/lock/subsys/" DAEMON_NAME );
 
     /* Now we are a daemon -- do the work for which we were paid */
-    while(1){
-	syslog( LOG_NOTICE, "alive" );
-	sleep(10);
+
+    /* ======== VARIABLES ======= */
+    int socketServ, socketCli;
+    socklen_t tailleCli;
+    int pid;
+    int port = 7000;
+    struct sockaddr_in servAddr, cliAddr;
+
+    /* ===== INITIALISATION ===== */
+    socketServ = socket(AF_INET, SOCK_STREAM, 0);
+    if(socketServ == -1)
+    {
+        syslog( LOG_ERR, "Impossible d'ouvrir la socket, code %d (%s)",
+                errno, strerror(errno) );
+        write(1, "Erreur d'ouverture de la socket serveur\n", 41);
+        exit(EXIT_FAILURE);
+    }
+
+    servAddr.sin_family = AF_INET;
+    servAddr.sin_addr.s_addr = INADDR_ANY;
+    servAddr.sin_port = htons(port);
+
+    if(bind(socketServ, (struct sockaddr *) &servAddr, sizeof(servAddr)) == -1) 
+    {
+        syslog( LOG_ERR, "Erreur de BINDING socket, code %d (%s)",
+                errno, strerror(errno) );
+        write(1, "Erreur de binding : port deja utilisee ?\n", 45);
+        exit(EXIT_FAILURE);
+    }
+
+    listen(socketServ,5);
+
+    while(1)
+    {
+	    syslog( LOG_NOTICE, "alive and listening" );
+        tailleCli = sizeof(cliAddr);
+        socketCli = accept(socketServ, (struct sockaddr *) &cliAddr, &tailleCli);
+        if(socketCli == -1) 
+        {
+            syslog( LOG_ERR, "Erreur d'initalisation socket cliente, code %d (%s)",
+                errno, strerror(errno) );
+            continue;
+        }
+
+        pid = fork();
+        if(pid < 0)
+        {
+            syslog( LOG_ERR, "Erreur FORK, code %d (%s)",
+                errno, strerror(errno) );
+            exit(EXIT_FAILURE);
+        }
+        if(pid == 0)  
+        {
+            close(socketServ);
+            while(lireOctet(socketCli)){}
+            close(socketCli);
+            exit(0);
+            break;
+        }
+        else close(socketCli);
     }
 
     /* Finish up */
