@@ -15,21 +15,30 @@
 #include <netinet/in.h>
 #include <string.h>
 
+/* =================================================================== *
+ *                             CONSTANTES                              *
+ * =================================================================== */
 /* Change this to whatever your daemon is called */
-#define DAEMON_NAME "daemon_impression"
+#define DAEMON_NAME     "daemon_printserver"
 
 /* Change this to the user under which to run */
-#define RUN_AS_USER "daemon"
+#define RUN_AS_USER     "daemon"
 
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE 1
+#define EXIT_SUCCESS    0
+#define EXIT_FAILURE    1
+#define PID_FILE        "/var/lib/printserver/printserver.pid"
+#define PORT            7000
+#define ROOT_DIR_DAEMON "/var/lib/printserver"
 
-
-/* ===== GLOBALES ====== */
+/* =================================================================== *
+ *                        VARIABLES GLOBALES                           *
+ * =================================================================== */
 int glob_sockServ, glob_sockCli;
 
-/* ===== FONCTIONS ===== */
 
+/* =================================================================== *
+ *                            SIG_HANDLER                              *
+ * =================================================================== */
 static void child_handler(int signum)
 {
     switch(signum) {
@@ -45,6 +54,11 @@ static void child_handler(int signum)
     }
 }
 
+
+
+/* =================================================================== *
+ *                           DAEMON INIT                               *
+ * =================================================================== */
 static void daemonize( const char *lockfile )
 {
     pid_t pid, sid, parent;
@@ -137,17 +151,29 @@ static void daemonize( const char *lockfile )
     kill( parent, SIGUSR1 );
 }
 
+
+
+/* =================================================================== *
+ *                          QUESTION 2 TELNET                          *
+ * =================================================================== */
 static int lireOctet()
 {
+    /* On va faire appel a la fonction plusieurs fois
+     * C'est donc mieux de mettre les variables en static
+     */
+    static FILE *fp;
     static int n;
+
+    /* Buffer du socket */
     static char buffer[256];
+    /* Buffer du filepath */
     static char buffDest[256];
+    /* Buffer de lecture du fichier */
     static char buffLect[1024];
 
     bzero(buffer, sizeof(buffer));
-    FILE *fp;
 
-
+    /* On essaie de lire la socket */
     n = read(glob_sockCli, buffer, 256);
     if(n < 0)
     {
@@ -157,10 +183,11 @@ static int lireOctet()
     }
     else if (n == 0)
     {
-        syslog( LOG_NOTICE, "Fin du processus");
+        syslog( LOG_NOTICE, "Fin du processus TELNET");
         return -1;
     }
 
+    /* On a reussi a lire, on le log */
     syslog( LOG_NOTICE, "Fichier a lire : %s", buffer);
 
     /* Alors le n-2, je pense que c'est du a la touche "entree"
@@ -180,12 +207,13 @@ static int lireOctet()
                 errno, strerror(errno) );
             return -1;
         }
+        /* Retourner 1 revient a recommencer la boucle dans le main */
         return 1;
     }
 
+    /* Lecture des 1024 premiers octets */
     n = fread(buffLect, sizeof(char), 1024, fp);
     syslog( LOG_NOTICE, "Octects lus : %d", n);
-
     if(write(glob_sockCli, buffLect, n) < 0)
     {
         syslog( LOG_ERR, "Erreur ECRITURE socket cliente, code %d (%s)",
@@ -198,17 +226,27 @@ static int lireOctet()
         fclose(fp);
     }
 
+    /* On recommencera la boucle du telnet */
     return 1;
 }
 
-int main( int argc, char *argv[] ) {
 
+/* =================================================================== *
+ *                                 MAIN                                *
+ * =================================================================== */
+int main( int argc, char *argv[] ) 
+{
+
+    /* C'est sale mais c'est le seul moyen que j'ai trouve
+     * pour regler les problemes de droits RWX avec les childrens
+     */
     FILE *pidFd;
-    mkdir("/var/lib/printserver", 0);
+    mkdir(ROOT_DIR_DAEMON, 0);
+
     /* Fichier PID */
-    pidFd = fopen("/var/lib/printserver/printserver.pid", "w+");
+    pidFd = fopen(PID_FILE, "w+");
     fclose(pidFd);
-    chmod("/var/lib/printserver/printserver.pid", S_IRWXU|
+    chmod(PID_FILE, S_IRWXU|
                                                  S_IRGRP|S_IXGRP|S_IWGRP|
                                                  S_IROTH|S_IXOTH|S_IWOTH);
 
@@ -223,14 +261,17 @@ int main( int argc, char *argv[] ) {
 
     /* Now we are a daemon -- do the work for which we were paid */
 
-    /* ======== VARIABLES ======= */
+    /* ==============================
+                  VARIABLES
+       ============================== */
     int pid;
-    int port = 7000;
-    struct sockaddr_in servAddr, cliAddr;
 
+    struct sockaddr_in servAddr, cliAddr;
     socklen_t tailleCli;
 
-    /* ===== INITIALISATION ===== */
+    /* ==============================
+                INITIALISATION 
+       ============================== */
     glob_sockServ = socket(AF_INET, SOCK_STREAM, 0);
     if(glob_sockServ == -1)
     {
@@ -240,10 +281,10 @@ int main( int argc, char *argv[] ) {
         exit(EXIT_FAILURE);
     }
 
-    /* Socket UNIX */
+    /* ========= Socket UNIX ======== */
     servAddr.sin_family = AF_INET;
     servAddr.sin_addr.s_addr = INADDR_ANY;
-    servAddr.sin_port = htons(port);
+    servAddr.sin_port = htons(PORT);
 
     if(bind(glob_sockServ, (struct sockaddr *) &servAddr, sizeof(servAddr)) == -1) 
     {
@@ -253,16 +294,21 @@ int main( int argc, char *argv[] ) {
         exit(EXIT_FAILURE);
     }
 
-    pidFd = fopen("/var/lib/printserver/printserver.pid", "w+");
+    /* ====== Ecriture du PID ====== */
+    pidFd = fopen(PID_FILE, "w+");
     fprintf(pidFd, "%d", (int)getpid());
     fclose(pidFd);
 
-    listen(glob_sockServ,5);
+    /* ==== Handling du SIGTERM ==== */
     signal(SIGTERM, child_handler);
+
+    /* ===== Listening socket ====== */
+    listen(glob_sockServ,5);
 
     while(1)
     {
 	    syslog( LOG_NOTICE, "alive and listening" );
+
         tailleCli = sizeof(cliAddr);
         glob_sockCli = accept(glob_sockServ, (struct sockaddr *) &cliAddr, &tailleCli);
         if(glob_sockCli == -1) 
@@ -272,6 +318,7 @@ int main( int argc, char *argv[] ) {
             continue;
         }
 
+        /* Creation du fils qui prend en charge le telnet */
         pid = fork();
         if(pid < 0)
         {
@@ -281,15 +328,21 @@ int main( int argc, char *argv[] ) {
         }
         if(pid == 0)  
         {
+            /* Le fils n'a pas besoin de la socket du pere */
             close(glob_sockServ);
-            signal(SIGTERM, child_handler);
             while(lireOctet() > 0){}
             close(glob_sockCli);
             exit(0);
         }
         else 
         {
+            /* Le pere n'a pas besoin de la socket du fils */
             close(glob_sockCli);
+
+            /* Je n'ai pas demande a ce que le pere attende son fils
+               car le daemon demande automatique a INIT de tuer les zombies
+               via signal(SIGCHLD, SIG_IGN)
+            */
         }
     }
 

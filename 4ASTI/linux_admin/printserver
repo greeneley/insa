@@ -18,13 +18,14 @@ fi
 #                    override the defaults in /lib/init/init-d-script.
 ### END INIT INFO
 
-# Author: Foo Bar <foobar@baz.org>
+# Author: Thanh Luu <foobar@baz.org>
 #
 # Please remove the "Author" lines above and replace them
 # with your own name if you copy and modify this script.
 
-DESC="Description of the service"
-DAEMON=/home/user/insa/4ASTI/linux_admin/test
+DESC="Daemon TCP printer"
+DAEMON=/usr/bin/printserverd
+PIDFILE=/var/lib/printserver/printserver.pid
 
 depend() {
 	need net
@@ -32,16 +33,24 @@ depend() {
 }
 
 start() {
-	ebegin "Starting Daemon FTP printer - Thanh Luu"
-	#start-stop-daemon --start --exec /home/user/insa/4ASTI/linux_admin/test -- -f -d 
+	ebegin "Starting Daemon TCP printer "
+	start-stop-daemon --start --exec DAEMON -- -f -d 
 	eend $?
 }
 
 stop() {
-	#ebegin "Stoping Daemon FTP printer - Thanh Luu"
-	#kill -s USR1 /var/lib/q3ftpdaemon/daemon.pid
+	# Par defaut
+	#ebegin "Stoping Daemon TCP printer "
+	#kill -s USR1 `cat /var/lib/printserver/printserver.pid`
 	#eend $?
-	ebegin "Stoping Daemon FTP printer - Thanh Luu"
-	kill -9 `cat /var/lib/printserver/printserver.pid`
+
+	# Stop via SIGKILL
+	#ebegin "Stoping Daemon TCP printer "
+	#start-stop-daemon --stop --signal KILL --pidfile PIDFILE
+	#eend $?
+
+	# Stop via SIGTERM
+	ebegin "Stoping Daemon TCP printer "
+	start-stop-daemon --stop --signal TERM --pidfile PIDFILE
 	eend $?
 }
