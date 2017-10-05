@@ -1,0 +1,26 @@
+#!/sbin/runscript
+# Copyright 1999-2004 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+opts="${opts}"
+
+depend() {
+	need net
+	after mysql
+}
+
+start() {
+	ebegin "Starting Daemon FTP printer - Thanh Luu"
+	#start-stop-daemon --start --exec /home/user/insa/4ASTI/linux_admin/test -- -f -d 
+	eend $?
+}
+
+stop() {
+	#ebegin "Stoping Daemon FTP printer - Thanh Luu"
+	#kill -s USR1 /var/lib/q3ftpdaemon/daemon.pid
+	#eend $?
+	ebegin "Stoping Daemon FTP printer - Thanh Luu"
+	kill -9 `cat /var/lib/printserver/printserver.pid`
+	eend $?
+}
+

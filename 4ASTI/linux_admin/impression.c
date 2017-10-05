@@ -25,12 +25,23 @@
 #define EXIT_FAILURE 1
 
 
+/* ===== GLOBALES ====== */
+int glob_sockServ, glob_sockCli;
+
+/* ===== FONCTIONS ===== */
+
 static void child_handler(int signum)
 {
     switch(signum) {
     case SIGALRM: exit(EXIT_FAILURE); break;
     case SIGUSR1: exit(EXIT_SUCCESS); break;
     case SIGCHLD: exit(EXIT_FAILURE); break;
+    case SIGTERM:
+        close(glob_sockServ);
+        close(glob_sockCli);
+        syslog(LOG_NOTICE, "Fin du daemon : SIGTERM");
+        exit(EXIT_SUCCESS);
+        break;
     }
 }
 
@@ -79,7 +90,6 @@ static void daemonize( const char *lockfile )
     }
     /* If we got a good PID, then we can exit the parent process. */
     if (pid > 0) {
-
         /* Wait for confirmation from the child via SIGTERM or SIGCHLD, or
            for two seconds to elapse (SIGALRM).  pause() should not return. */
         alarm(2);
@@ -92,7 +102,7 @@ static void daemonize( const char *lockfile )
     parent = getppid();
 
     /* Cancel certain signals */
-    signal(SIGCHLD,SIG_DFL); /* A child process dies */
+    signal(SIGCHLD,SIG_IGN); /* A child process dies */
     signal(SIGTSTP,SIG_IGN); /* Various TTY signals */
     signal(SIGTTOU,SIG_IGN);
     signal(SIGTTIN,SIG_IGN);
@@ -100,7 +110,7 @@ static void daemonize( const char *lockfile )
     signal(SIGTERM,SIG_DFL); /* Die on SIGTERM */
 
     /* Change the file mode mask */
-    umask(177);
+    umask(0);
 
     /* Create a new SID for the child process */
     sid = setsid();
@@ -127,29 +137,34 @@ static void daemonize( const char *lockfile )
     kill( parent, SIGUSR1 );
 }
 
-static int lireOctet(int socketClient)
+static int lireOctet()
 {
-    int n;
-    char buffer[256];
-    char buffDest[256];
-    char buffLect[1024];
+    static int n;
+    static char buffer[256];
+    static char buffDest[256];
+    static char buffLect[1024];
 
     bzero(buffer, sizeof(buffer));
     FILE *fp;
 
 
-    n = read(socketClient,buffer, 256);
+    n = read(glob_sockCli, buffer, 256);
     if(n < 0)
     {
         syslog( LOG_ERR, "Erreur LECTURE socket ou ECRITURE buffer, code %d (%s)",
                 errno, strerror(errno) );
         return -1;
     }
+    else if (n == 0)
+    {
+        syslog( LOG_NOTICE, "Fin du processus");
+        return -1;
+    }
 
     syslog( LOG_NOTICE, "Fichier a lire : %s", buffer);
 
     /* Alors le n-2, je pense que c'est du a la touche "entree"
-     * qui doit etre interpretee comme une combinaison de deux lettres
+     * qui doit etre interpretee comme une combinaison de deux characters
      */
     strncpy(buffDest, buffer, n-2);
 
@@ -159,7 +174,7 @@ static int lireOctet(int socketClient)
         syslog( LOG_ERR, "Erreur LECTURE fichier, code %d (%s)",
                 errno, strerror(errno) );
 
-        if((write(socketClient, "Erreur lecture du fichier\n", 26)) == -1)
+        if((write(glob_sockCli, "Erreur lecture du fichier\n", 26)) == -1)
         {
             syslog( LOG_ERR, "Erreur ECRITURE socket cliente, code %d (%s)",
                 errno, strerror(errno) );
@@ -171,7 +186,7 @@ static int lireOctet(int socketClient)
     n = fread(buffLect, sizeof(char), 1024, fp);
     syslog( LOG_NOTICE, "Octects lus : %d", n);
 
-    if(write(socketClient,buffLect,n) < 0)
+    if(write(glob_sockCli, buffLect, n) < 0)
     {
         syslog( LOG_ERR, "Erreur ECRITURE socket cliente, code %d (%s)",
                 errno, strerror(errno) );
@@ -187,6 +202,16 @@ static int lireOctet(int socketClient)
 }
 
 int main( int argc, char *argv[] ) {
+
+    FILE *pidFd;
+    mkdir("/var/lib/printserver", 0);
+    /* Fichier PID */
+    pidFd = fopen("/var/lib/printserver/printserver.pid", "w+");
+    fclose(pidFd);
+    chmod("/var/lib/printserver/printserver.pid", S_IRWXU|
+                                                 S_IRGRP|S_IXGRP|S_IWGRP|
+                                                 S_IROTH|S_IXOTH|S_IWOTH);
+
     /* Initialize the logging interface */
     openlog( DAEMON_NAME, LOG_PID, LOG_LOCAL5 );
     syslog( LOG_INFO, "starting" );
@@ -199,15 +224,15 @@ int main( int argc, char *argv[] ) {
     /* Now we are a daemon -- do the work for which we were paid */
 
     /* ======== VARIABLES ======= */
-    int socketServ, socketCli;
-    socklen_t tailleCli;
     int pid;
     int port = 7000;
     struct sockaddr_in servAddr, cliAddr;
 
+    socklen_t tailleCli;
+
     /* ===== INITIALISATION ===== */
-    socketServ = socket(AF_INET, SOCK_STREAM, 0);
-    if(socketServ == -1)
+    glob_sockServ = socket(AF_INET, SOCK_STREAM, 0);
+    if(glob_sockServ == -1)
     {
         syslog( LOG_ERR, "Impossible d'ouvrir la socket, code %d (%s)",
                 errno, strerror(errno) );
@@ -215,11 +240,12 @@ int main( int argc, char *argv[] ) {
         exit(EXIT_FAILURE);
     }
 
+    /* Socket UNIX */
     servAddr.sin_family = AF_INET;
     servAddr.sin_addr.s_addr = INADDR_ANY;
     servAddr.sin_port = htons(port);
 
-    if(bind(socketServ, (struct sockaddr *) &servAddr, sizeof(servAddr)) == -1) 
+    if(bind(glob_sockServ, (struct sockaddr *) &servAddr, sizeof(servAddr)) == -1) 
     {
         syslog( LOG_ERR, "Erreur de BINDING socket, code %d (%s)",
                 errno, strerror(errno) );
@@ -227,14 +253,19 @@ int main( int argc, char *argv[] ) {
         exit(EXIT_FAILURE);
     }
 
-    listen(socketServ,5);
+    pidFd = fopen("/var/lib/printserver/printserver.pid", "w+");
+    fprintf(pidFd, "%d", (int)getpid());
+    fclose(pidFd);
+
+    listen(glob_sockServ,5);
+    signal(SIGTERM, child_handler);
 
     while(1)
     {
 	    syslog( LOG_NOTICE, "alive and listening" );
         tailleCli = sizeof(cliAddr);
-        socketCli = accept(socketServ, (struct sockaddr *) &cliAddr, &tailleCli);
-        if(socketCli == -1) 
+        glob_sockCli = accept(glob_sockServ, (struct sockaddr *) &cliAddr, &tailleCli);
+        if(glob_sockCli == -1) 
         {
             syslog( LOG_ERR, "Erreur d'initalisation socket cliente, code %d (%s)",
                 errno, strerror(errno) );
@@ -250,13 +281,16 @@ int main( int argc, char *argv[] ) {
         }
         if(pid == 0)  
         {
-            close(socketServ);
-            while(lireOctet(socketCli)){}
-            close(socketCli);
+            close(glob_sockServ);
+            signal(SIGTERM, child_handler);
+            while(lireOctet() > 0){}
+            close(glob_sockCli);
             exit(0);
-            break;
         }
-        else close(socketCli);
+        else 
+        {
+            close(glob_sockCli);
+        }
     }
 
     /* Finish up */
