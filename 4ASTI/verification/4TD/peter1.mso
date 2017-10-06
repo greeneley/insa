@@ -1,0 +1,46 @@
+proc=[i,w,sc,fin] {
+      etat = 4;
+      init = 0;
+      0=i;
+      1=w;
+      2=sc;
+      3=fin;
+      0->1 [turn];
+      1->2 [wait];
+      2->0 [repeat];
+      0->3 [fin];
+};;
+
+turn=[] {
+      etat = 2;
+      init = 0,1;
+      0->0 [r1,e1];
+      0->1 [r2];
+      1->1 [r2,e2];
+      1->0 [r1];
+};;
+
+synchro = <proc p1, proc p2, turn t> {
+       <turn,_,r1> -> p1;
+       <wait,_,e2> ->p1;
+       <repeat,_,_> -> p1;
+       <fin,_,_> -> p1;
+       <_,turn,r2> -> p2;
+       <_,wait,e1> ->p2;
+       <_,repeat,_> -> p2;
+       <_,fin,_> -> p2;
+  };;
+
+synchro += INIT <- init;;
+/*
+synchro += propsc <- AG(!(p1.sc && p2.sc));;
+reduit = synchro | INIT && !propsc;;
+*/
+
+/*
+synchro += propequite <- AG(p1.w -> AF(p1.sc));;
+reduit = synchro | INIT && !propequite;;
+
+*/
+synchro += bug <- p1.w && AX(false);;
+chemin = synchro -> bug;;
