@@ -43,6 +43,7 @@ void free_TableauInt(TableauInt* toDestroy)
 	free(toDestroy);
 }
 
+
 /*
  *  Chiffrement utilisant le ou exclusif
  */
@@ -79,7 +80,6 @@ void xor_crypt(char* key, char* texte, char* chiffre)
 			fclose(fi);
 		}
 	}
-	printf("Fin du programme.\n");
 }
 
 /*
@@ -126,11 +126,13 @@ void cesar_crypt(int decalage, char* texte, char* chiffre)
 				{
 					c = ((c-'A'+cle)%26)+'A';
 				}
+				/* Finalement, ca cree des problemes de decryptage !
 				else
 				{
-					/* Sinon caractere special : on encrypte naivement */
-					c += cle;
+					// Sinon caractere special : on encrypte naivement
+					c += decalage;
 				}
+				*/
 				putc(c, fo);
 			}
 			fclose(fo);
@@ -159,50 +161,8 @@ void cesar_decrypt(int decalage, char* chiffre, char* clair)
 		return;
 	}
 
-	/* Declaration variables */
-	FILE *fi, *fo;
-	int c, cle;
-
-	cle = ((decalage%26)+26)%26;
-
-	if((fi = fopen(chiffre, "rb")) != NULL)
-	{
-		if((fo = fopen(clair, "wb")) != NULL)
-		{
-			printf("Decryptage Cesar...\n");
-			while((c=getc(fi)) != EOF)
-			{
-				/* Decryptage du caractere */
-				if('a' <= c && c <= 'z')
-				{
-					c = ((c-'a'+26-cle)%26)+'a';
-				}
-				else if('A' <= c && c <= 'Z')
-				{
-					c = ((c-'A'+26-cle)%26)+'A';
-				}
-				else
-				{
-					/* Sinon caractere special : on decrypte naivement */
-					c -= cle;
-				}
-				putc(c, fo);
-			}
-			fclose(fo);
-		}
-		else
-		{
-			printf("Erreur d'ecriture du fichier output.\n");
-		}
-		fclose(fi);
-	}
-	else
-	{
-		printf("Erreur de lecture du fichier input.\n");
-	}
-	printf("Fin du programme\n");
+	cesar_crypt(-decalage, chiffre, clair);
 }
-
 
 /*
  *  Chiffrement utilisant vigenere
@@ -217,27 +177,21 @@ void vigenere_crypt(char* key, char* texte, char* chiffre)
 
 	/* Declaration variables */
 	FILE *fi, *fo;
-	int c, cleOk, decalage;
+	int c, pos;
+	int cleOk, decalage, taille;
 	char *cle;
-	TableauInt* cleNormalise;
+	//TableauInt* cleNormalise;
 
 	/* Initialisation variables */
 	cle = key;
 	cleOk = 1;
-	cleNormalise = init_TableauInt(strlen(key));
+	//cleNormalise = init_TableauInt(strlen(key));
 
 	/* Verification illigibilite de la cle */
 	while(*cle != '\0')
 	{
-		if('A' <= *cle && *cle <= 'Z')
-		{
-			add_TableauInt(cleNormalise, *cle-'A');
-		}
-		else if('a' <= *cle && *cle <= 'z')
-		{
-			add_TableauInt(cleNormalise, *cle-'a');
-		}
-		else
+		if ( !('A' <= *cle && *cle <= 'Z') 
+			 || !('a' <= *cle && *cle <= 'z') )
 		{
 			printf("Erreur : la cle ne doit etre constituee que de lettres.\n");
 			cleOk = 0;
@@ -245,6 +199,9 @@ void vigenere_crypt(char* key, char* texte, char* chiffre)
 		}
 		cle++;
 	}
+
+	taille = strlen(texte);
+	pos    = 0;
 
 	if(cleOk)
 	{
@@ -256,11 +213,11 @@ void vigenere_crypt(char* key, char* texte, char* chiffre)
 				while((c=getc(fi)) != EOF)
 				{
 					/* Si on est en fin de cle, on recommence au debut */
-					if(cleNormalise->pos == cleNormalise->taille)
+					if(pos == taille)
 					{
-						cleNormalise->pos = 0;
+						pos = 0;
 					}
-					decalage = cleNormalise->tab[cleNormalise->pos];
+					decalage = texte[pos];
 
 					/* Cryptage du caractere */
 					if('a' <= c && c <= 'z')
@@ -271,13 +228,15 @@ void vigenere_crypt(char* key, char* texte, char* chiffre)
 					{
 						c = ((c-'A'+decalage)%26)+'A';
 					}
+					/* Finalement non car on cree des problemes de decyptage sinon
 					else
 					{
-						/* Sinon caractere special : on encrypte naivement */
+						// Sinon caractere special : on encrypte naivement
 						c += decalage;
 					}
+					*/
 					putc(c, fo);
-					cleNormalise->pos++;
+					pos++;
 				}
 				fclose(fo);
 			}
@@ -298,7 +257,6 @@ void vigenere_crypt(char* key, char* texte, char* chiffre)
 	}
 
 	printf("Fin du programme\n");
-	free_TableauInt(cleNormalise);
 }
 
 /*
@@ -375,11 +333,13 @@ void vigenere_decrypt(char* key, char* chiffre, char* clair)
 					{
 						c = ((c-'A'+(26-decalage))%26)+'A';
 					}
+					/* Finalement, ca cree des problemes de decodage !
 					else
 					{
-						/* Sinon caractere special : on decrypte naivement */
+						// Sinon caractere special : on decrypte naivement
 						c -= decalage;
 					}
+					*/
 					putc(c, fo);
 					cleNormalise->pos++;
 				}
@@ -407,12 +367,17 @@ void vigenere_decrypt(char* key, char* chiffre, char* clair)
 
 int main(int argc, char const *argv[])
 {
-	xor_crypt("djzdu", "plaintext", "encrypted");
-	xor_decrypt("djzdu", "encrypted", "uncrypted");
-	//cesar_crypt(-57, "plaintext", "encrypted");
-	//cesar_decrypt(-57, "encrypted", "uncrypted");
+	//xor_crypt("djzdu", "plaintext", "encrypted");
+	//xor_decrypt("djzdu", "encrypted", "uncrypted");
+	//cesar_crypt(67, "plaintext", "encrypted");
+	//cesar_decrypt(67, "encrypted", "uncrypted");
 	//vigenere_crypt("BaCheLIEr", "plaintext", "encrypted");
 	//vigenere_decrypt("BaCheLIEr", "encrypted", "uncrypted");
 
+	char* test;
+	test = malloc(sizeof(char)*10);
+	*test = 'l';
+	*(test+1) = 'b';
+	printf("%s", test);
 	return 0;
 }

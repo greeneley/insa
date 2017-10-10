@@ -5,12 +5,55 @@
 #include "encrypt.h"
 #include <math.h>
 
+
+/****************************************************************
+ *                                                               *
+ *  ------------------ VARIABLES GLOBALES ---------------------  *
+ *                                                               *
+ ****************************************************************/
+#define A_TO_a 32
+#define a_TO_A -32
+
+
+/****************************************************************
+ *                                                               *
+ *  --------------------------- XOR ---------------------------  *
+ *                                                               *
+ ****************************************************************/
+
+
 /**
  *  * chiffrement utilisant le ou exclusif
  *   */
 void xor_crypt(char * key, char * texte, char* chiffre)
 {
+	if(key == NULL || texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
 
+	char *cp;
+	int c, i;
+
+	/* ===== Initialisation variables ===== */
+	i      = 0;
+
+	if((cp = key))
+	{
+		printf("Cryptage XOR...\n");
+		while(texte[i] != '\0')
+		{
+			c = texte[i];
+			if(*cp == '\0')
+			{
+				cp = key;
+			}
+			c  ^= *(cp++);
+			chiffre[i] = c;
+			i++;
+		}
+	}
 }
 
 /**
@@ -18,31 +61,154 @@ void xor_crypt(char * key, char * texte, char* chiffre)
  *   */
 void xor_decrypt(char * key, char * texte, char* chiffre)
 {
-	
+	xor_crypt(key, texte, chiffre);
 }
+
+
+
+/****************************************************************
+ *                                                               *
+ *  -------------------------- Cesar --------------------------  *
+ *                                                               *
+ ****************************************************************/
+
 
 /**
  *  * chiffrement utilisant cesar
  *   */
 void cesar_crypt(int decallage, char * texte, char* chiffre)
 {
+	if(texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
 
+	/* Declaration variables */
+	int c, i, cle;
+
+	/* Initialisation variables */
+	i = 0;
+
+	/* On s'assure que les nombres negatifs deviennent positifs */
+	cle = ((decallage%26)+26)%26;
+
+	printf("Encryptage Cesar...\n");
+	while(texte[i] != '\0')
+	{
+		c = texte[i];
+		/* Cryptage du caractere */
+		if('a' <= c && c <= 'z')
+		{
+			c = ((c-'a'+cle)%26)+'a';
+		}
+		else if('A' <= c && c <= 'Z')
+		{
+			c = ((c-'A'+cle)%26)+'A';
+		}
+		chiffre[i] = c;
+		i++;
+	}
 }
+
 
 /**
  *  * dÈchiffrement utilisant  cesar
  *   */
 void cesar_decrypt(int decallage, char * texte, char* chiffre)
 {
+	if(texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
 
+	cesar_crypt(-decallage, texte, chiffre);
 }
+
+
+/****************************************************************
+ *                                                               *
+ *  ------------------------ VIGENERE -------------------------  *
+ *                                                               *
+ ****************************************************************/
+
 
 /**
  *  * chiffrement utilisant viginere
  *   */
 void viginere_crypt(char * key, char * texte, char* chiffre)
 {
+	if(key == NULL || texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
 
+	/* Declaration variables */
+	int c, i, pos;
+	int decalage, taille;
+	char* test;
+	test = key;
+
+	/* Verification eligibilite de la cle */
+	while(*test != '\0')
+	{
+		if ( !('A' <= *test && *test <= 'Z') 
+			 && !('a' <= *test && *test <= 'z') )
+		{
+			printf("Erreur : la cle ne doit etre constituee que de lettres.\n");
+			return;
+		}
+		test++;
+	}
+
+	/* Initialisation variables */
+	taille = strlen(texte);
+	pos    = 0;
+	i      = 0;
+
+	printf("Encryptage Vigenere...\n");
+	while(texte[i] != '\0')
+	{
+		c = texte[i];
+
+		/* Si on est en fin de cle, on recommence au debut */
+		if(pos == taille)
+		{
+			pos = 0;
+		}
+		decalage = key[pos];
+
+		/* ==============================================
+		   =========== Cryptage du caractere ============
+		   ==============================================
+
+		 * c-'lettre' correspond a l'index de c dans l'alphabet
+		 * decalage-'lettre' correspond a l'index par rapport a 'lettre'
+		 * la somme des deux donne la lettre chiffree 
+		*/
+		if('a' <= c && c <= 'z')
+		{
+			if('A' <= decalage && decalage <= 'Z')
+			{
+				decalage += A_TO_a;
+			}
+			c = ((c-'a'+decalage-'a')%26)+'a';
+		}
+		else if('A' <= c && c <= 'Z')
+		{
+			if('a' <= decalage && decalage <= 'z')
+			{
+				decalage += a_TO_A;
+			}
+			c = ((c-'A'+decalage-'A')%26)+'A';
+		}
+
+		chiffre[i] = c;
+		pos++;
+		i++;
+	}
 }
 
 /**
@@ -50,8 +216,75 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
  *   */
 void viginere_decrypt(char * key, char * texte, char* chiffre)
 {
+	if(key == NULL || texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : un des arguments est NULL.");
+		return;
+	}
 
+	/* Declaration variables */
+	int c, i, pos;
+	int decalage, taille;
+
+	/* On suppose que la cle est correcte pour dechiffrer */
+
+	/* Initialisation variables */
+	taille = strlen(texte);
+	pos    = 0;
+	i      = 0;
+
+	printf("Decryptage Vigenere...\n");
+	while(texte[i] != '\0')
+	{
+		c = texte[i];
+
+		/* Si on est en fin de cle, on recommence au debut */
+		if(pos == taille)
+		{
+			pos = 0;
+		}
+		decalage = key[pos];
+
+		/* ==============================================
+		   =========== Cryptage du caractere ============
+		   ==============================================
+
+		 * au lieu de faire +(decalage-'lettre')
+		 * on fait -(decalage-'lettre')
+		 * pour revenir vers la lettre originelle.
+		 * On doit s'assurer que le resultat est positif
+		*/
+		if('a' <= c && c <= 'z')
+		{
+			if('A' <= decalage && decalage <= 'Z')
+			{
+				decalage += A_TO_a;
+			}
+			c = ((((c-decalage)%26)+26)%26) + 'a';
+		}
+		else if('A' <= c && c <= 'Z')
+		{
+			if('a' <= decalage && decalage <= 'z')
+			{
+				decalage += a_TO_A;
+			}
+			c = ((((c-decalage)%26)+26)%26) + 'A';
+		}
+
+		chiffre[i] = c;
+		pos++;
+		i++;
+	}
+	printf("Fin du programme\n");
 }
+
+
+/****************************************************************
+ *                                                               *
+ *  --------------------------- DES ---------------------------  *
+ *                                                               *
+ ****************************************************************/
+
 
 /**
  *  * chiffrement utilisant des
@@ -69,6 +302,14 @@ void des_decrypt(char * key, char * texte, char* chiffre, int size)
 {
 
 }
+
+
+/****************************************************************
+ *                                                               *
+ *  --------------------------- 3DES --------------------------  *
+ *                                                               *
+ ****************************************************************/
+
 
 /**
  *  * chiffrement utilisant 3des
@@ -176,7 +417,7 @@ void inttotext(char * texte, char* chiffre){
 
 /**
  * Chiffrement RSA
- */
+ *
 void rsa_crypt(int e, int n, char * texte, char* chiffre, int size)
 {
     int tmp;
@@ -191,19 +432,20 @@ void rsa_crypt(int e, int n, char * texte, char* chiffre, int size)
 		tmp=*pt-'0';
 		if(10*buf + tmp >= n){
 		    // on utilise le $ comme séparateur de bloc
-			sprintf(chiffre+strlen(chiffre),"%ld$%c",/* TODO Chiffrement de buf */,'\0');
+			sprintf(chiffre+strlen(chiffre),"%ld$%c",/* TODO Chiffrement de buf /,'\0');
 			buf=0;
 		}
 		buf=10*buf+tmp;
 		pt++;
 	}
-	sprintf(chiffre+strlen(chiffre),"%ld$%c", /* TODO Chiffrement de Buf */,'\0');
+	sprintf(chiffre+strlen(chiffre),"%ld$%c", /* TODO Chiffrement de Buf /,'\0');
 	printf("\n");
 }
+*/
 
 /**
  * Déchiffrement RSA
- */
+ *
 void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 {
 	int tmp;
@@ -215,7 +457,7 @@ void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 	while((*pt) != '\0'){
 		// on utilise le $ comme séparateur de bloc
 	    if((*pt) == '$'){
-			sprintf(tmpc+strlen(tmpc),"%ld%c", /* Dechiffrement de buf */,'\0');
+			sprintf(tmpc+strlen(tmpc),"%ld%c", /* Dechiffrement de buf *,'\0');
 			buf=0;
 		}else{
 			tmp=*pt-'0';
@@ -223,9 +465,10 @@ void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 		}
 		pt++;
 	}
-	sprintf(tmpc+strlen(tmpc),"%ld%c",/* Dechiffrement de buf*/,'\0');
+	sprintf(tmpc+strlen(tmpc),"%ld%c",/* Dechiffrement de buf*,'\0');
 	
 	inttotext(tmpc,chiffre);
 }
 
+*/
 
