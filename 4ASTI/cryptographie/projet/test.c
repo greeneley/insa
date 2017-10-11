@@ -68,7 +68,6 @@ int main(int argc, char *argv[]){
 	printf("'%s'\n",dechiffre);
 	printf("%s\n", strcmp(texte, dechiffre)==0?"ok":"NON");
 
-	/*
 	chiffre = (char *)malloc(8+strlen(texte) * sizeof(char));
 	dechiffre = (char *)malloc(8+strlen(texte) * sizeof(char)); 
 	printf("----------------   3DES --------------\n");
@@ -77,7 +76,6 @@ int main(int argc, char *argv[]){
 	printf("'%s'\n",chiffre);
 	printf("'%s'\n",dechiffre);
 	printf("%s\n", strcmp(texte, dechiffre)==0?"ok":"NON");
-	*/
 
 	chiffre = (char *)malloc(3*strlen(texte) * sizeof(char));
 	dechiffre = (char *)malloc(3*strlen(texte) * sizeof(char)); 

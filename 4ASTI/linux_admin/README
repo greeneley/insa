@@ -1,0 +1,14 @@
+Dans l'archive zip, vous pouvez trouver les fichiers suivants :
+	- printserverd.c : fichier main contenant le travail effectué.
+		J'ai essayé de commenter ma démarche et de le rendre lisible.
+	- printserver : un fichier de script bash qui permet d'init le daemon
+		via /etc/init.d/
+	- Makefile : un fichier makefile très simple qui contient les commandes
+		pour compiler, installer et clean
+		La compilation via 'make' va produire un fichier 'printserverd'.
+
+Normalement, le fichier Makefile contient toutes les commandes pour init mon daemon.
+Mais il se peut que des problèmes de permissions rendent certaines tâches impossibles.
+Il faudra donc executer manuellement le makefile en su ou sudo.
+
+Thanh Luu

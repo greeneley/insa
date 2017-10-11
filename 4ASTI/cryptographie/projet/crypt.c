@@ -294,7 +294,26 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
  *   */
 void des_crypt(char * key, char * texte, char* chiffre, int size)
 {
+	if(key == NULL || texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : l'une des chaines est NULL\n");
+		return;
+	}
 
+	char* ptrTxt;
+	char* ptrChiffre;
+	int i;
+
+	/* Initialisation des variables */
+	ptrTxt     = texte;
+	ptrChiffre = chiffre;
+
+	for(i=0; i<size; i++)
+	{
+		des_encipher((unsigned char*)ptrTxt, (unsigned char*)ptrChiffre, (unsigned char*)key);
+		ptrTxt     += sizeof(char)*8;
+		ptrChiffre += sizeof(char)*8;
+	}
 }
 
 
@@ -303,7 +322,26 @@ void des_crypt(char * key, char * texte, char* chiffre, int size)
  *   */
 void des_decrypt(char * key, char * texte, char* chiffre, int size)
 {
+	if(key == NULL || texte == NULL || chiffre == NULL)
+	{
+		printf("Erreur : l'une des chaines est NULL\n");
+		return;
+	}
 
+	char* ptrChiffre;
+	char* ptrDechiffre;
+	int i;
+
+	/* Initialisation des variables */
+	ptrChiffre   = texte;
+	ptrDechiffre = chiffre;
+
+	for(i=0; i<size; i++)
+	{
+		des_decipher((unsigned char*)ptrChiffre, (unsigned char*)ptrDechiffre, (unsigned char*)key);
+		ptrChiffre   += sizeof(char)*8;
+		ptrDechiffre += sizeof(char)*8;
+	}
 }
 
 
@@ -319,7 +357,23 @@ void des_decrypt(char * key, char * texte, char* chiffre, int size)
  *   */
 void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int size)
 {
+	if(key1==NULL || key2==NULL || texte==NULL || chiffre==NULL)
+	{
+		printf("Erreur : l'une des chaines est NULL\n");
+		return;
+	}
 
+	/* Variables */
+	char* tmp_DES1;
+	char* tmp_DES2;
+
+	/* Initialisation variables */
+	tmp_DES1 = malloc(sizeof(char)*strlen(texte));
+	tmp_DES2 = malloc(sizeof(char)*strlen(texte));
+
+	des_crypt(key1, texte, tmp_DES1, size);
+	des_decrypt(key2, tmp_DES1, tmp_DES2, size);
+	des_crypt(key1, tmp_DES2, chiffre, size);
 }
 
 
@@ -328,7 +382,23 @@ void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int s
  *   */
 void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int size)
 {
+	if(key1==NULL || key2==NULL || texte==NULL || chiffre==NULL)
+	{
+		printf("Erreur : l'une des chaines est NULL\n");
+		return;
+	}
 
+	/* Variables */
+	char* tmp_DES1;
+	char* tmp_DES2;
+
+	/* Initialisation variables */
+	tmp_DES1 = malloc(sizeof(char)*strlen(texte));
+	tmp_DES2 = malloc(sizeof(char)*strlen(texte));
+
+	des_decrypt(key1, texte, tmp_DES1, size);
+	des_crypt(key2, tmp_DES1, tmp_DES2, size);
+	des_decrypt(key1, tmp_DES2, chiffre, size);
 }
 
 
