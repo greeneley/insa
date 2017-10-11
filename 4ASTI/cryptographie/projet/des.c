@@ -277,11 +277,9 @@ if (cle != NULL) {
    memset(cle_g, 0, 4);
    memset(cle_d, 0, 4);
 
+   /* Construction des cles gauche et droite */
    for (j = 0; j < 28; j++)
       bit_set(cle_g, j, bit_get(temp, j));
-
-   for (j = 0; j < 28; j++)
-      bit_set(cle_d, j, bit_get(temp, j + 28));
 
    /*************************************************************
    *                                                            *
@@ -297,7 +295,9 @@ if (cle != NULL) {
       *                                                         *
       **********************************************************/
 
+      /* Etape de rotation */
       bit_rot_left(cle_g, 28, Des_Rotations[i]);
+      //TODO
       bit_rot_left(cle_d, 28, Des_Rotations[i]);
 
       /**********************************************************
@@ -307,10 +307,10 @@ if (cle != NULL) {
       **********************************************************/
 
       for (j = 0; j < 28; j++)
+      {
          bit_set(sous_cles[i], j, bit_get(cle_g, j));
-
-      for (j = 0; j < 28; j++)
          bit_set(sous_cles[i], j + 28, bit_get(cle_d, j));
+      }
 
       /**********************************************************
       *                                                         *
@@ -318,6 +318,7 @@ if (cle != NULL) {
       *                                                         *
       **********************************************************/
 
+      /* Phase de permutation */
       permute(sous_cles[i], Des_Permute, 48);
 
    }
@@ -403,8 +404,9 @@ for (i = 0; i < 16; i++) {
       *                                                         *
       **********************************************************/
 
-      bit_xor(bloc_f, sous_cles[15 - i], bloc_x, 48);
-      memcpy(bloc_f, bloc_x, 6);
+ 	  //TODO 
+     bit_xor(bloc_f, sous_cles[15-i], bloc_x, 48);
+	  memcpy(bloc_f, bloc_x, 6);
 
    }
 
@@ -463,6 +465,7 @@ for (i = 0; i < 16; i++) {
    *                                                            *
    *************************************************************/
 
+   //TODO completer :
    bit_xor(bloc_g, bloc_f, bloc_x, 32);
 
    /*************************************************************
