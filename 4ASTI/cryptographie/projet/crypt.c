@@ -164,7 +164,7 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
 	}
 
 	/* Initialisation variables */
-	taille = strlen(texte);
+	taille = strlen(key);
 	pos    = 0;
 	i      = 0;
 
@@ -229,7 +229,7 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 	/* On suppose que la cle est correcte pour dechiffrer */
 
 	/* Initialisation variables */
-	taille = strlen(texte);
+	taille = strlen(key);
 	pos    = 0;
 	i      = 0;
 
@@ -249,10 +249,13 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 		   =========== Cryptage du caractere ============
 		   ==============================================
 
-		 * au lieu de faire +(decalage-'lettre')
+		 * Au lieu de faire +(decalage-'lettre')
 		 * on fait -(decalage-'lettre')
 		 * pour revenir vers la lettre originelle.
 		 * On doit s'assurer que le resultat est positif
+		 * donc +26 a l'operation precedente.
+		 * Et enfin un %26 si la soustrction etait deja
+		 * positive pour ne pas depasser 26.
 		*/
 		if('a' <= c && c <= 'z')
 		{
@@ -260,7 +263,7 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 			{
 				decalage += A_TO_a;
 			}
-			c = ((((c-decalage)%26)+26)%26) + 'a';
+			c = ((c-decalage+26)%26) + 'a';
 		}
 		else if('A' <= c && c <= 'Z')
 		{
@@ -268,7 +271,7 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 			{
 				decalage += a_TO_A;
 			}
-			c = ((((c-decalage)%26)+26)%26) + 'A';
+			c = ((c-decalage+26)%26) + 'A';
 		}
 
 		chiffre[i] = c;
