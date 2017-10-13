@@ -372,8 +372,13 @@ void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int s
 	tmp_DES2 = malloc(sizeof(char)*strlen(texte));
 
 	des_crypt(key1, texte, tmp_DES1, size);
+	//printf("%s\n\n", tmp_DES1);
 	des_decrypt(key2, tmp_DES1, tmp_DES2, size);
+	//printf("%s\n\n", tmp_DES2);
 	des_crypt(key1, tmp_DES2, chiffre, size);
+
+	free(tmp_DES1);
+	free(tmp_DES2);
 }
 
 
@@ -397,8 +402,13 @@ void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int s
 	tmp_DES2 = malloc(sizeof(char)*strlen(texte));
 
 	des_decrypt(key1, texte, tmp_DES1, size);
+	//printf("%s\n\n", tmp_DES1);
 	des_crypt(key2, tmp_DES1, tmp_DES2, size);
+	//printf("%s\n\n", tmp_DES2);
 	des_decrypt(key1, tmp_DES2, chiffre, size);
+
+	free(tmp_DES1);
+	free(tmp_DES2);
 }
 
 
