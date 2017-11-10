@@ -16,15 +16,15 @@ public class Operation extends Thread {
 			String nom = getName();
 			System.out.print(nom);
 			
-			if(compte.getSem() == false)
+			/*if(compte.getSem() == false)
 			{
 				compte.lockSem();
 				compte.ajouter(i);
 				compte.retirer(i);
 				compte.openSem();
-			}
-			
-			//compte.operationNulle(i);
+			}*/
+				
+			compte.operationNulle(i);
 			
 			int solde = compte.getSolde();
 			//System.out.print(nom);
@@ -42,6 +42,7 @@ public class Operation extends Thread {
 	public static void main(String[] args)
 	{
 		Compte compte = new Compte();
+
 		for(int i=0; i<20; i++)
 		{
 			Operation operation = new Operation("" + (char)('A' + i), compte);

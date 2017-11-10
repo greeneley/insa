@@ -1,0 +1,39 @@
+fumeur=[a, b]{
+	etat = 3;
+	init = 0;
+	1=a;
+	2=b;
+	0->1 [a];
+	1->2 [b];
+};;
+
+agent=[pose]{
+	etat=2;
+	init=0;
+	1=pose;
+	0->1 [pose]
+};;
+
+sem=[V, P]{
+	etat=2;
+	init=0;
+	0=P;
+	1=V;
+	0->1 [V];
+	1->0 [P];
+};;
+
+systeme = <agent agt, fumeur ab, fumeur ac, fumeur bc, sem a, sem b, sem c> {
+       <pose, _, _, _, V, V, _>;
+       <_, a, _, _, _, P, _, _>;
+       <_, b, _, _, _, _, P, _>;
+
+       <pose, _, _, _, V, _, V>;
+       <_, _, a, _, _, P, _, _>;
+       <_, _, b, _, _, _, _, P>;
+
+       <pose, _, _, _, _, V, V>;
+       <_, _, _, a, _, _, P, _>;
+       <_, _, _, b, _, _, _, P>;
+};;
+

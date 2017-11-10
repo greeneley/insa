@@ -9,6 +9,7 @@ public class Main {
 		Compteur comp_1 = new Compteur("Compteur_1", 10);
 		Compteur comp_2 = new Compteur("Compteur_2", 10);
 		Compteur comp_3 = new Compteur("Compteur_3", 10);
+		Compteur[] list_Compteur = {comp_1, comp_2, comp_3};
 		
 		/* ======== METHODE PROCEDURALE =======
 		try {
@@ -23,10 +24,16 @@ public class Main {
 		
 		/* =========== EXERCICES 2 ============ */
 		comp_1.resetPos(); // methode affectant une var statique
+
+		comp_1.setPriority(10);
+		comp_2.setPriority(4);
+		comp_3.setPriority(1);
 		
-		comp_1.start();
-		comp_2.start();
-		comp_3.start();
+		for(int i=0; i<3; i++)
+		{
+			list_Compteur[i].start();
+		}
+		
 	}
 
 }

@@ -3,7 +3,7 @@ import java.util.concurrent.TimeUnit;
 public class Compteur extends Thread {
 	
 	/* ================= VARIABLES =============== */
-	
+
 	protected String name;
 	protected int    n;
 	protected int    valeurMin = 0;
@@ -83,7 +83,8 @@ public class Compteur extends Thread {
 		for(int i=0; i<this.getN(); i++)
 		{
 			System.out.println(this.getName()+" : "+i);
-			TimeUnit.MILLISECONDS.sleep(this.generate());
+			//TimeUnit.MILLISECONDS.sleep(this.generate());
+			TimeUnit.MICROSECONDS.sleep(1000);
 		}
 		System.out.print("*** "+this.getName()+" a fini de compter jusqu'à "+this.getN());
 	}
