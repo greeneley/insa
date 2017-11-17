@@ -1,21 +1,30 @@
+import java.util.Arrays;
+
 /**
  * Tri d'un tableau d'entiers
  * Version mono-thread
- * /
-public class Trieur
-{
+ */
+public class Trieur extends Thread{
   private int[] t;
+  private int[] tA;
+  private int[] tB;
   
   private Trieur(int[] t)
   {
     this.t = t;
+  }
+
+  public void run()
+  {
+	 Trieur tableau = new Trieur(t);
+	 tableau.trierJoin(0, t.length - 1);
   }
   
   /**
    * Trie un tableau d'entiers par ordre croissant
    * @param t tableau à trier
    */
-  public static void trier(int[] t)
+public static void trier(int[] t)
   {
     Trieur tableau = new Trieur(t);
     tableau.trier(0, t.length - 1);
@@ -38,11 +47,42 @@ public class Trieur
     else
     {
       int milieu = debut + (fin - debut) / 2;
-      trier(debut, milieu),
-      trier(milieu + 1; fin);
+      trier(debut, milieu);
+      trier(milieu + 1, fin);
       triFusion(debut, fin);
     }
  }
+ 
+ private void trierJoin(int debut, int fin)
+ {
+	 if (fin - debut < 2)
+	 {
+	    if (t[debut] > t[fin])
+	    {
+	      echanger(debut, fin);
+	    }
+	  }
+	  else
+	  {
+	      int milieu = debut + (fin - debut) / 2;
+	      this.tA = Arrays.copyOfRange(t, debut, milieu);
+	      this.tB = Arrays.copyOfRange(t, milieu + 1, )
+	      
+	      Trieur trieurA = new Trieur();
+	      Trieur trieurB = new Trieur();
+	      
+	      
+	      
+	      try {
+	    	  //join
+	      } catch (InterruptedException e) {
+	    	  // TODO Auto-generated catch block
+	    	  e.printStackTrace();
+	      }
+	      triFusion(debut, fin);
+	  }
+ }
+ 
  
   /**
    * Echanger t[i] et t[j]
@@ -72,7 +112,7 @@ public class Trieur
     int iFusion = 0;
     while (i1 <= milieu && i2 <= fin)
     {
-      if (t[i1] < t[i2]
+      if (t[i1] < t[i2])
       {
         tFusion[iFusion++] = t[i1++];
       }
@@ -98,19 +138,30 @@ public class Trieur
       }
     }
     // Copie tFusion dans t
-    for (int i = 0; j = debut; i <= fin - debut)
+    for (int i=0, j=debut; i <= fin - debut; )
     {
       t[j++] = tFusion[i++];
     }
+  }
     
     public static void main(String[] args)
     {
+    	
       int[] t = {5, 8, 3, 2, 7, 10, 1};
-      Trieur.trier(t);
+      //Trieur.trier(t);
+      
+      Trieur monTrieur = new Trieur(t);
+      monTrieur.start();
+      try {
+    	  monTrieur.join();
+      } catch (InterruptedException e) {
+    	  // TODO Auto-generated catch block
+    	  e.printStackTrace();
+      }
       for (int i = 0; i < t.length; i++)
       {
         System.out.println(t[i] + " ; ");
       }
       System.out.println();
     }
-  }
+ }
