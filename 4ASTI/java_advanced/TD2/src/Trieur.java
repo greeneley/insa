@@ -1,4 +1,3 @@
-import java.util.Arrays;
 
 /**
  * Tri d'un tableau d'entiers
@@ -6,23 +5,46 @@ import java.util.Arrays;
  */
 public class Trieur extends Thread{
   private int[] t;
-  private int[] tA;
-  private int[] tB;
+  private int debut;
+  private int fin;
+  private Notice notice;
   
   private Trieur(int[] t)
   {
     this.t = t;
   }
-
+  
+  private Trieur(int[] t, int debut, int fin)
+  {
+    this.t     = t;
+    this.debut = debut;
+    this.fin   = fin;
+  }
+  
+  private Trieur(int[] t, int debut, int fin, Notice notice)
+  {
+    this.t      = t;
+    this.debut  = debut;
+    this.fin    = fin;
+    this.notice = notice;
+  }
+ 
   public void run()
   {
-	 Trieur tableau = new Trieur(t);
-	 tableau.trierJoin(0, t.length - 1);
+	  /* JOIN
+	   this.trierJoin();
+	   */
+	 synchronized(this.notice)
+	 {
+		 this.trierWait();
+		 this.notice.notify();
+	 }
   }
   
   /**
    * Trie un tableau d'entiers par ordre croissant
    * @param t tableau à trier
+   * @throws InterruptedException 
    */
 public static void trier(int[] t)
   {
@@ -53,36 +75,74 @@ public static void trier(int[] t)
     }
  }
  
- private void trierJoin(int debut, int fin)
+ private void trierJoin()
  {
-	 if (fin - debut < 2)
+	 if (this.fin - this.debut < 2)
 	 {
-	    if (t[debut] > t[fin])
+	    if (t[this.debut] > t[this.fin])
 	    {
-	      echanger(debut, fin);
+	      echanger(this.debut, this.fin);
 	    }
+	    System.out.println("Fin " + this.getName() + "["+this.debut+";"+this.fin+"]");
+		  
 	  }
 	  else
 	  {
-	      int milieu = debut + (fin - debut) / 2;
-	      this.tA = Arrays.copyOfRange(t, debut, milieu);
-	      this.tB = Arrays.copyOfRange(t, milieu + 1, )
+	      int milieu = this.debut + (this.fin - this.debut) / 2;
 	      
-	      Trieur trieurA = new Trieur();
-	      Trieur trieurB = new Trieur();
+	      Trieur tA = new Trieur(this.t, this.debut, milieu);
+	      Trieur tB = new Trieur(this.t, milieu + 1, this.fin);
 	      
-	      
-	      
+	      tA.start();
+	      tB.start(); 
 	      try {
-	    	  //join
-	      } catch (InterruptedException e) {
-	    	  // TODO Auto-generated catch block
-	    	  e.printStackTrace();
-	      }
-	      triFusion(debut, fin);
+			tA.join();
+			tB.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	      triFusion(this.debut, this.fin);
+	      System.out.println("Fin " + this.getName() + "["+this.debut+";"+this.fin+"]");
 	  }
  }
  
+ private void trierWait()
+ {
+	 if (this.fin - this.debut < 2)
+	 {
+	    if (t[this.debut] > t[this.fin])
+	    {
+	      echanger(this.debut, this.fin);
+	    }
+	    System.out.println("Fin " + this.getName() + "["+this.debut+";"+this.fin+"]");
+		  
+	  }
+	  else
+	  {
+	      int milieu = this.debut + (this.fin - this.debut) / 2;
+	      
+	      Notice notice = new Notice();
+	      Trieur tA = new Trieur(this.t, this.debut, milieu, notice);
+	      Trieur tB = new Trieur(this.t, milieu + 1, this.fin, notice);
+	      
+	      synchronized(notice)
+	      {
+	    	  try {
+	    		tA.start();
+	    		tB.start();
+				notice.wait();
+				notice.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	      }
+	   
+	      triFusion(this.debut, this.fin);
+	      System.out.println("Fin " + this.getName() + "["+this.debut+";"+this.fin+"]");
+	  }
+ }
  
   /**
    * Echanger t[i] et t[j]
@@ -148,16 +208,32 @@ public static void trier(int[] t)
     {
     	
       int[] t = {5, 8, 3, 2, 7, 10, 1};
-      //Trieur.trier(t);
-      
-      Trieur monTrieur = new Trieur(t);
+	  //Trieur.trier(t);
+ 
+      /* JOIN
+      Trieur monTrieur = new Trieur(t, 0, t.length - 1);
       monTrieur.start();
       try {
-    	  monTrieur.join();
+		monTrieur.join();
       } catch (InterruptedException e) {
-    	  // TODO Auto-generated catch block
-    	  e.printStackTrace();
+		// TODO Auto-generated catch block
+		e.printStackTrace();
       }
+      */
+      
+      Notice maNotice  = new Notice();
+      Trieur monTrieur = new Trieur(t, 0, t.length - 1, maNotice);
+      synchronized(maNotice)
+      {
+    	  try {
+    		monTrieur.start();
+    		maNotice.wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+      }
+      
       for (int i = 0; i < t.length; i++)
       {
         System.out.println(t[i] + " ; ");
