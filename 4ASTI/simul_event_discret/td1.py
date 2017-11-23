@@ -45,6 +45,7 @@ TAILLE_ECHANTILLON = 10000
 # ============================================= #
 # ============= UNIFORME CONTINUE ============= #
 # ============================================= #
+
 fig, ax = plt.subplots(1, 1)
 
 #### Calcul de différentes valeurs statistiques
@@ -78,9 +79,6 @@ ax.plot([], [], "g", label=str_esp_var_emp)
 # Histogramme
 ax.hist(r, normed=True, histtype='stepfilled', alpha=0.2)
 ax.legend(loc='best', frameon=False)
-
-plt.show()
-exit()
 
 
 # ============================================= #
@@ -149,6 +147,18 @@ ax.legend(loc='best', frameon=False)
 # ============================================= #
 # =================== WEIBULL ================= #
 # ============================================= #
+
+a = 5. # shape
+s = np.random.weibull(a, TAILLE_ECHANTILLON)
+import matplotlib.pyplot as plt
+x = np.arange(1,100.)/50.
+def weib(x,n,a):
+	return (a / n) * (x / n)**(a - 1) * np.exp(-(x / n)**a)
+
+count, bins, ignored = plt.hist(np.random.weibull(5.,TAILLE_ECHANTILLON))
+x = np.arange(1,100.)/50.
+scale = count.max()/weib(x, 1., 5.).max()
+plt.plot(x, weib(x, 1., 5.)*scale)
 
 
 
@@ -278,4 +288,3 @@ ax.legend(loc='best', frameon=False)
 
 # ==================== SHOW =================== #
 plt.show()
-
