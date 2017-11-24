@@ -547,15 +547,15 @@ void rsa_crypt(int e, int n, char * texte, char* chiffre, int size)
 	*chiffre='\0';
 	while((*pt) != '\0'){
 		tmp=*pt-'0';
-		if(10*buf + tmp >= n){
+		if((10*buf + tmp) >= n){
 		    // on utilise le $ comme séparateur de bloc
-			sprintf(chiffre+strlen(chiffre),"%ld$%c", modexp(buf, e, n),'\0');
+			sprintf(chiffre+strlen(chiffre),"%ld$%c",modexp(buf, e, n),'\0');
 			buf=0;
 		}
 		buf=10*buf+tmp;
 		pt++;
 	}
-	sprintf(chiffre+strlen(chiffre),"%ld$%c", modexp(buf, e, n),'#');
+	sprintf(chiffre+strlen(chiffre),"%ld$%c", modexp(buf, e, n),'\0');
 	printf("\n");
 }
 
@@ -570,10 +570,10 @@ void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 	Huge buf=0;
 	
 	*tmpc='\0';
-	while((*pt) != '#'){
+	while((*pt) != '\0'){
 		// on utilise le $ comme séparateur de bloc
 	    if((*pt) == '$'){
-			sprintf(tmpc+strlen(tmpc),"%ld", modexp(buf, d, n));
+			sprintf(tmpc+strlen(tmpc),"%ld%c", modexp(buf, d, n),'\0');
 			buf=0;
 		}else{
 			tmp=*pt-'0';
@@ -581,7 +581,8 @@ void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 		}
 		pt++;
 	}
-	sprintf(tmpc+strlen(tmpc),"%ld", modexp(buf, d, n));
+	sprintf(tmpc+strlen(tmpc),"%ld%c",modexp(buf, d, n),'\0');
 	
 	inttotext(tmpc,chiffre);
 }
+

@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 
 	chiffre = (char *)malloc(8+strlen(texte) * sizeof(char));
 	dechiffre = (char *)malloc(8+strlen(texte) * sizeof(char));
-	printf("----------------   VIGENRE --------------\n");
+	printf("----------------   VIGENERE --------------\n");
 	viginere_crypt("abc", texte,chiffre);
 	viginere_decrypt("abc", chiffre, dechiffre);
 	printf("'%s'\n",chiffre);
