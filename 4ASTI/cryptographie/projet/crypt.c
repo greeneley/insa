@@ -379,6 +379,40 @@ void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int s
 
 	free(tmp_DES1);
 	free(tmp_DES2);
+
+	/* if(key1==NULL || key2==NULL || texte==NULL || chiffre==NULL)
+	{
+		printf("Erreur : l'une des chaines est NULL\n");
+		return;
+	}
+
+	// Variables 
+	char* tmp_DES1;
+	char* tmp_DES2;
+	char* ptrTxt;
+	char* ptrChiffre;
+	int i;
+
+	// Initialisation variables
+	tmp_DES1   = malloc(8*sizeof(char));
+	tmp_DES2   = malloc(8*sizeof(char));
+
+	ptrTxt     = texte;
+	ptrChiffre = chiffre;
+
+	// Chiffrement 3DES 
+	for(i=0; i<size; i++)
+	{
+		des_encipher((unsigned char*)ptrTxt, (unsigned char*)tmp_DES1, (unsigned char*)key1);
+		des_decipher((unsigned char*)tmp_DES1, (unsigned char*)tmp_DES2, (unsigned char*)key2);
+		des_encipher((unsigned char*)tmp_DES2, (unsigned char*)ptrChiffre, (unsigned char*)key1);
+		ptrTxt     += sizeof(char)*8;
+		ptrChiffre += sizeof(char)*8;
+	}
+
+	free(tmp_DES1);
+	free(tmp_DES2);
+	*/
 }
 
 
