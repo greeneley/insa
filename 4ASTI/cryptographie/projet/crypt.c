@@ -6,16 +6,17 @@
 #include <math.h>
 
 
-/****************************************************************
+/*****************************************************************
  *                                                               *
  *  ------------------ VARIABLES GLOBALES ---------------------  *
  *                                                               *
  ****************************************************************/
 #define A_TO_a 32
 #define a_TO_A -32
+#define TAILLE_BLOCK_DES 8
 
 
-/****************************************************************
+/*****************************************************************
  *                                                               *
  *  --------------------------- XOR ---------------------------  *
  *                                                               *
@@ -23,26 +24,43 @@
 
 
 /**
- *  * chiffrement utilisant le ou exclusif
- *   */
-void xor_crypt(char * key, char * texte, char* chiffre)
+ * \fn 		void xor_crypt(char * key, char * texte, char* chiffre, int taille)
+ * \brief 	Chiffrement utilisant le ou exclusif (XOR) muni d'une cle.
+ *
+ * \param 	char* key     La cle de chiffrement.
+ * \param 	char* texte   Le texte source a chiffrer.
+ * \param   char* chiffre Le texte ou stocker le chiffrement.
+ * \param   int   taille  La taille du texte d'origine.
+ *
+ * \return 	Void
+*/
+void xor_crypt(char * key, char * texte, char* chiffre, int taille)
 {
 	if(key == NULL || texte == NULL || chiffre == NULL)
 	{
-		printf("Erreur : un des arguments est NULL.");
+		printf("Erreur : un des arguments est NULL.\n");
 		return;
 	}
 
-	char *cp;
-	int c, i;
+	/* ===== Variables ===== */
+	char *cp; // iterateur de cle
+	int c;    // caractere a chiffrer
+	int i;    // iterateur de texte
 
-	/* ===== Initialisation variables ===== */
+	/* ===== Algorithme ===== */
 	i      = 0;
 
+	/* Le but de l'algorithme est simple.
+
+	   On va XOR chaque lettre avec une 
+	      lettre de la cle de chiffrement.
+
+	   Si l'on est a la fin de la cle,
+	      on retourne au debut de la cle.
+	*/
 	if((cp = key))
 	{
-		printf("Cryptage XOR...\n");
-		while(texte[i] != '\0')
+		for(i=0; i<taille; i++)
 		{
 			c = texte[i];
 			if(*cp == '\0')
@@ -51,19 +69,25 @@ void xor_crypt(char * key, char * texte, char* chiffre)
 			}
 			c  ^= *(cp++);
 			chiffre[i] = c;
-			i++;
 		}
 	}
 }
 
 /**
- *  * dÈchiffrement utilisant le ou exclusif
- *   */
-void xor_decrypt(char * key, char * texte, char* chiffre)
+ * \fn 		void xor_decrypt(char * key, char * texte, char* chiffre, int taille)
+ * \brief 	Dechiffrement utilisant le ou exclusif (XOR) muni d'une cle.
+ *
+ * \param 	char* key     La cle de chiffrement.
+ * \param 	char* texte   Le texte source a dechiffrer.
+ * \param   char* chiffre Le texte ou stocker le dechiffrement.
+ * \param   int   taille  La taille du texte d'origine.
+ *
+ * \return 	Void
+*/
+void xor_decrypt(char * key, char * texte, char* chiffre, int taille)
 {
-	xor_crypt(key, texte, chiffre);
+	xor_crypt(key, texte, chiffre, taille);
 }
-
 
 
 /****************************************************************
@@ -74,30 +98,42 @@ void xor_decrypt(char * key, char * texte, char* chiffre)
 
 
 /**
- *  * chiffrement utilisant cesar
- *   */
+ * \fn 		cesar_crypt(int decallage, char * texte, char* chiffre)
+ * \brief 	Chiffrement de Cesar.
+ *
+ * \param 	int   decallage La variation d'index dans l'alphabet.
+ * \param 	char* texte     Le texte source a chiffrer.
+ * \param   char* chiffre   Le texte ou stocker le chiffrement.
+ *
+ * \return 	Void
+*/
 void cesar_crypt(int decallage, char * texte, char* chiffre)
 {
 	if(texte == NULL || chiffre == NULL)
 	{
-		printf("Erreur : un des arguments est NULL.");
+		printf("Erreur : un des arguments est NULL.\n");
 		return;
 	}
 
-	/* Declaration variables */
-	int c, i, cle;
+	/* === Variabless === */
+	int c;
+	int i;
+	int cle; // Le nombre de decallages
 
-	/* Initialisation variables */
-	i = 0;
-
-	/* On s'assure que les nombres negatifs deviennent positifs */
+	/* On s'assure que les nombres negatifs deviennent positifs 
+	 * Et que la cle soit dans [[0,25]]
+	 */
 	cle = ((decallage%26)+26)%26;
 
-	printf("Encryptage Cesar...\n");
+	/* Pour le chiffrement :
+	 *    On regarde si la lettre est minuscule ou majuscule
+	 *    On calcule la position de la lettre chifrre par raport a 'a' ou 'A'
+	 *    On ajoute 'a' ou 'A' pour retourner dans l'alphabet
+	 */
+	i = 0;
 	while(texte[i] != '\0')
 	{
 		c = texte[i];
-		/* Cryptage du caractere */
 		if('a' <= c && c <= 'z')
 		{
 			c = ((c-'a'+cle)%26)+'a';
@@ -113,16 +149,27 @@ void cesar_crypt(int decallage, char * texte, char* chiffre)
 
 
 /**
- *  * dÈchiffrement utilisant  cesar
- *   */
+ * \fn 		cesar_decrypt(int decallage, char * texte, char* chiffre)
+ * \brief 	Dechiffrement de Cesar.
+ *
+ * \param 	int   decallage La variation d'index dans l'alphabet.
+ * \param 	char* texte     Le texte source a dehiffrer.
+ * \param   char* chiffre   Le texte ou stocker le dechiffrement.
+ *
+ * \return 	Void
+*/
 void cesar_decrypt(int decallage, char * texte, char* chiffre)
 {
 	if(texte == NULL || chiffre == NULL)
 	{
-		printf("Erreur : un des arguments est NULL.");
+		printf("Erreur : un des arguments est NULL.\n");
 		return;
 	}
 
+	/* Meme principe que le chiffrement.
+	 * Cette fois neanmoins on chiffre vers l'arriere
+	 *   pour retrouver le caractere d'origine.
+	 */
 	cesar_crypt(-decallage, texte, chiffre);
 }
 
@@ -135,23 +182,31 @@ void cesar_decrypt(int decallage, char * texte, char* chiffre)
 
 
 /**
- *  * chiffrement utilisant viginere
- *   */
+ * \fn 		void viginere_crypt(char * key, char * texte, char* chiffre)
+ * \brief 	Chiffrement de Vigenere.
+ *
+ * \param 	char* key     La cle de chiffrement.
+ * \param 	char* texte   Le texte source a chiffrer.
+ * \param   char* chiffre Le texte ou stocker le chiffrement.
+ *
+ * \return 	Void
+*/
 void viginere_crypt(char * key, char * texte, char* chiffre)
 {
 	if(key == NULL || texte == NULL || chiffre == NULL)
 	{
-		printf("Erreur : un des arguments est NULL.");
+		printf("Erreur : un des arguments est NULL.\n");
 		return;
 	}
 
-	/* Declaration variables */
-	int c, i, pos;
+	/* ===== Variables ===== */
+	int c, i;
+	int pos;              // Iterateur de cle
 	int decalage, taille;
 	char* test;
 	test = key;
 
-	/* Verification eligibilite de la cle */
+	/* ===== Verification eligibilite de la cle ===== */
 	while(*test != '\0')
 	{
 		if ( !('A' <= *test && *test <= 'Z') 
@@ -168,7 +223,7 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
 	pos    = 0;
 	i      = 0;
 
-	printf("Encryptage Vigenere...\n");
+	/* ===== Algorithme ===== */
 	while(texte[i] != '\0')
 	{
 		c = texte[i];
@@ -181,7 +236,7 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
 		decalage = key[pos];
 
 		/* ==============================================
-		   =========== Cryptage du caractere ============
+		   ========= Chiffrement du caractere ===========
 		   ==============================================
 
 		 * c-'lettre' correspond a l'index de c dans l'alphabet
@@ -192,6 +247,7 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
 		{
 			if('A' <= decalage && decalage <= 'Z')
 			{
+				/* Conversion majuscule en minuscule */
 				decalage += A_TO_a;
 			}
 			c = ((c-'a'+decalage-'a')%26)+'a';
@@ -200,6 +256,7 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
 		{
 			if('a' <= decalage && decalage <= 'z')
 			{
+				/* Conversion minuscule en majuscule */
 				decalage += a_TO_A;
 			}
 			c = ((c-'A'+decalage-'A')%26)+'A';
@@ -212,13 +269,20 @@ void viginere_crypt(char * key, char * texte, char* chiffre)
 }
 
 /**
- *  * dÈchiffrement utilisant viginere
- *   */
+ * \fn 		void viginere_decrypt(char * key, char * texte, char* chiffre)
+ * \brief 	Dechiffrement de Vigenere.
+ *
+ * \param 	char* key     La cle de dechiffrement.
+ * \param 	char* texte   Le texte source a dechiffrer.
+ * \param   char* chiffre Le texte ou stocker le dechiffrement.
+ *
+ * \return 	Void
+*/
 void viginere_decrypt(char * key, char * texte, char* chiffre)
 {
 	if(key == NULL || texte == NULL || chiffre == NULL)
 	{
-		printf("Erreur : un des arguments est NULL.");
+		printf("Erreur : un des arguments est NULL.\n");
 		return;
 	}
 
@@ -233,7 +297,6 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 	pos    = 0;
 	i      = 0;
 
-	printf("Decryptage Vigenere...\n");
 	while(texte[i] != '\0')
 	{
 		c = texte[i];
@@ -246,7 +309,7 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 		decalage = key[pos];
 
 		/* ==============================================
-		   =========== Cryptage du caractere ============
+		   ======== Dechiffrement du caractere ==========
 		   ==============================================
 
 		 * Au lieu de faire +(decalage-'lettre')
@@ -254,7 +317,7 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 		 * pour revenir vers la lettre originelle.
 		 * On doit s'assurer que le resultat est positif
 		 * donc +26 a l'operation precedente.
-		 * Et enfin un %26 si la soustrction etait deja
+		 * Et enfin un %26 si la soustraction etait deja
 		 * positive pour ne pas depasser 26.
 		*/
 		if('a' <= c && c <= 'z')
@@ -278,20 +341,27 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 		pos++;
 		i++;
 	}
-	printf("Fin du programme\n");
 }
 
 
 /****************************************************************
  *                                                               *
- *  --------------------------- DES ---------------------------  *
+ *  ------------------------ DES EBC---------------------------  *
  *                                                               *
  ****************************************************************/
 
 
 /**
- *  * chiffrement utilisant des
- *   */
+ * \fn 		void des_crypt(char * key, char * texte, char* chiffre, int size)
+ * \brief 	Chiffrement DES EBC.
+ *
+ * \param 	char* key     La cle de chiffrement.
+ * \param 	char* texte   Le texte source a chiffrer.
+ * \param   char* chiffre Le texte ou stocker le chiffrement.
+ * \param   int   size    Le nombre de blocs a chiffrer.
+ *
+ * \return 	Void
+*/
 void des_crypt(char * key, char * texte, char* chiffre, int size)
 {
 	if(key == NULL || texte == NULL || chiffre == NULL)
@@ -308,18 +378,27 @@ void des_crypt(char * key, char * texte, char* chiffre, int size)
 	ptrTxt     = texte;
 	ptrChiffre = chiffre;
 
+	/* Chiffrement DES EBC */
 	for(i=0; i<size; i++)
 	{
 		des_encipher((unsigned char*)ptrTxt, (unsigned char*)ptrChiffre, (unsigned char*)key);
-		ptrTxt     += sizeof(char)*8;
-		ptrChiffre += sizeof(char)*8;
+		ptrTxt     += sizeof(char)*TAILLE_BLOCK_DES;
+		ptrChiffre += sizeof(char)*TAILLE_BLOCK_DES;
 	}
 }
 
 
 /**
- *  * dÈchiffrement utilisant des
- *   */
+ * \fn 		void des_decrypt(char * key, char * texte, char* chiffre, int size)
+ * \brief 	Dechiffrement DES EBC.
+ *
+ * \param 	char* key     La cle de dechiffrement.
+ * \param 	char* texte   Le texte source a dechiffrer.
+ * \param   char* chiffre Le texte ou stocker le dechiffrement. 
+ * \param   int   size    Le nombre de blocs a dechiffrer.
+ *
+ * \return 	Void
+*/
 void des_decrypt(char * key, char * texte, char* chiffre, int size)
 {
 	if(key == NULL || texte == NULL || chiffre == NULL)
@@ -336,11 +415,12 @@ void des_decrypt(char * key, char * texte, char* chiffre, int size)
 	ptrChiffre   = texte;
 	ptrDechiffre = chiffre;
 
+	/* Dechiffrement DES EBC */
 	for(i=0; i<size; i++)
 	{
 		des_decipher((unsigned char*)ptrChiffre, (unsigned char*)ptrDechiffre, (unsigned char*)key);
-		ptrChiffre   += sizeof(char)*8;
-		ptrDechiffre += sizeof(char)*8;
+		ptrChiffre   += sizeof(char)*TAILLE_BLOCK_DES;
+		ptrDechiffre += sizeof(char)*TAILLE_BLOCK_DES;
 	}
 }
 
@@ -353,8 +433,17 @@ void des_decrypt(char * key, char * texte, char* chiffre, int size)
 
 
 /**
- *  * chiffrement utilisant 3des
- *   */
+ * \fn 		void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int size)
+ * \brief 	Chiffrement 3DES EBC.
+ *
+ * \param 	char* key1    La 1ere cle de chiffrement. 
+ * \param 	char* key2    La 2nde cle de chiffrement.
+ * \param 	char* texte   Le texte source a chiffrer.
+ * \param   char* chiffre Le texte ou stocker le chiffrement. 
+ * \param   int   size    Le nombre de blocs a chiffrer.
+ *
+ * \return 	Void
+*/
 void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int size)
 {
 	if(key1==NULL || key2==NULL || texte==NULL || chiffre==NULL)
@@ -363,62 +452,47 @@ void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int s
 		return;
 	}
 
-	/* Variables */
-	char* tmp_DES1;
-	char* tmp_DES2;
-
-	/* Initialisation variables */
-	tmp_DES1 = malloc(sizeof(char)*strlen(texte));
-	tmp_DES2 = malloc(sizeof(char)*strlen(texte));
-
-	des_crypt(key1, texte, tmp_DES1, size);
-	//printf("%s\n\n", tmp_DES1);
-	des_decrypt(key2, tmp_DES1, tmp_DES2, size);
-	//printf("%s\n\n", tmp_DES2);
-	des_crypt(key1, tmp_DES2, chiffre, size);
-
-	free(tmp_DES1);
-	free(tmp_DES2);
-
-	/* if(key1==NULL || key2==NULL || texte==NULL || chiffre==NULL)
-	{
-		printf("Erreur : l'une des chaines est NULL\n");
-		return;
-	}
-
-	// Variables 
+	/* ===== Variables ===== */
 	char* tmp_DES1;
 	char* tmp_DES2;
 	char* ptrTxt;
 	char* ptrChiffre;
 	int i;
 
-	// Initialisation variables
-	tmp_DES1   = malloc(8*sizeof(char));
-	tmp_DES2   = malloc(8*sizeof(char));
+	/* ===== Initialisation ===== */
+	tmp_DES1   = malloc(TAILLE_BLOCK_DES*sizeof(char));
+	tmp_DES2   = malloc(TAILLE_BLOCK_DES*sizeof(char));
 
 	ptrTxt     = texte;
 	ptrChiffre = chiffre;
 
-	// Chiffrement 3DES 
+	// Chiffrement 3DES EBC
 	for(i=0; i<size; i++)
 	{
 		des_encipher((unsigned char*)ptrTxt, (unsigned char*)tmp_DES1, (unsigned char*)key1);
 		des_decipher((unsigned char*)tmp_DES1, (unsigned char*)tmp_DES2, (unsigned char*)key2);
 		des_encipher((unsigned char*)tmp_DES2, (unsigned char*)ptrChiffre, (unsigned char*)key1);
-		ptrTxt     += sizeof(char)*8;
-		ptrChiffre += sizeof(char)*8;
+		ptrTxt     += sizeof(char)*TAILLE_BLOCK_DES;
+		ptrChiffre += sizeof(char)*TAILLE_BLOCK_DES;
 	}
 
 	free(tmp_DES1);
 	free(tmp_DES2);
-	*/
 }
 
 
 /**
- *  * dÈchiffrement utilisant 3des
- *   */
+ * \fn 		void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int size)
+ * \brief 	Dechiffrement 3DES EBC.
+ *
+ * \param 	char* key     La 1ere cle de dechiffrement.
+ * \param 	char* key     La 2nde cle de dechiffrement.
+ * \param 	char* texte   Le texte source a dechiffrer.
+ * \param   char* chiffre Le texte ou stocker le dechiffrement. 
+ * \param   int   size    Le nombre de blocs a dechiffrer.
+ *
+ * \return 	Void
+*/
 void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int size)
 {
 	if(key1==NULL || key2==NULL || texte==NULL || chiffre==NULL)
@@ -427,19 +501,29 @@ void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int s
 		return;
 	}
 
-	/* Variables */
+	/* ===== Variables ===== */
 	char* tmp_DES1;
 	char* tmp_DES2;
+	char* ptrTxt;
+	char* ptrChiffre;
+	int i;
 
-	/* Initialisation variables */
-	tmp_DES1 = malloc(sizeof(char)*strlen(texte));
-	tmp_DES2 = malloc(sizeof(char)*strlen(texte));
+	/* ===== Initialisation ===== */
+	tmp_DES1   = malloc(TAILLE_BLOCK_DES*sizeof(char));
+	tmp_DES2   = malloc(TAILLE_BLOCK_DES*sizeof(char));
 
-	des_decrypt(key1, texte, tmp_DES1, size);
-	//printf("%s\n\n", tmp_DES1);
-	des_crypt(key2, tmp_DES1, tmp_DES2, size);
-	//printf("%s\n\n", tmp_DES2);
-	des_decrypt(key1, tmp_DES2, chiffre, size);
+	ptrTxt     = texte;
+	ptrChiffre = chiffre;
+
+	// Dehiffrement 3DES EBC
+	for(i=0; i<size; i++)
+	{
+		des_decipher((unsigned char*)ptrTxt, (unsigned char*)tmp_DES1, (unsigned char*)key1);
+		des_encipher((unsigned char*)tmp_DES1, (unsigned char*)tmp_DES2, (unsigned char*)key2);
+		des_decipher((unsigned char*)tmp_DES2, (unsigned char*)ptrChiffre, (unsigned char*)key1);
+		ptrTxt     += sizeof(char)*TAILLE_BLOCK_DES;
+		ptrChiffre += sizeof(char)*TAILLE_BLOCK_DES;
+	}
 
 	free(tmp_DES1);
 	free(tmp_DES2);
@@ -447,7 +531,7 @@ void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int s
 
 
 /****************************************************************
- *                                                               *
+ *  CREDITS JEREMY BRIFFAUT                                      *
  *  -------------------------- modexp -------------------------  *
  *                                                               *
  ****************************************************************/
@@ -498,91 +582,98 @@ static Huge modexp(Huge a, Huge b, Huge n) {
 	
 }
 
-
 /**
- * Transforme une chaine de caractère en chaine d'entier
- */
-void texttoint(char * texte, char* chiffre, int size){
-	*chiffre='\0';
-	int tmp;
-	int i;
-	for(i=0;i<size;i++){		
-	    // on ajoute 10 pour éviter le problème de disparition du 0 devnt les entiers entre 1 et 9 (01 a 09)
-		// ceci évite de découper le texte en bloc de taille < n et de les normaliser ensuite
-		tmp=(*(texte+i)-'a'+10);
-		sprintf(chiffre+strlen(chiffre),"%d%c",tmp,'\0');
-	}
-}
-
-/**
- * Transforme une chaine d'entier en chaine de caractère
- */ 
-void inttotext(char * texte, char* chiffre){
-	*chiffre='\0';
-	int tmp=0;
-	while((*texte) != '\0'){	
-	    // lettre de l'alphabet (0..25 correspond pour nous à 10..35)	
-		if(10*tmp+(*(texte)-'0') > 36){
-		    // on déduit donc 10 pour obtenir la bonne lettre dans l'alphabet
-			sprintf(chiffre+strlen(chiffre),"%c%c",tmp+'a'-10, '\0');
-			tmp=0;
-		}
-		tmp=10*tmp+(*(texte)-'0');
-		texte++;
-	}
-}
-
-/**
- * Chiffrement RSA
- */
+ * \fn 		void rsa_crypt(int e, int n, char * texte, char* chiffre, int size)
+ * \brief 	Chiffrement RSA. Base sur l'algorithme de JEREMY BRIFFAUT.
+ *
+ * \param 	int   e       Exposant de chiffrement. 
+ * \param 	int   n       Module de chiffrement.
+ * \param 	char* texte   Le texte source a dechiffrer.
+ * \param   char* chiffre Le texte ou stocker le dechiffrement. 
+ * \param   int   size    Taille du texte d'origine avant chiffrement.
+ *
+ * \return 	Void
+*/
 void rsa_crypt(int e, int n, char * texte, char* chiffre, int size)
 {
-    int tmp;
-	Huge buf=0;
-	char* pt;
-	char* btmp = (char *)malloc(strlen(texte) * sizeof(char)); 
-	
-	texttoint(texte,btmp,size);
-	pt = btmp;
+	/* ===== Variables ===== */
+	int i;
+	char c;
+	Huge buf=0; // Buffer pour la fonction modexp
 	*chiffre='\0';
-	while((*pt) != '\0'){
-		tmp=*pt-'0';
-		if((10*buf + tmp) >= n){
-		    // on utilise le $ comme séparateur de bloc
-			sprintf(chiffre+strlen(chiffre),"%ld$%c",modexp(buf, e, n),'\0');
-			buf=0;
-		}
-		buf=10*buf+tmp;
-		pt++;
+
+	/* ===== Algorithmes ===== */
+	/* Pour l'algo :
+	 * On va se deplacer caractere par caractere dans le texte source
+	 *    puis on va calculer le chiffrement RSA de ce caractere.
+	 * On concatene ce caractere avec le pointeur sur la destination (chiffre).
+	 * On fait donc un RSA sur chaque caractere, dans leur format decimal.
+	 */ 
+	for(i=0;i<(size);i++)
+	{
+		c   = *(texte+i);
+		buf = (Huge)c;
+		/* Le caractere '$' sert de separateur pour le dechiffrement */
+		sprintf(chiffre+strlen(chiffre),"%ld$%c",modexp(buf, e, n),'\0');
 	}
-	sprintf(chiffre+strlen(chiffre),"%ld$%c", modexp(buf, e, n),'\0');
-	printf("\n");
 }
 
 /**
- * Déchiffrement RSA
- */
+ * \fn 		void rsa_decrypt(int d, int n, char * texte, char* chiffre)
+ * \brief 	Dehiffrement RSA. Base sur l'algorithme de JEREMY BRIFFAUT.
+ *
+ * \param 	int   e       Exposant de dechiffrement. 
+ * \param 	int   n       Module de chiffrement.
+ * \param 	char* texte   Le texte source a dechiffrer.
+ * \param   char* chiffre Le texte ou stocker le dechiffrement. 
+ * \param   int   size    Taille du texte d'origine avant chiffrement.
+ *
+ * \return 	Void
+*/
 void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 {
-	int tmp;
-	char* pt=texte;
-	char* tmpc= (char *)malloc(strlen(texte) * sizeof(char)); 
-	Huge buf=0;
-	
-	*tmpc='\0';
-	while((*pt) != '\0'){
-		// on utilise le $ comme séparateur de bloc
-	    if((*pt) == '$'){
-			sprintf(tmpc+strlen(tmpc),"%ld%c", modexp(buf, d, n),'\0');
-			buf=0;
-		}else{
-			tmp=*pt-'0';
-			buf=10*buf+tmp;
+
+	/* ===== Variables ====== */
+	int puiss;  // Puissance de dix
+	int tmp;    // Variable pour la conversion caractere->numerique
+	int i;
+	int nombre; // Variable pour stocker un nombre sous forme %c
+	char* ptr_fin;
+	char* ptr_debut;
+
+	/* ===== Initialisation ===== */
+	ptr_fin = texte;
+	ptr_debut = texte;
+	*chiffre = '\0';
+
+	/* ===== Algorithmes ===== */
+	/* Pour l'algorithmes :
+	 * On va chercher a parcourir toute la chaine.
+	 * Quand on rencontre '$', on regarde tout ce qui est avant,
+	 *   pour convertire les char numeriques en nombre numeriques.
+	 * On applique ensuite le dechiffrement sur ce nombre.
+	 */
+	while((*ptr_fin) != '\0')
+	{
+		if((*ptr_fin) == '$')
+		{
+			puiss = 1;
+			tmp   = 0;
+			for(i = 0; i<(ptr_fin-ptr_debut); i++)
+			{
+				/* On converti les caracteres numeriques en valeur numerique
+				[[0,9]] == [[48,57]] */
+				nombre = *(ptr_fin - i - 1) - 48;
+
+				tmp = tmp + ( nombre * puiss );
+				puiss *= 10;
+			}
+			sprintf(chiffre+strlen(chiffre),"%c%c", (int)modexp(tmp, d, n),'\0');
+			ptr_debut = ptr_fin+1;
 		}
-		pt++;
+		ptr_fin++;
 	}
-	sprintf(tmpc+strlen(tmpc),"%ld%c",modexp(buf, d, n),'\0');
-	
-	inttotext(tmpc,chiffre);
 }
+
+
 

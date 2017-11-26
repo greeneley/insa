@@ -1,6 +1,8 @@
 #ifndef BIT_H
 #define BIT_H
 
+/* CREDITS : JEREMY BRIFFAUT */
+
 int bit_get(const unsigned char *bits, int pos);
 
 void bit_set(unsigned char *bits, int pos, int etat);

@@ -1,12 +1,14 @@
+/* CREDITS : JEREMY BRIFFAUT */
+
 /**
  *  * chiffrement utilisant le ou exclusif
  *   */
-void xor_crypt(char* key, char* texte, char* chiffre);
+void xor_crypt(char* key, char* texte, char* chiffre, int taille);
 
 /**
  *  * déchiffrement utilisant le ou exclusif
  *   */
-void xor_decrypt(char* key, char* chiffre, char* clair);
+void xor_decrypt(char* key, char* chiffre, char* clair, int taille);
 
 /**
  *  * chiffrement utilisant cesar
@@ -59,7 +61,4 @@ void rsa_crypt(int e, int n, char* texte, char* chiffre, int size);
  * Dechiffrement RSA
  */
 void rsa_decrypt(int d, int n, char* chiffre, char* clair);
-
-
-
 

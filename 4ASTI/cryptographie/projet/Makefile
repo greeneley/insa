@@ -19,11 +19,11 @@ clean:
 	$(RM) -f core *.o $(CIBLES) *~
 
 
-test: test.o crypt.o des.o bit.o 
-	$(CC) $(CFLAGS) -o $@ test.o des.o crypt.o bit.o  $(LIBS)
+test: test.o crypt.o des.o bit.o md5.o
+	$(CC) $(CFLAGS) -o $@ test.o des.o crypt.o bit.o md5.o $(LIBS)
 
 test.o: test.c
-		$(CC) $(CFLAGS) -c test.c crypt.h
+		$(CC) $(CFLAGS) -c test.c crypt.h md5.h
 
 crypt.o: crypt.c
 		$(CC) $(CFLAGS) -c crypt.c
@@ -32,6 +32,9 @@ des.o: des.c
 
 bit.o: bit.c
 		$(CC) $(CFLAGS) -c bit.c
+
+md5.o: md5.c
+		$(CC) $(CFLAGS) -c md5.c
 
 run: clean test
 		./test test.txt
