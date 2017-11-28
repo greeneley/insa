@@ -23,7 +23,7 @@ public class Main {
 		
 		System.out.println("------------------------------------------------");	
 		System.out.println("Creation d'une table");
-		Table t = new TableInt("C:/temp/table2", nupletSize);
+		Table t = new TableInt("/tmp/table2", nupletSize);
 		for(int i=0;i<datasetSize;i++){
 			t.put(tab[i]);
 			}

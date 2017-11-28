@@ -52,6 +52,12 @@ public class TableInt implements Table{
 	@Override
 	public Nuplet[] fullScan() {
 		// TODO Auto-generated method stub
+		Nuplet[] scan = new Nuplet[this.records];
+		
+		for(int i=0; i<this.records; i++)
+		{
+			
+		}
 		return null;
 	}
 
