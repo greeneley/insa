@@ -1,9 +1,17 @@
+# Thanh LUU STI 2019
 
+from scipy import stats
+from statsmodels.graphics.tsaplots import plot_acf
+import random
 
 # =======================================
 #               FUNCTIONS
 # =======================================
 
+
+# =======================================
+#               EXERCICE 1
+# =======================================
 def exo1(X0, a, c, m, size, affiche=False):
 	"""Methode Congruentielle Lineaire
 	"""
@@ -36,47 +44,57 @@ def exo1(X0, a, c, m, size, affiche=False):
 #END_DEF
 
 
+# =======================================
+#               EXERCICE 2
+# =======================================
 def exo2(m1, affiche, *generateurs):
 	"""Methode de Congruences lineaires combinees
 	"""
 
 	# ====== VARIABLES ====== #
-	X       = [-1]
-	k       = len(generateurs)
+	X       = [0.0]
+	nb_gen  = len(generateurs)
+	nb_Xi   = len(generateurs[0])
 	Xi      = -1
 	Ri      = -1
 	periode = -1
 	trouve  = False
 
 	# ====== ALGORITHME ====== #
-	for i in range(1, k):
-		for j in range(1, k):
-			X[i] = ( ( (-1)**(j-1) ) * generateurs[j][i] ) % (m1 - 1)
+	for i in range(nb_Xi):
+		for j in range(1, nb_gen):
+			X[i] += ( ( (-1)**(j-1) ) * generateurs[j][i] )
+		#END_FOR
 
-			if(X[i] > 0):
-				Ri = X[i] / m1
-			else:
-				Ri = (m1 - 1) / m1
-			#END_IF
+		X[i] %= (m1 - 1)
 
-			if( (X[i] == X[0]) and not(trouve) and i!=0 ):
-				periode = i
-				trouve  = True
-			#END_IF
+		if(X[i] > 0):
+			Ri = X[i] / m1
+		else:
+			Ri = (m1 - 1) / m1
+		#END_IF
 
-			if(affiche):
-				print(Ri)
-			#END_IF
+		if( (X[i] == X[0]) and not(trouve) and i!=0 ):
+			periode = i
+			trouve  = True
+		#END_IF
 
-			X.append(0.0)
-		#END_FOR_j
+		if(affiche):
+			print(Ri)
+		#END_IF
+
+		X.append(0.0)
 	#END_FOR_i
 
 	# ====== OUTPUT ====== #
-	print("Periode(%d) = %d" % (m1, periode))
+	print("Periode(Xk, m1 = %d) = %d" % (m1, periode))
 	return 0
 #END_DEF
 
+
+# =======================================
+#               EXERCICE 3
+# =======================================
 
 # =======================================
 #                  MAIN
@@ -92,5 +110,9 @@ if(__name__ == '__main__'):
 	X1 = exo1(2, 3, 0, 13, 100)
 	X2 = exo1(5, 5, 0, 11, 100)
 	print("")
-	exo2(13, True, X1, X2)
+	exo2(13, False, X1, X2)
+
+	print("====== EXERCICE 3 ======")
+	print("====== EXERCICE 4 ======")
+	print("====== EXERCICE 5 ======")
 #END_IF
