@@ -8,16 +8,18 @@ public class Bloom {
 	
 	final   int TAILLE_NORMALISEE_BYTE = 256;
 	
-	
-	public void Bloom(int k)
+	public Bloom(int k)
 	{
 		this.k   = k;
+		
+		// Init du filtre a 0
 		this.tab = new int[this.TAILLE_NORMALISEE_BYTE];
 		for(int i=0; i<this.TAILLE_NORMALISEE_BYTE; i++)
 		{
 			this.tab[i] = 0;
 		}
 		
+		// Init de la fonction de hachage
 		try {
 			this.h = new MD5();
 		} catch (NoSuchAlgorithmException e) {
@@ -28,23 +30,46 @@ public class Bloom {
 	
 	public void verify(String element)
 	{
+		// Init de la fonction de hachage
 		this.h.update(element);
 		this.h.digest();
 		
+		// Verification		
 		for(int i=0; i<this.k; i++)
 		{		
-			if(this.h.hacheK(i) != 1)
+			if(this.tab[this.h.hacheK(i)] != 1)
 			{
 				System.out.println("L'élément '"+element+"' ne fait pas partie du filtre.");
 				return;
 			}
-			System.out.println("L'élément '"+element+"' fait partie du filtre");
+		}
+		System.out.println("L'élément '"+element+"' fait partie du filtre");
+	}
+	
+	public void add(String element)
+	{
+		this.h.update(element);
+		this.h.digest();
+		
+		for(int i=0; i<this.k; i++)
+		{
+			this.tab[this.h.hacheK(i)] = 1;
 		}
 		
+		System.out.println("L'élément '"+element+"' a ete ajoute au filtre.");
 	}
 	
 	public static void main(String[] args)
 	{
-		//TODO : 	
+		Bloom filtre = new Bloom(6);
+		filtre.add("Reservoir Dogs");
+		filtre.add("Shining");
+		filtre.add("Inception");
+		
+		System.out.println("");
+		
+		filtre.verify("Shining");
+		filtre.verify("Brazil");
+		filtre.verify("Strech");
 	}
 }

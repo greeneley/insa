@@ -18,7 +18,8 @@ public class MD5 {
 	
 	public void update(String element)
 	{
-		this.md.update(element.getBytes());
+		this.element = element;
+		this.md.update(this.element.getBytes());
 	}
 	
 	public void digest()
