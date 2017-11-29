@@ -346,14 +346,14 @@ void viginere_decrypt(char * key, char * texte, char* chiffre)
 
 /****************************************************************
  *                                                               *
- *  ------------------------ DES EBC---------------------------  *
+ *  ------------------------ DES ECB---------------------------  *
  *                                                               *
  ****************************************************************/
 
 
 /**
  * \fn 		void des_crypt(char * key, char * texte, char* chiffre, int size)
- * \brief 	Chiffrement DES EBC.
+ * \brief 	Chiffrement DES ECB.
  *
  * \param 	char* key     La cle de chiffrement.
  * \param 	char* texte   Le texte source a chiffrer.
@@ -378,7 +378,7 @@ void des_crypt(char * key, char * texte, char* chiffre, int size)
 	ptrTxt     = texte;
 	ptrChiffre = chiffre;
 
-	/* Chiffrement DES EBC */
+	/* Chiffrement DES ECB */
 	for(i=0; i<size; i++)
 	{
 		des_encipher((unsigned char*)ptrTxt, (unsigned char*)ptrChiffre, (unsigned char*)key);
@@ -390,7 +390,7 @@ void des_crypt(char * key, char * texte, char* chiffre, int size)
 
 /**
  * \fn 		void des_decrypt(char * key, char * texte, char* chiffre, int size)
- * \brief 	Dechiffrement DES EBC.
+ * \brief 	Dechiffrement DES ECB.
  *
  * \param 	char* key     La cle de dechiffrement.
  * \param 	char* texte   Le texte source a dechiffrer.
@@ -415,7 +415,7 @@ void des_decrypt(char * key, char * texte, char* chiffre, int size)
 	ptrChiffre   = texte;
 	ptrDechiffre = chiffre;
 
-	/* Dechiffrement DES EBC */
+	/* Dechiffrement DES ECB */
 	for(i=0; i<size; i++)
 	{
 		des_decipher((unsigned char*)ptrChiffre, (unsigned char*)ptrDechiffre, (unsigned char*)key);
@@ -434,7 +434,7 @@ void des_decrypt(char * key, char * texte, char* chiffre, int size)
 
 /**
  * \fn 		void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int size)
- * \brief 	Chiffrement 3DES EBC.
+ * \brief 	Chiffrement 3DES ECB.
  *
  * \param 	char* key1    La 1ere cle de chiffrement. 
  * \param 	char* key2    La 2nde cle de chiffrement.
@@ -466,7 +466,7 @@ void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int s
 	ptrTxt     = texte;
 	ptrChiffre = chiffre;
 
-	// Chiffrement 3DES EBC
+	// Chiffrement 3DES ECB
 	for(i=0; i<size; i++)
 	{
 		des_encipher((unsigned char*)ptrTxt, (unsigned char*)tmp_DES1, (unsigned char*)key1);
@@ -483,7 +483,7 @@ void tripledes_crypt(char * key1, char * key2, char * texte, char* chiffre,int s
 
 /**
  * \fn 		void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int size)
- * \brief 	Dechiffrement 3DES EBC.
+ * \brief 	Dechiffrement 3DES ECB.
  *
  * \param 	char* key     La 1ere cle de dechiffrement.
  * \param 	char* key     La 2nde cle de dechiffrement.
@@ -515,7 +515,7 @@ void tripledes_decrypt(char* key1, char* key2, char* texte, char* chiffre, int s
 	ptrTxt     = texte;
 	ptrChiffre = chiffre;
 
-	// Dehiffrement 3DES EBC
+	// Dehiffrement 3DES ECB
 	for(i=0; i<size; i++)
 	{
 		des_decipher((unsigned char*)ptrTxt, (unsigned char*)tmp_DES1, (unsigned char*)key1);
