@@ -107,9 +107,9 @@ def exo3(seed=False):
 	"""
 
 	# ===== VARIABLES ===== #
-	x1 = []
-	x2 = []
-	x3 = []
+	x1     = []
+	x2     = []
+	x3     = []
 	result = []
 
 	# Le seed permet "d'influencer" la RNG

@@ -101,8 +101,8 @@ int main(int argc, char *argv[]){
 	chiffre = (char *)malloc(8+strlen(texte) * sizeof(char));
 	dechiffre = (char *)malloc(8+strlen(texte) * sizeof(char)); 
 	printf("----------------   3DES EBC   ----------------\n");
-	tripledes_crypt("untest", "dechiffrement", texte,chiffre, size);
-	tripledes_decrypt("untest", "dechiffrement", chiffre, dechiffre, size);
+	tripledes_crypt("unecle", "dechiffrement", texte,chiffre, size);
+	tripledes_decrypt("unecle", "dechiffrement", chiffre, dechiffre, size);
 	printf("'%s'\n",chiffre);
 	printf("'%s'\n",dechiffre);
 	printf("%s\n", strcmp(texte, dechiffre)==0?"ok":"NON");

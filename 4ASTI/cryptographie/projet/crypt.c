@@ -650,7 +650,7 @@ void rsa_decrypt(int d, int n, char * texte, char* chiffre)
 	/* Pour l'algorithmes :
 	 * On va chercher a parcourir toute la chaine.
 	 * Quand on rencontre '$', on regarde tout ce qui est avant,
-	 *   pour convertire les char numeriques en nombre numeriques.
+	 *   pour convertir les char numeriques en nombre numeriques.
 	 * On applique ensuite le dechiffrement sur ce nombre.
 	 */
 	while((*ptr_fin) != '\0')
