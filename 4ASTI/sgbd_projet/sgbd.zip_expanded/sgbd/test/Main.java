@@ -1,6 +1,10 @@
 package sgbd.test;
 
 import sgbd.stockage.*;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
 import sgbd.impl.*;
 
 public class Main 
@@ -39,7 +43,7 @@ public class Main
 	 */
 	public static void testTableInt()
 	{
-		System.out.println("===== LECTURE VIA FULLSCAN =====");
+		System.out.println("\n===== LECTURE VIA FULLSCAN =====");
 		for(Nuplet n : t.fullScan())
 		{
 			System.out.println(n.toString());
@@ -55,7 +59,7 @@ public class Main
 	 */
 	public static void testRestrictionInt(int att, int object)
 	{
-		System.out.println("===== TESTS RESTRICTIONS =====");
+		System.out.println("\n===== TESTS RESTRICTIONS =====");
 		// Notre objet qui permttra de tester les methodes de la classe
 		RestrictionInt restrictInt = new RestrictionInt();
 		
@@ -78,9 +82,11 @@ public class Main
 		}
 	}
 	
+	
 	public static void testProjectionImpl(Nuplet[] tab, int[] atts)
 	{
-		System.out.println("===== TESTS PRJECTION =====");
+		System.out.println("\n===== TESTS PRJECTION =====");
+		
 		// Notre objet qui permettra de tester les methodes de la classe		
 		ProjectionImpl pi = new ProjectionImpl();
 		
@@ -91,6 +97,69 @@ public class Main
 		{
 			System.out.println(n.toString());
 		}
+	}
+	
+	
+	public static void testJointureBl()
+	{	
+		System.out.println("\n===== TESTS JOINTURE DOUBLE BOUCLES =====");
+		
+		JointureBl jointer = new JointureBl();
+		Nuplet[] u1 = new NupletInt[3];
+		Nuplet[] u2 = new NupletInt[3];
+		
+		u1[0] = new NupletInt(new byte[] {0,1,2,3,4});
+		u1[1] = new NupletInt(new byte[] {1,2,3,4,5});
+		u1[2] = new NupletInt(new byte[] {9,1,9,9,9});
+		
+		u2[0] = new NupletInt(new byte[] {8,1,8,8,8});
+		u2[1] = new NupletInt(new byte[] {1,7,3,4,5});
+		u2[2] = new NupletInt(new byte[] {9,2,9,9,9});
+
+		long startTime = System.currentTimeMillis();
+		Nuplet[] result = jointer.jointure(u1, u2, 1, 1);
+		long endTime = System.currentTimeMillis();
+		System.out.println("That took " + (endTime - startTime) + " milliseconds");
+		
+		for(Nuplet n : result)
+		{
+			System.out.println(n);	
+		}
+
+	}
+	
+	
+	public static void testJointureH()
+	{
+		System.out.println("\n===== TESTS JOINTURE HASHJOIN =====");
+		
+		JointureH jointer = new JointureH();
+		Nuplet[] u1 = new NupletInt[3];
+		Nuplet[] u2 = new NupletInt[3];
+		
+		u1[0] = new NupletInt(new byte[] {0,1,2,3,4});
+		u1[1] = new NupletInt(new byte[] {1,2,3,4,5});
+		u1[2] = new NupletInt(new byte[] {9,1,9,9,9});
+		
+		u2[0] = new NupletInt(new byte[] {8,1,8,8,8});
+		u2[1] = new NupletInt(new byte[] {1,7,3,4,5});
+		u2[2] = new NupletInt(new byte[] {9,2,9,9,9});
+
+		long startTime = System.currentTimeMillis();
+		Nuplet[] result = jointer.jointure(u1, u2, 1, 1);
+		long endTime = System.currentTimeMillis();
+		System.out.println("That took " + (endTime - startTime) + " milliseconds");
+		
+		for(Nuplet n : result)
+		{
+			System.out.println(n);	
+		}
+	}
+	
+	
+	public static void testJointureS()
+	{
+		//TODO;
 	}
 
 	
@@ -111,8 +180,7 @@ public class Main
 		}
 
 		// Implémentation avec Table
-		System.out.println("------------------------------------------------");	
-		System.out.println("Creation d'une table");
+		System.out.println("===== Creation d'une table =====");
 		t = new TableInt("/tmp/table2", nupletSize);
 		for(int i=0;i<datasetSize;i++){
 			t.put(tab[i]);
@@ -126,14 +194,9 @@ public class Main
 		//testTableInt();
 		//testRestrictionInt(4, 45);
 		//testProjectionImpl(t.fullScan(), new int[]{0,3,7});
-		//TODO : JointureBl
-		
-		
-		
+		//testJointureBl();
+		//testJointureH();
+		//testJointureS();
 	}
-	
-	
-	
-
 }
 
