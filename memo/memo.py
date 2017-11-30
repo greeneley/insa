@@ -12,13 +12,14 @@ class MaClasse(object):
 
 	def __init__(self):
 		"""Constructeur de l'objet MaClasse"""
+  #END_DEF
 
 	### SETTERS ###
 	### GETTERS ###
 	### PROPERTIES ###
 	### METHODES ###
 
-	pass # FIN DE CLASSE
+#END_CLASS
 
 ### Fonction ###
 
