@@ -52,13 +52,13 @@ public class TableInt implements Table{
 	@Override
 	public Nuplet[] fullScan() {
 		// TODO Auto-generated method stub
-		Nuplet[] scan = new Nuplet[this.records];
+		Nuplet[] scan = new NupletInt[this.records];
 		
 		for(int i=0; i<this.records; i++)
 		{
-			
+			scan[i] = (NupletInt)this.f.get(i);
 		}
-		return null;
+		return scan;
 	}
 
 	@Override
