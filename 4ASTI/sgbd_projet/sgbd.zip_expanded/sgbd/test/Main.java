@@ -48,6 +48,10 @@ public class Main
 		{
 			System.out.println(n.toString());
 		}
+		
+		System.out.println("\n===== INSERT =====");
+		System.out.println("\n===== UPDATE =====");
+		System.out.println("\n===== DELETE =====");
 	}
 	
 
@@ -159,7 +163,7 @@ public class Main
 	
 	public static void testJointureS()
 	{
-		//TODO;
+		System.out.println("AHAH ! J'ai la flemme.\nNon sérieux, TODO !");
 	}
 
 	

@@ -119,8 +119,13 @@ class LoiExponentielle(object):
 			@return None         Si les donnees entrees ne valident pas les conditions d'execution.
 		"""
 
+		"""
+		   ATTENTION : erreur avec la FRI
+		   Il faut la calculer de maniere generale
+		   C'est un cas particulier ici
+		"""
 		u = self.fdr(x)
-		result = 1 - sqrt(1 - u)
+		#result = 1 - sqrt(1 - u)
 		return result
 	#END_DEF
 #END_CLASS

@@ -68,8 +68,27 @@ public class TableInt implements Table{
 	}
 
 	@Override
-	public void delete(Nuplet n, int att, Object value) {
-		// TODO Auto-generated method stub
+	public void delete(Nuplet n, int att, Object value) 
+	{
+
+		// ===== Variables =====
+		int[] match = new int[n.size()];
+		
+		// ===== Algo =====
+		// === On va d'abord lister toutes les indexes a garder
+		
+	
+		Nuplet output = new NupletInt(n.size()-1);
+		for(int i=0; i<att; i++)
+		{
+			output.putAtt(i, n.getAtt(i));
+		}
+		for(int i=(att+1); i<n.size(); i++)
+		{
+			// Attention a ne pas etre out of index avec output
+			output.putAtt(i-1, n.getAtt(i));
+		}
+		n = output;
 		
 	}
 

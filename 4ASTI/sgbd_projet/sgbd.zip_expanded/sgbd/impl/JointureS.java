@@ -2,6 +2,7 @@ package sgbd.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 import sgbd.operateurs.Jointure;
@@ -28,32 +29,61 @@ public class JointureS implements Jointure {
 		// ===== Jointure =====
 		// === Variables
 		ArrayList<Integer[]> join = new ArrayList<Integer[]>();
-		int i = 0;
-		int j = 0;
+		int size_uplets1  = t1[0].size();
+		int size_uplets2  = t2[0].size();
+		int taille_uplet  = size_uplets1 + size_uplets2;
+		int index_t1      = 0;
+		int index_t2      = 0;
+		int index_produit = 0;
 		
+		// === Algo
 		// On join d'abord les indexes
-		// TODO: Revoir l'algo : il y a un probleme avec le produit cartesien
-		while( (i!=this.tri_t1.length) && (j!=this.tri_t2.length) )
+		while( (index_t1!=this.tri_t1.length) && (index_t2!=this.tri_t2.length) )
 		{
-			int val1 = (int)this.tri_t1[i].getAtt(att1);
-			int val2 = (int)this.tri_t2[j].getAtt(att2);
+			int val1 = (int)this.tri_t1[index_t1].getAtt(att1);
+			int val2 = (int)this.tri_t2[index_t2].getAtt(att2);
+			
+			// Si les valeurs match, on va faire un produit cartesien
 			if(val1 == val2)
 			{
-				join.add(new Integer[]{i,j});
-				j++;
+				// Tant que le produit cartesien est possible
+				while(val1 == val2)
+				{
+					join.add(new Integer[]{index_t1, index_produit});
+					index_t2++;
+				}
+				
+				index_t2=index_t1;
+				index_t1++;
 			}
+			// Dans les autres cas, on avance dans les deux arrays
 			else if(val1 < val2)
 			{
-				i++;
+				index_t1++;
 			}
 			else
 			{
-				j++;
+				index_t2++;
 			}
 		}
 		
-		// Puis on join les Nuplets
-		Nuplet[] result = new Nuplet[]
+		// === Output
+		Nuplet[] result = new Nuplet[join.size()];
+		for(int i=0; i<join.size(); i++)
+		{
+			Nuplet subNuplet = new NupletInt(taille_uplet);
+			
+			for(int j=0; j<size_uplets1; j++)
+			{
+				subNuplet.putAtt(i, t1[join.get(i)[0]].getAtt(j) );
+			}
+					
+			for(int j=0; j<size_uplets2; j++)
+			{
+				subNuplet.putAtt(i, t2[join.get(i)[0]].getAtt(j) );
+			}
+			result[i] = subNuplet;
+		}
 		return null;
 	}
 	
