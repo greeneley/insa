@@ -50,8 +50,23 @@ public class Main
 		}
 		
 		System.out.println("\n===== INSERT =====");
+		
+		
 		System.out.println("\n===== UPDATE =====");
+		System.out.println("\nt.update(1, 100, 200);");
+		t.update(1, (byte) 100, (byte) 70);
+		for(Nuplet n : t.fullScan())
+		{
+			System.out.println(n.toString());
+		}
+		
 		System.out.println("\n===== DELETE =====");
+		System.out.println("\nt.update(1, 100, 200);");
+		t.delete(1, (byte) 70);
+		for(Nuplet n : t.fullScan())
+		{
+			System.out.println(n.toString());
+		}
 	}
 	
 
@@ -89,7 +104,7 @@ public class Main
 	
 	public static void testProjectionImpl(Nuplet[] tab, int[] atts)
 	{
-		System.out.println("\n===== TESTS PRJECTION =====");
+		System.out.println("\n===== TESTS PROJECTION =====");
 		
 		// Notre objet qui permettra de tester les methodes de la classe		
 		ProjectionImpl pi = new ProjectionImpl();
@@ -163,7 +178,29 @@ public class Main
 	
 	public static void testJointureS()
 	{
-		System.out.println("AHAH ! J'ai la flemme.\nNon sérieux, TODO !");
+		System.out.println("\n===== TESTS JOINTURE SORT MERGE JOIN =====");
+		
+		JointureS jointer = new JointureS();
+		Nuplet[] u1 = new NupletInt[3];
+		Nuplet[] u2 = new NupletInt[3];
+		
+		u1[0] = new NupletInt(new byte[] {0,1,2,3,4});
+		u1[1] = new NupletInt(new byte[] {1,2,3,4,5});
+		u1[2] = new NupletInt(new byte[] {9,1,9,9,9});
+		
+		u2[0] = new NupletInt(new byte[] {8,1,8,8,8});
+		u2[1] = new NupletInt(new byte[] {1,7,3,4,5});
+		u2[2] = new NupletInt(new byte[] {9,2,9,9,9});
+
+		long startTime = System.currentTimeMillis();
+		Nuplet[] result = jointer.jointure(u1, u2, 1, 1);
+		long endTime = System.currentTimeMillis();
+		System.out.println("That took " + (endTime - startTime) + " milliseconds");
+		
+		for(Nuplet n : result)
+		{
+			System.out.println(n);	
+		}
 	}
 
 	
@@ -195,7 +232,7 @@ public class Main
 		 * ========================
 		 */
 		//testOriginaux();
-		//testTableInt();
+		testTableInt();
 		//testRestrictionInt(4, 45);
 		//testProjectionImpl(t.fullScan(), new int[]{0,3,7});
 		//testJointureBl();

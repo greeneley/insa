@@ -1,5 +1,6 @@
 package sgbd.impl;
 
+import java.io.RandomAccessFile;
 import java.util.Vector;
 
 import sgbd.stockage.Nuplet;
@@ -17,6 +18,10 @@ public class TableInt implements Table{
 
 	@Override
 	public Nuplet get(int pos) {
+		if(pos > (this.records-1))
+		{
+			return null;
+		}
 		return (Nuplet) f.get(pos);
 	}
 
@@ -35,7 +40,8 @@ public class TableInt implements Table{
 	 * 
 	 */
 	@Override
-	public Nuplet[] getByAtt(int att, Object value) {
+	public Nuplet[] getByAtt(int att, Object value) {	
+		
 		Vector<Nuplet> v = new Vector<Nuplet>();
 		for(int i=0;i<this.size();i++){
 			Nuplet temp = this.get(i);
@@ -61,34 +67,41 @@ public class TableInt implements Table{
 		return scan;
 	}
 
-	@Override
-	public void insert(Nuplet n) {
+	public void insert(Nuplet n) 
+	{
 		// TODO Auto-generated method stub
-		
+		// C'est quoi la difference entre ça et put ???
 	}
 
-	@Override
-	public void delete(Nuplet n, int att, Object value) 
-	{
-
-		// ===== Variables =====
-		int[] match = new int[n.size()];
-		
-		// ===== Algo =====
-		// === On va d'abord lister toutes les indexes a garder
-		
 	
-		Nuplet output = new NupletInt(n.size()-1);
-		for(int i=0; i<att; i++)
+	/**
+	 * Permet de supprimer tous les Nuplet qui possedent la valeur
+	 * value à l'empalcement att.
+	 * 
+	 * @param att
+	 * @param value
+	 */
+	public void delete(int att, Object value) 
+	{
+		if(this.getByAtt(att, value).length > 0)
 		{
-			output.putAtt(i, n.getAtt(i));
+			Nuplet[] save = this.fullScan();
+			this.records  = 0;
+			this.f.resetLength();
+			for(Nuplet n : save)
+			{
+				if(n.getAtt(att) != value)
+				{
+					this.put(n);
+				}
+			}
 		}
-		for(int i=(att+1); i<n.size(); i++)
-		{
-			// Attention a ne pas etre out of index avec output
-			output.putAtt(i-1, n.getAtt(i));
-		}
-		n = output;
+	}	
+
+	
+	@Override
+	public void delete(Nuplet n, int att, Object value) {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -96,6 +109,32 @@ public class TableInt implements Table{
 	public void update(Nuplet n, int att, Object oldValue, Object newValue) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	
+	public void update(int att, Object oldValue, Object newValue) 
+	{
+		Nuplet current;
+		for(int i=0; i<this.size(); i++)
+		{
+			current = this.get(i);
+			System.out.println(current.getAtt(att)+"    "+oldValue);
+			if(current.getAtt(att) == oldValue)
+			{
+				Nuplet nouveau = new NupletInt(current.size());
+				for(int j=0; j<att; j++)
+				{
+					nouveau.putAtt(j, current.getAtt(j));
+				}
+				nouveau.putAtt(att, newValue);
+				for(int j=(att+1); j<current.size(); j++)
+				{
+					nouveau.putAtt(j, current.getAtt(j));
+				}
+				this.f.store(i, nouveau);	
+				System.out.println("\nok");
+			}			
+		}
 	}
 
 }

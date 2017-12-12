@@ -50,6 +50,11 @@ public class FichierInt implements Fichier{
 		return this.currentLength;
 	}
 	
+	public void resetLength()
+	{
+		this.currentLength = 0;
+	}
+	
 	
 
 }
