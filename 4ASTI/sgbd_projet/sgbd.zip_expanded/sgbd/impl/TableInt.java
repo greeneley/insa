@@ -55,9 +55,17 @@ public class TableInt implements Table{
 		return ret;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see sgbd.stockage.Table#fullScan()
+	 * 
+	 * Applique la methode de parcours 'Fullscan' dans la TableInt.
+	 * 
+	 */
 	@Override
-	public Nuplet[] fullScan() {
-		// TODO Auto-generated method stub
+	public Nuplet[] fullScan() 
+	{
 		Nuplet[] scan = new NupletInt[this.records];
 		
 		for(int i=0; i<this.records; i++)
@@ -67,10 +75,12 @@ public class TableInt implements Table{
 		return scan;
 	}
 
+	
 	public void insert(Nuplet n) 
 	{
 		// TODO Auto-generated method stub
 		// C'est quoi la difference entre ça et put ???
+		this.put(n);
 	}
 
 	
@@ -90,7 +100,7 @@ public class TableInt implements Table{
 			this.f.resetLength();
 			for(Nuplet n : save)
 			{
-				if(n.getAtt(att) != value)
+				if((byte)n.getAtt(att) != (byte)value)
 				{
 					this.put(n);
 				}
@@ -99,27 +109,13 @@ public class TableInt implements Table{
 	}	
 
 	
-	@Override
-	public void delete(Nuplet n, int att, Object value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(Nuplet n, int att, Object oldValue, Object newValue) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
 	public void update(int att, Object oldValue, Object newValue) 
 	{
 		Nuplet current;
 		for(int i=0; i<this.size(); i++)
 		{
 			current = this.get(i);
-			System.out.println(current.getAtt(att)+"    "+oldValue);
-			if(current.getAtt(att) == oldValue)
+			if((byte)current.getAtt(att) == (byte)oldValue)
 			{
 				Nuplet nouveau = new NupletInt(current.size());
 				for(int j=0; j<att; j++)
@@ -132,7 +128,6 @@ public class TableInt implements Table{
 					nouveau.putAtt(j, current.getAtt(j));
 				}
 				this.f.store(i, nouveau);	
-				System.out.println("\nok");
 			}			
 		}
 	}

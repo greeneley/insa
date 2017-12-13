@@ -8,8 +8,6 @@ public interface Table {
 	public int size();
 	public void put(Nuplet n);
 	public void insert(Nuplet n);
-	public void delete(Nuplet n, int att, Object value); // efface tous les Nuplets dont att est �gal � value
-	public void update(Nuplet n, int att, Object oldValue, Object newValue); // modifie tous les Nuplets dont att �tait �gal � oldValue et leur met la valeur newValue
 	public void delete(int att, Object value); // efface tous les Nuplets dont att est �gal � value
 	public void update(int att, Object oldValue, Object newValue); // modifie tous les Nuplets dont att �tait �gal � oldValue et leur met la valeur newValue
 

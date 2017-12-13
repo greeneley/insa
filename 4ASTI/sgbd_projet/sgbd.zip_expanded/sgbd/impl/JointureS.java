@@ -26,6 +26,16 @@ public class JointureS implements Jointure {
 		// On trie les deux Nuplets
 		this.triFusion(t1, t2, att1, att2);
 		
+		for(Nuplet n : this.tri_t1)
+		{
+			System.out.println(n.toString());
+		}
+		System.out.println("==================================================================");
+		for(Nuplet n : this.tri_t2)
+		{
+			System.out.println(n.toString());
+		}
+		
 		// ===== Jointure =====
 		// === Variables
 		ArrayList<Integer[]> join = new ArrayList<Integer[]>();
@@ -34,22 +44,21 @@ public class JointureS implements Jointure {
 		int taille_uplet  = size_uplets1 + size_uplets2;
 		int index_t1      = 0;
 		int index_t2      = 0;
-		int index_produit = 0;
 		
 		// === Algo
 		// On join d'abord les indexes
 		while( (index_t1!=this.tri_t1.length) && (index_t2!=this.tri_t2.length) )
 		{
-			int val1 = (int)this.tri_t1[index_t1].getAtt(att1);
-			int val2 = (int)this.tri_t2[index_t2].getAtt(att2);
+			byte val1 = (byte)this.tri_t1[index_t1].getAtt(att1);
+			byte val2 = (byte)this.tri_t2[index_t2].getAtt(att2);
 			
 			// Si les valeurs match, on va faire un produit cartesien
 			if(val1 == val2)
 			{
 				// Tant que le produit cartesien est possible
-				while(val1 == val2)
+				while(val1 == (byte)this.tri_t2[index_t2].getAtt(att2))
 				{
-					join.add(new Integer[]{index_t1, index_produit});
+					join.add(new Integer[]{index_t1, index_t2});
 					index_t2++;
 				}
 				
@@ -75,16 +84,16 @@ public class JointureS implements Jointure {
 			
 			for(int j=0; j<size_uplets1; j++)
 			{
-				subNuplet.putAtt(i, t1[join.get(i)[0]].getAtt(j) );
+				subNuplet.putAtt(j, t1[join.get(i)[0]].getAtt(j) );
 			}
 					
-			for(int j=0; j<size_uplets2; j++)
+			for(int j=(size_uplets1+1); j<(size_uplets1+size_uplets2); j++)
 			{
-				subNuplet.putAtt(i, t2[join.get(i)[0]].getAtt(j) );
+				subNuplet.putAtt(j, t2[join.get(i)[0]].getAtt(j) );
 			}
 			result[i] = subNuplet;
 		}
-		return null;
+		return result;
 	}
 	
 	
@@ -115,7 +124,7 @@ public class JointureS implements Jointure {
 		{
 			try
 			{
-				index_t1[i] = new int[] {i, (int)t1[i].getAtt(att1)};
+				index_t1[i] = new int[] {i, (byte)t1[i].getAtt(att1)};
 			}
 			catch(Exception e)
 			{
@@ -124,7 +133,7 @@ public class JointureS implements Jointure {
 			
 			try
 			{
-				index_t2[i] = new int[] {i, (int)t2[i].getAtt(att2)};
+				index_t2[i] = new int[] {i, (byte)t2[i].getAtt(att2)};
 			}
 			catch(Exception e)
 			{

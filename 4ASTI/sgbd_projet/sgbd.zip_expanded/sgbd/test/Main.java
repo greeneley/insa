@@ -50,19 +50,26 @@ public class Main
 		}
 		
 		System.out.println("\n===== INSERT =====");
-		
+		Nuplet nouveau = new NupletInt(new byte[] {0,120,2,3,4,5,6,7,8,9});
+		System.out.println("\nt.insert(nouveau_nuplet)");
+		t.insert(nouveau);
+		for(Nuplet n : t.fullScan())
+		{
+			System.out.println(n.toString());
+		}
+
 		
 		System.out.println("\n===== UPDATE =====");
-		System.out.println("\nt.update(1, 100, 200);");
-		t.update(1, (byte) 100, (byte) 70);
+		System.out.println("\nt.update(1, 120, 119);");
+		t.update(1, (byte) 120, (byte) 119);
 		for(Nuplet n : t.fullScan())
 		{
 			System.out.println(n.toString());
 		}
 		
 		System.out.println("\n===== DELETE =====");
-		System.out.println("\nt.update(1, 100, 200);");
-		t.delete(1, (byte) 70);
+		System.out.println("\nt.delete(1, 119);");
+		t.delete(1, (byte) 119);
 		for(Nuplet n : t.fullScan())
 		{
 			System.out.println(n.toString());
@@ -76,9 +83,10 @@ public class Main
 	 * @param att	 Index de l'attribut a tester.
 	 * @param object Valeur a laquelle effectuer les tests de comparaison avec l'attribut.
 	 */
-	public static void testRestrictionInt(int att, int object)
+	public static void testRestrictionInt(int att, Object object)
 	{
 		System.out.println("\n===== TESTS RESTRICTIONS =====");
+		System.out.println("testRestrictionInt(4, 45);");
 		// Notre objet qui permttra de tester les methodes de la classe
 		RestrictionInt restrictInt = new RestrictionInt();
 		
@@ -179,6 +187,7 @@ public class Main
 	public static void testJointureS()
 	{
 		System.out.println("\n===== TESTS JOINTURE SORT MERGE JOIN =====");
+		System.out.println("jointer.jointure(u1, u2, 1, 1);");
 		
 		JointureS jointer = new JointureS();
 		Nuplet[] u1 = new NupletInt[3];
@@ -232,12 +241,12 @@ public class Main
 		 * ========================
 		 */
 		//testOriginaux();
-		testTableInt();
+		//testTableInt();
 		//testRestrictionInt(4, 45);
 		//testProjectionImpl(t.fullScan(), new int[]{0,3,7});
 		//testJointureBl();
 		//testJointureH();
-		//testJointureS();
+		testJointureS();
 	}
 }
 
