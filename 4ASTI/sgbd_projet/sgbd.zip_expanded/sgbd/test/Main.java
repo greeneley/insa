@@ -240,12 +240,12 @@ public class Main
 		 *          TEST
 		 * ========================
 		 */
-		//testOriginaux();
-		//testTableInt();
-		//testRestrictionInt(4, 45);
-		//testProjectionImpl(t.fullScan(), new int[]{0,3,7});
-		//testJointureBl();
-		//testJointureH();
+		testOriginaux();
+		testTableInt();
+		testRestrictionInt(4, 45);
+		testProjectionImpl(t.fullScan(), new int[]{0,3,7});
+		testJointureBl();
+		testJointureH();
 		testJointureS();
 	}
 }

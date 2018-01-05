@@ -1,6 +1,5 @@
 package sgbd.impl;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,16 +24,6 @@ public class JointureS implements Jointure {
 		
 		// On trie les deux Nuplets
 		this.triFusion(t1, t2, att1, att2);
-		
-		for(Nuplet n : this.tri_t1)
-		{
-			System.out.println(n.toString());
-		}
-		System.out.println("==================================================================");
-		for(Nuplet n : this.tri_t2)
-		{
-			System.out.println(n.toString());
-		}
 		
 		// ===== Jointure =====
 		// === Variables
@@ -87,9 +76,9 @@ public class JointureS implements Jointure {
 				subNuplet.putAtt(j, t1[join.get(i)[0]].getAtt(j) );
 			}
 					
-			for(int j=(size_uplets1+1); j<(size_uplets1+size_uplets2); j++)
+			for(int j=0; j<+size_uplets2; j++)
 			{
-				subNuplet.putAtt(j, t2[join.get(i)[0]].getAtt(j) );
+				subNuplet.putAtt(j+size_uplets1, t2[join.get(i)[0]].getAtt(j) );
 			}
 			result[i] = subNuplet;
 		}

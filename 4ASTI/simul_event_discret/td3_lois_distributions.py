@@ -291,6 +291,24 @@ class LoiExponentielle(object):
 		result = log(1 - u) / (-self.l)
 		return result
 	#END_DEF
+
+
+	def get_esperance():
+		"""Renvoie l'esperance de la loi exponentielle.
+
+			@return float value La valeur de l'esperance.
+		"""
+		return 1.0 / self.l
+	#END_DEF
+
+
+	def get_variance():
+		"""Renvoie la variance de la loi exponentielle.
+
+			@return float value La valeur de la variance.
+		"""
+		return 1.0 / (self.l * self.l)
+	#END_DEF
 #END_CLASS
 
 
@@ -399,11 +417,157 @@ class LoiGeometrique(object):
 
 
 # ==========================================
+#              UNIFORME(a, b)
+# ==========================================
+
+class LoiUniforme(object):
+	"""Retranscrit la loi de distribution Uniforme(a, b)
+	"""
+
+	# =====================
+	#     CONSTRUCTORS
+	# =====================
+	def __init__(self, a, b):
+		"""
+			@param float a Borne inferieure de la fonction exponentielle
+			@param float b Borne superieure de la fonction exponentielle
+		"""
+
+		if(a > b):
+			printf("Erreur de definition. Condition : a <= b")
+			raise ValueError
+		else:
+			self.__a = a
+			self.__b = b
+		#END_IF
+	#END_DEF
+
+
+	# =====================
+	#      PROPERTIES
+	# =====================
+
+	# ===================== self.__a
+	@property
+	def a(self):
+		return self.__a
+
+	@a.setter
+	def a(self, value):
+		if(value > self.__b):
+			print("Erreur de definition. Condition : a <= b")
+		else:
+			self.__a = value
+
+	# ===================== self.__b
+	@property
+	def b(self):
+		return self.__b
+
+	@b.setter
+	def b(self, value):
+		if(value < self.__a):
+			print("Erreur de definition. Condition : a <= b")
+		else:
+			self.__b = value
+
+
+	# =====================
+	#       METHODS
+	# =====================
+
+	def get_esperance():
+		"""Renvoie la valeur de l'esperance de la loi uniforme continue(a,b).
+
+			@return float value La valeur de l'esperance.
+		"""
+		return (self.a + self.b) / 2.0
+	#END_DEF
+
+
+	def get_variance():
+		"""Renvoie la valeur de la variance de la loi uniforme continue(a,b).
+
+			@return float value La valeur de la variance.
+		"""
+		return (self.b - self.a) * (self.b - self.a) / 12.0
+	#END_DEF
+#END_CLASS
+
+
+# ==========================================
+#              NORMALE(mu, sigsqr)
+# ==========================================
+
+class LoiNormale(object):
+	"""Retranscrit la loi de distribution Normale(mu, sigsqr)
+	"""
+
+	# =====================
+	#     CONSTRUCTORS
+	# =====================
+	def __init__(self, moyenne, variance):
+		"""
+			@param float moyenne  Parametre 'moyenne' de la loi normale.
+			@param float variance Parametre 'variance' de la loi normale.
+		"""
+		self.__mu     = moyenne
+		self.__sigsqr = variance
+	#END_DEF
+
+
+	# =====================
+	#      PROPERTIES
+	# =====================
+
+	# ===================== self.__mu
+	@property
+	def mu(self):
+		return self.__mu
+
+	@mu.setter
+	def mu(self, value):
+		self.__mu = value
+
+	# ===================== self.__sigsqr
+	@property
+	def sigsqr(self):
+		return self.__sigsqr
+
+	@sigsqr.setter
+	def sigsqr(self, value):
+		self.__sigsqr = value
+
+
+	# =====================
+	#       METHODS
+	# =====================
+
+	def get_esperance():
+		"""Renvoie l'esperance de la loi normale.
+
+			@return float value La valeur de l'esperance.
+		"""
+		return self.mu
+	#END_DEF
+
+
+	def get_variance():
+		"""Renvoie la variance de la loi normale.
+
+			@return float value La valeur de la variance.
+		"""
+		return self.sigsqr
+	#END_DEF
+#END_CLASS
+
+# ==========================================
 #                  MAIN
 # ==========================================
 
 if(__name__ == '__main__'):
-	test = Test()
+	#test = Test()
 	#test.exo1_tri(0, 5, 4)
 	#test.exo1_exp(3)
+	pass
 #END_IF

@@ -1,6 +1,5 @@
 package sgbd.impl;
 
-import java.io.RandomAccessFile;
 import java.util.Vector;
 
 import sgbd.stockage.Nuplet;

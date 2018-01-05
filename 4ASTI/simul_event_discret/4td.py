@@ -1,3 +1,5 @@
+#!/usr/bin/python3.5
+
 import ciw
 
 N = ciw.create_network(Arrival_distributions=[['Exponential', 0.2]],
