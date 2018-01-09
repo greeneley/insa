@@ -41,7 +41,7 @@ class MaClasse(object):
   #END_DEF
 
 	# =====================
-  #       METHODS
+  #        METHODS
   # =====================
   def method(self):
     """BEREVE
