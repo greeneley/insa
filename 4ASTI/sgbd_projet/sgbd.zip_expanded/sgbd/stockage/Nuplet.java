@@ -14,4 +14,6 @@ public interface Nuplet {
 	public int size();
 	
 	public String toString();
+	
+	public void print();
 }

@@ -1,252 +1,100 @@
 package sgbd.test;
 
 import sgbd.stockage.*;
+import sgbd.console.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
+import java.util.Scanner;
 
 import sgbd.impl.*;
 
 public class Main 
 {
-	
 	public static final int datasetSize = 100;
 	public static final int nupletSize = 10;
 	
-	private static Table t;
-	
-	
-	/**
-	 * Ce sont les tests originallement presents dans le fichier.
-	 * 
-	 */
-	public static void testOriginaux()
+	public static void testSGBD(TableInt t)
 	{
-		System.out.println("Lecture d'une table");
-		for(int i=0;i<datasetSize;i++){
-			System.out.println(t.get(i).toString());
-			}
+		TestSGBD Test = new TestSGBD(t);
 		
-		// Utilisation de getByAtt
-		System.out.println("Test GetByAtt");
-		Nuplet[] res = t.getByAtt(4, (byte)50);
-		for(Nuplet n : res) 
+		// Tests basiques : fullscan, restriction, projection
+		Test.testTableInt();
+		Test.testRestrictionInt(4, (byte)45);
+		Test.testProjectionImpl(t.fullScan(), new int[]{0,3,7});
+		
+		Random gen1 = new Random();	
+		Random gen2 = new Random();
+		Nuplet[] u1 = new NupletInt[250];
+		Nuplet[] u2 = new NupletInt[250];
+		
+		// On genere une table de 250 nuplets de taille 5
+		System.out.println("Generation de tables aleatoires...");		
+		for(int i=0; i<250; i++)
 		{
-			System.out.println(n.toString());
+			u1[i] = new NupletInt(new byte[] {(byte)gen1.nextInt(100), (byte)gen1.nextInt(100), (byte)gen1.nextInt(100), (byte)gen1.nextInt(100), (byte)gen1.nextInt(100)});
+			u2[i] = new NupletInt(new byte[] {(byte)gen2.nextInt(100), (byte)gen2.nextInt(100), (byte)gen2.nextInt(100), (byte)gen2.nextInt(100), (byte)gen2.nextInt(100)});	
 		}
+		System.out.println("Done.");
+		
+		// Test des jointures
+		Test.testJointureBl(u1, u2);
+		Test.testJointureH(u1, u2);
+		Test.testJointureS(u1, u2);
 	}
 	
-	
-	/**
-	 * Permet d'effectuer des tests de la classe NupletInt.
-	 * 
-	 */
-	public static void testTableInt()
+	public static void testConsole()
 	{
-		System.out.println("\n===== LECTURE VIA FULLSCAN =====");
-		for(Nuplet n : t.fullScan())
-		{
-			System.out.println(n.toString());
-		}
-		
-		System.out.println("\n===== INSERT =====");
-		Nuplet nouveau = new NupletInt(new byte[] {0,120,2,3,4,5,6,7,8,9});
-		System.out.println("\nt.insert(nouveau_nuplet)");
-		t.insert(nouveau);
-		for(Nuplet n : t.fullScan())
-		{
-			System.out.println(n.toString());
-		}
-
-		
-		System.out.println("\n===== UPDATE =====");
-		System.out.println("\nt.update(1, 120, 119);");
-		t.update(1, (byte) 120, (byte) 119);
-		for(Nuplet n : t.fullScan())
-		{
-			System.out.println(n.toString());
-		}
-		
-		System.out.println("\n===== DELETE =====");
-		System.out.println("\nt.delete(1, 119);");
-		t.delete(1, (byte) 119);
-		for(Nuplet n : t.fullScan())
-		{
-			System.out.println(n.toString());
-		}
+		System.out.println("\n====== TEST CONSOLE SGBD =====");
+		System.out.println("Pour voir les commandes a disposition, taper 'help;'");
+		// Shell
+		Shell terminal = new Shell();
+		terminal.read();
 	}
-	
-
-	/**
-	 * Permet d'effectuer des tests sur la classe RestrictionInt.
-	 * 
-	 * @param att	 Index de l'attribut a tester.
-	 * @param object Valeur a laquelle effectuer les tests de comparaison avec l'attribut.
-	 */
-	public static void testRestrictionInt(int att, Object object)
-	{
-		System.out.println("\n===== TESTS RESTRICTIONS =====");
-		System.out.println("testRestrictionInt(4, 45);");
-		// Notre objet qui permttra de tester les methodes de la classe
-		RestrictionInt restrictInt = new RestrictionInt();
-		
-		System.out.println("[.egalite()]");
-		for(Nuplet n : restrictInt.egalite(t.fullScan(), att, object))
-		{
-			System.out.println(n.toString());
-		}
-		
-		System.out.println("[.superieur()]");
-		for(Nuplet n : restrictInt.superieur(t.fullScan(), att, object))
-		{
-			System.out.println(n.toString());
-		}
-		
-		System.out.println("[.inferieur()]");
-		for(Nuplet n : restrictInt.inferieur(t.fullScan(), att, object))
-		{
-			System.out.println(n.toString());
-		}
-	}
-	
-	
-	public static void testProjectionImpl(Nuplet[] tab, int[] atts)
-	{
-		System.out.println("\n===== TESTS PROJECTION =====");
-		
-		// Notre objet qui permettra de tester les methodes de la classe		
-		ProjectionImpl pi = new ProjectionImpl();
-		
-		System.out.println("[.project()]");
-		Nuplet[] resProj = pi.project(tab, atts); 
-
-		for(Nuplet n : resProj)
-		{
-			System.out.println(n.toString());
-		}
-	}
-	
-	
-	public static void testJointureBl()
-	{	
-		System.out.println("\n===== TESTS JOINTURE DOUBLE BOUCLES =====");
-		
-		JointureBl jointer = new JointureBl();
-		Nuplet[] u1 = new NupletInt[3];
-		Nuplet[] u2 = new NupletInt[3];
-		
-		u1[0] = new NupletInt(new byte[] {0,1,2,3,4});
-		u1[1] = new NupletInt(new byte[] {1,2,3,4,5});
-		u1[2] = new NupletInt(new byte[] {9,1,9,9,9});
-		
-		u2[0] = new NupletInt(new byte[] {8,1,8,8,8});
-		u2[1] = new NupletInt(new byte[] {1,7,3,4,5});
-		u2[2] = new NupletInt(new byte[] {9,2,9,9,9});
-
-		long startTime = System.currentTimeMillis();
-		Nuplet[] result = jointer.jointure(u1, u2, 1, 1);
-		long endTime = System.currentTimeMillis();
-		System.out.println("That took " + (endTime - startTime) + " milliseconds");
-		
-		for(Nuplet n : result)
-		{
-			System.out.println(n);	
-		}
-
-	}
-	
-	
-	public static void testJointureH()
-	{
-		System.out.println("\n===== TESTS JOINTURE HASHJOIN =====");
-		
-		JointureH jointer = new JointureH();
-		Nuplet[] u1 = new NupletInt[3];
-		Nuplet[] u2 = new NupletInt[3];
-		
-		u1[0] = new NupletInt(new byte[] {0,1,2,3,4});
-		u1[1] = new NupletInt(new byte[] {1,2,3,4,5});
-		u1[2] = new NupletInt(new byte[] {9,1,9,9,9});
-		
-		u2[0] = new NupletInt(new byte[] {8,1,8,8,8});
-		u2[1] = new NupletInt(new byte[] {1,7,3,4,5});
-		u2[2] = new NupletInt(new byte[] {9,2,9,9,9});
-
-		long startTime = System.currentTimeMillis();
-		Nuplet[] result = jointer.jointure(u1, u2, 1, 1);
-		long endTime = System.currentTimeMillis();
-		System.out.println("That took " + (endTime - startTime) + " milliseconds");
-		
-		for(Nuplet n : result)
-		{
-			System.out.println(n);	
-		}
-	}
-	
-	
-	public static void testJointureS()
-	{
-		System.out.println("\n===== TESTS JOINTURE SORT MERGE JOIN =====");
-		System.out.println("jointer.jointure(u1, u2, 1, 1);");
-		
-		JointureS jointer = new JointureS();
-		Nuplet[] u1 = new NupletInt[3];
-		Nuplet[] u2 = new NupletInt[3];
-		
-		u1[0] = new NupletInt(new byte[] {0,1,2,3,4});
-		u1[1] = new NupletInt(new byte[] {1,2,3,4,5});
-		u1[2] = new NupletInt(new byte[] {9,1,9,9,9});
-		
-		u2[0] = new NupletInt(new byte[] {8,1,8,8,8});
-		u2[1] = new NupletInt(new byte[] {1,7,3,4,5});
-		u2[2] = new NupletInt(new byte[] {9,2,9,9,9});
-
-		long startTime = System.currentTimeMillis();
-		Nuplet[] result = jointer.jointure(u1, u2, 1, 1);
-		long endTime = System.currentTimeMillis();
-		System.out.println("That took " + (endTime - startTime) + " milliseconds");
-		
-		for(Nuplet n : result)
-		{
-			System.out.println(n);	
-		}
-	}
-
 	
 	public static void main(String[] args)
 	{
-		
 		/* ========================
 		 *          INIT
 		 * ========================
 		 */
+		System.out.println("Creation d'une table...");
 		// Génération des données
 		Nuplet[] tab = new NupletInt[datasetSize];
-		for(int i=0;i<datasetSize;i++){
+		for(int i=0;i<datasetSize;i++)
+		{
 			tab[i] = new NupletInt(nupletSize);
-			for(int j=0;j<nupletSize;j++){
+			for(int j=0;j<nupletSize;j++)
+			{
 				tab[i].putAtt(j, (byte)(j+i));
 			}
 		}
 
 		// Implémentation avec Table
-		System.out.println("===== Creation d'une table =====");
-		t = new TableInt("/tmp/table2", nupletSize);
-		for(int i=0;i<datasetSize;i++){
-			t.put(tab[i]);
-			}
+		TableInt tSGBD = new TableInt("./table", nupletSize);
+		for(int i=0;i<datasetSize;i++)
+		{
+			tSGBD.put(tab[i]);
+		}
+		System.out.println("Done.");
+		
 		
 		/* ========================
 		 *          TEST
 		 * ========================
 		 */
-		testOriginaux();
-		testTableInt();
-		testRestrictionInt(4, 45);
-		testProjectionImpl(t.fullScan(), new int[]{0,3,7});
-		testJointureBl();
-		testJointureH();
-		testJointureS();
+		
+		Scanner s = new Scanner(System.in);
+		System.out.print("Voulez vous lancer le test des fonctions SGBD avant de lancer le test en console ? (y/n) : ");
+		if(s.next().equals("y"))
+		{
+			testSGBD(tSGBD);
+		}
+		testConsole();
+		s.close();
+		
 	}
 }
 

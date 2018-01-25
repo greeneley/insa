@@ -11,14 +11,13 @@ public class FichierInt implements Fichier{
 	private int currentLength;
 	
 	public FichierInt(String filePath, int nupletSize){
-		this.fp = filePath;
-		this.nupletSize = nupletSize;
+		this.fp            = filePath;
+		this.nupletSize    = nupletSize;
 	}
 
 	public void store(int pos, Object o) {
 		try {
 			this.f = new RandomAccessFile(this.fp, "rw");
-			NupletInt n = (NupletInt) o;
 			byte[] b = new byte[nupletSize];
 			for(int i=0;i<nupletSize;i++)
 				b[i] = (byte)((NupletInt) o).getAtt(i);
@@ -33,7 +32,7 @@ public class FichierInt implements Fichier{
 	@Override
 	public Object get(int pos) {
 		try {
-			this.f = new RandomAccessFile(this.fp, "rw");
+			this.f = new RandomAccessFile(this.fp, "r");
 			byte[] b = new byte[nupletSize];
 			this.f.seek(pos*nupletSize);
 			f.read(b);
@@ -48,13 +47,11 @@ public class FichierInt implements Fichier{
 	@Override
 	public long getCurrentSize() {
 		return this.currentLength;
-	}
+	}	
 	
-	public void resetLength()
+	public int getNupletSize()
 	{
-		this.currentLength = 0;
+		return this.nupletSize;
 	}
-	
-	
 
 }

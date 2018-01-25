@@ -22,11 +22,16 @@ public class ProjectionImpl implements Projection
 		// ===== Variables =====
 		Nuplet[] result = new Nuplet[t.length];
 		
+		// ===== Algo =====
+		// On itere sur la table t
 		for(int i=0; i<t.length; i++)
 		{
+			// La projection aura la taille de atts[]
 			Nuplet nuplet = new NupletInt(atts.length);
+			// On itere sur l'ensemble des attributs a projeter
 			for(int j=0; j<atts.length; j++)
 			{
+				// On garde ceux qui nous interessent
 				nuplet.putAtt(j, t[i].getAtt(atts[j]));;
 			}
 			result[i] = nuplet;

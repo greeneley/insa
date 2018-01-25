@@ -7,12 +7,25 @@ import sgbd.stockage.Table;
 
 public class TableInt implements Table{
 	
+	private String name;
 	private int records;
-	FichierInt f;
+	private FichierInt f;
 	
 	public TableInt(String filePath, int nupletSize){
 		this.records = 0;
-		this.f = new FichierInt(filePath, nupletSize);
+		this.f       = new FichierInt(filePath, nupletSize);
+		this.name    = filePath.substring(filePath.lastIndexOf("/")+1);
+	}
+
+	public TableInt(String filePath, int nupletSize, int recordsSize)
+	{
+		this.records = recordsSize;
+		this.f       = new FichierInt(filePath, nupletSize);
+		this.name    = filePath.substring(filePath.lastIndexOf("/")+1);
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 	@Override
@@ -77,37 +90,57 @@ public class TableInt implements Table{
 	
 	public void insert(Nuplet n) 
 	{
-		// TODO Auto-generated method stub
 		// C'est quoi la difference entre ça et put ???
+		/* J'aurais bien ajoute un element pos mais problemes ensuite
+		 * avec la gestion de la taille,
+		 * avec la structure de l'objet qui n'a pas d'id...
+		 */
 		this.put(n);
 	}
 
 	
 	/**
 	 * Permet de supprimer tous les Nuplet qui possedent la valeur
-	 * value à l'empalcement att.
+	 * value à l'emplacement att.
 	 * 
 	 * @param att
 	 * @param value
 	 */
 	public void delete(int att, Object value) 
 	{
-		if(this.getByAtt(att, value).length > 0)
+		Nuplet[] save = this.fullScan();
+		this.records  = 0;
+		for(Nuplet n : save)
 		{
-			Nuplet[] save = this.fullScan();
-			this.records  = 0;
-			this.f.resetLength();
-			for(Nuplet n : save)
+			if((byte)n.getAtt(att) != (byte)value)
 			{
-				if((byte)n.getAtt(att) != (byte)value)
-				{
-					this.put(n);
-				}
+				this.put(n);
 			}
 		}
 	}	
-
 	
+	
+	/**
+	 * Supprime la ligne a l'index row de la table
+	 * 
+	 * @param row L'index dans la table du Nuplet a supprimer
+	 */
+	public void deleteRow(int row)
+	{
+		for(int i=row; i<(this.records-1); i++)
+		{
+			this.f.store(i, (Nuplet)this.f.get(i+1));
+		}
+		this.records--;
+	}
+	
+	
+	/**
+	 * Met a jour tous les Nuplets de la table dont la colonne att est de value oldValue
+	 * par la valeur newValue
+	 * 
+	 * @see sgbd.stockage.Table#update(int, java.lang.Object, java.lang.Object)
+	 */
 	public void update(int att, Object oldValue, Object newValue) 
 	{
 		Nuplet current;
@@ -129,6 +162,37 @@ public class TableInt implements Table{
 				this.f.store(i, nouveau);	
 			}			
 		}
+	}
+	
+	/**
+	 * Affecte la valeur newValue a la colonne column dans le Nuplet d'indice row
+	 * 
+	 * @param row Indice du Nuplet concerne
+	 * @param column L'index de la colonne a modifier
+	 * @param newValue La nouvelle valeur
+	 */
+	public void updateInRow(int row, int column, Object newValue)
+	{
+		Nuplet current = this.get(row);
+		Nuplet nouveau = new NupletInt(current.size());
+		
+		for(int i=0; i<current.size(); i++)
+		{
+			if(i==column)
+			{
+				nouveau.putAtt(i, (byte)newValue);
+			}
+			else
+			{
+				nouveau.putAtt(i, (byte)current.getAtt(i));
+			}
+		}
+		this.f.store(row, nouveau);
+	}
+	
+	public int getNupletSize()
+	{
+		return this.f.getNupletSize();
 	}
 
 }

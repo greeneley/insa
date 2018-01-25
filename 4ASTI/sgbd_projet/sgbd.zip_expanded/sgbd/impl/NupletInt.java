@@ -36,5 +36,14 @@ public class NupletInt implements Nuplet{
 	public void putAtt(int i, Object o) {
 		this.values[i] = (byte) o;
 	}
+	
+	public void print()
+	{
+		String s = "";
+		for(int i=0;i<this.size();i++){
+			s+=this.values[i]+"\t";
+		}
+		System.out.println(s);
+	}
 
 }
