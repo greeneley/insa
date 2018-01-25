@@ -177,7 +177,7 @@ class Reseau(object):
     #        PRINTING
     # =======================
 
-    def trials(self, nb_trials=1, temps=SEMAINE):
+    def trials(self, nb_trials=0, temps=SEMAINE):
         """Effectue et affiche des analyses de la simulation.
 
         Les parametres analyses sont actuellement, par groupe et globalement :
@@ -203,38 +203,76 @@ class Reseau(object):
         # =====================
         #      Calculs
         # =====================
-        for trial in range(nb_trials):
-            ciw.seed(trial)
-            self.compute(SEMAINE)
+
+        if(nb_trials > 0):
+            for trial in range(nb_trials):
+                ciw.seed(trial)
+                self.compute(temps)
+
+                avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                nb_patient['all'].append(len([r.id_number for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+
+                for i in range(5):
+                    try:
+                        avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                        avg_wait[i].append(mean([r.waiting_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                        nb_patient[i].append(len([r.id_number for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                    except Exception as e:
+                        pass
+                    #END_TRY
+                #END_FOR
+            #END_FOR
+        else:
+            self.compute(temps)
 
             avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
             avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
             nb_patient['all'].append(len([r.id_number for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
 
             for i in range(5):
-                avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                avg_wait[i].append(mean([r.waiting_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                nb_patient[i].append(len([r.id_number for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                try:
+                    avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                    avg_wait[i].append(mean([r.waiting_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                    nb_patient[i].append(len([r.id_number for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                except Exception as e:
+                    pass
+                #END_TRY
             #END_FOR
-        #END_FOR
+        #END_IF
 
 
         # =====================
         #      Affichage
         # =====================
-        print("\nNombre total de patients diagnostiques : %d" % nb_patient['all'][0])
-        for i in range(5):
-            print("Nombre de patients diagnostiques [Code %d] : %d (%.2f)" % (i+1, nb_patient[i][0], nb_patient[i][0]/nb_patient['all'][0]*100))
+        print("\nNombre moyen de patients diagnostiques : %.f" % mean(nb_patient['all']))
+        try:
+            print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f)" % (1, mean(nb_patient[0]), mean(nb_patient[0])/mean(nb_patient['all'])*100))
+        except Exception as e:
+            print("Nombre moyen de patients diagnostiques [Code 1] : 0 (0.00)")
+        #END_TRY
+        for i in range(1, 5):
+            print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f)" % (i+1, mean(nb_patient[i]), mean(nb_patient[i])/mean(nb_patient['all'])*100))
         #END_FOR
 
         print("\nDuree moyenne d'attente : %.2f mins" % mean(avg_wait['all']))
-        for i in range(5):
-            print("Attente moyenne [Code %d] : %.2f mins" % (i+1, avg_wait[i][0]))
+        try:
+            print("Attente moyenne [Code %d] : %.2f mins" % (1, mean(avg_wait[0])))
+        except Exception as e:
+            print("Attente moyenne [Code 1] : 0.00 mins")
+        #END_TRY
+        for i in range(1, 5):
+            print("Attente moyenne [Code %d] : %.2f mins" % (i+1, mean(avg_wait[i])))
         #END_FOR
 
         print("\nDuree moyen de service: %.2f mins" % mean(avg_service['all']))
-        for i in range(5):
-            print("Temps de service moyen [Code %d] : %.2f mins" % (i+1, avg_service[i][0]))
+        try:
+            print("Temps de service moyen [Code %d] : %.2f mins" % (1, mean(avg_service[0])))
+        except Exception as e:
+            print("Temps de service moyen [Code 1] : 0.00 mins")
+        #END_TRY
+        for i in range(1, 5):
+            print("Temps de service moyen [Code %d] : %.2f mins" % (i+1, mean(avg_service[i])))
         #END_FOR
     #END_DEF
 
@@ -329,9 +367,7 @@ if __name__ == '__main__':
     print("==============    INIT   ==============")
     projet = Reseau(WARMUP, COOLDOWN)
     print("OK")
-    #print("============== COMPUTING ==============")
-    #projet.compute(4*SEMAINE)
-    #print("OK")
-    print("==============   TRIALS   ==============")
-    projet.trials(10, SEMAINE)
+    print("============== COMPUTING ==============")
+    projet.trials(10, JOUR)
+    #projet.trials()
 #END_IF
