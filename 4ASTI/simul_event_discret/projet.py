@@ -14,11 +14,14 @@
 import ciw
 import random
 from statistics import *
+import matplotlib.pyplot as plt 
 
 
 # ==========================================
 #            CONSTANTES GLOBALES
 # ==========================================
+
+# Les valeurs sont en minutes
 MINUTE   = 1
 HEURE    = 60
 JOUR     = 1440
@@ -121,8 +124,8 @@ class Reseau(object):
                 ]
             },
             Transition_matrices={
-                'Class 0': [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                'Class 0': [[0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                            [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
                             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -180,7 +183,7 @@ class Reseau(object):
     def trials(self, nb_trials=0, temps=SEMAINE):
         """Effectue et affiche des analyses de la simulation.
 
-        Les parametres analyses sont actuellement, par groupe et globalement :
+        Les parametres analyses sont actuellement, par classe et globalement :
             - temps de service moyen
             - temps d'attente moyen
             - nombre de patients moyens
@@ -213,6 +216,7 @@ class Reseau(object):
                 avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
                 nb_patient['all'].append(len([r.id_number for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
 
+                # Sur de petite duree, il se peut qu'aucune classe 0 n'apparaissent, on doit donc l'ignorer
                 for i in range(5):
                     try:
                         avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
@@ -229,7 +233,8 @@ class Reseau(object):
             avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
             avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
             nb_patient['all'].append(len([r.id_number for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-
+            
+            # Sur de petite duree, il se peut qu'aucune classe 0 n'apparaissent, on doit donc l'ignorer
             for i in range(5):
                 try:
                     avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
@@ -245,6 +250,10 @@ class Reseau(object):
         # =====================
         #      Affichage
         # =====================
+        #
+        # Pour les blocs try/except : on doit prendre en compte la non presence de classe 0
+        # sur les petites durees. Il faut donc prendre en compte d'eventuelles erreurs.
+
         print("\nNombre moyen de patients diagnostiques : %.f" % mean(nb_patient['all']))
         try:
             print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f)" % (1, mean(nb_patient[0]), mean(nb_patient[0])/mean(nb_patient['all'])*100))
@@ -368,6 +377,9 @@ if __name__ == '__main__':
     projet = Reseau(WARMUP, COOLDOWN)
     print("OK")
     print("============== COMPUTING ==============")
-    projet.trials(10, JOUR)
+    # Sur X trials, on effectue une simulation de Y temps
+    projet.trials(10, SEMAINE)
+
+    # On fait par defaut une seule simulation d'une semaine
     #projet.trials()
 #END_IF
