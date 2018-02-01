@@ -1,3 +1,5 @@
+#!/usr/bin/python3.5
+
 ####################################################
 ####################################################
 # Thanh Luu
@@ -39,6 +41,10 @@ COOLDOWN = 100
 
 class Reseau(object):
     """Implementation du reseau de files d'attente du projet. Voir compte-rendu pour plus d'informations."""
+
+    #########################
+    #      INIT METHOD
+    #########################
 
     def __init__(self, warmup_time=0, cooldown_time=0):
         """Initialise le reseau ainsi que les variables utiles.
@@ -83,7 +89,7 @@ class Reseau(object):
             },
             Service_distributions={
                 'Class 0':[['Exponential', 6.0],
-                           ['Deterministic', 0.0],
+                           ['Triangular', 3, 7, 5],
                            ['Deterministic', 0.0],
                            ['Deterministic', 0.0],
                            ['Deterministic', 0.0],
@@ -164,9 +170,15 @@ class Reseau(object):
                             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
                             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]],
             },
+            Priority_classes={'Class 0': 0, 
+                              'Class 1': 1,
+                              'Class 2': 2,
+                              'Class 3': 3,
+                              'Class 4': 4
+            },
             Number_of_servers=[
-                'Inf',
-                'Inf',
+                [[4, 480], [6, 960], [4,1440]],
+                [[4, 480], [6, 960], [4,1440]],
                 [[4, 480], [6, 960], [4,1440]],
                 [[4, 480], [6, 960], [4,1440]],
                 [[4, 480], [6, 960], [4,1440]],
@@ -176,12 +188,16 @@ class Reseau(object):
         )
     #END_DEF
 
-    # =======================
-    #        PRINTING
-    # =======================
+    #########################
+    #      PRINT METHOD
+    #########################
 
-    def trials(self, nb_trials=0, temps=SEMAINE):
+    def trials(self, nb_trials=0, temps=SEMAINE, export=False):
         """Effectue et affiche des analyses de la simulation.
+
+            @param int     nb_trials Le nombre de trials a effectuer. Si rien n'est indique, n'effectue qu'une seule simulation.
+            @param int     temps     Le nombre de temps en minutes a simuler. Une semaine par defaut.
+            @param boolean export    Indique a la classe s'il faut exporter les resultats. False par defaut.s
 
         Les parametres analyses sont actuellement, par classe et globalement :
             - temps de service moyen
@@ -211,6 +227,10 @@ class Reseau(object):
             for trial in range(nb_trials):
                 ciw.seed(trial)
                 self.compute(temps)
+
+                if(export):
+                    self.Q.write_records_to_file('./results.csv') 
+                #END_IF
 
                 avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
                 avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
@@ -256,12 +276,12 @@ class Reseau(object):
 
         print("\nNombre moyen de patients diagnostiques : %.f" % mean(nb_patient['all']))
         try:
-            print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f)" % (1, mean(nb_patient[0]), mean(nb_patient[0])/mean(nb_patient['all'])*100))
+            print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f %%)" % (1, mean(nb_patient[0]), mean(nb_patient[0])/mean(nb_patient['all'])*100))
         except Exception as e:
-            print("Nombre moyen de patients diagnostiques [Code 1] : 0 (0.00)")
+            print("Nombre moyen de patients diagnostiques [Code 1] : 0 (0.00 %%)")
         #END_TRY
         for i in range(1, 5):
-            print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f)" % (i+1, mean(nb_patient[i]), mean(nb_patient[i])/mean(nb_patient['all'])*100))
+            print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f %%)" % (i+1, mean(nb_patient[i]), mean(nb_patient[i])/mean(nb_patient['all'])*100))
         #END_FOR
 
         print("\nDuree moyenne d'attente : %.2f mins" % mean(avg_wait['all']))
@@ -286,9 +306,9 @@ class Reseau(object):
     #END_DEF
 
 
-    # =======================
-    #         METHODS
-    # =======================
+    #########################
+    #    COMPUTE METHOD
+    #########################
 
     def compute(self, temps):
         """Fixe le temps de simulation et simule le reseau de files d'attente.
@@ -305,9 +325,9 @@ class Reseau(object):
     #END_DEF
 
 
-    # =======================
+    #########################
     #  ARRIVAL DISTRIBUTIONS
-    # =======================
+    #########################
 
     def arrival_classes(self, proportion, t):
         """Calcule la probabilite d'arrivee d'une classe de proportion 'proportion' a l'instant 't'.
@@ -364,7 +384,6 @@ class Reseau(object):
     def arrival_class_4(self, t):
         return self.arrival_classes(self.proportion_class[4], t)
     #END_DEF
-
 #END_CLASS
 
 
@@ -374,12 +393,13 @@ class Reseau(object):
 
 if __name__ == '__main__':
     print("==============    INIT   ==============")
+    # Voir constantes : WARUMP = COOLDOWN = 100 mins
     projet = Reseau(WARMUP, COOLDOWN)
     print("OK")
     print("============== COMPUTING ==============")
-    # Sur X trials, on effectue une simulation de Y temps
-    projet.trials(10, SEMAINE)
+    # Sur X trials, on effectue une simulation de Y temps et on exporte les resultats si True
+    projet.trials(1000, SEMAINE,True)
 
-    # On fait par defaut une seule simulation d'une semaine
+    # On fait par defaut une seule simulation d'une semaine sans exporter les resultats
     #projet.trials()
 #END_IF
