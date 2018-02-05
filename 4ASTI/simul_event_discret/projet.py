@@ -192,7 +192,7 @@ class Reseau(object):
     #      PRINT METHOD
     #########################
 
-    def trials(self, nb_trials=0, temps=SEMAINE, export=False):
+    def trials(self, nb_trials=1, temps=SEMAINE, export=False):
         """Effectue et affiche des analyses de la simulation.
 
             @param int     nb_trials Le nombre de trials a effectuer. Si rien n'est indique, n'effectue qu'une seule simulation.
@@ -206,65 +206,87 @@ class Reseau(object):
         """
 
         # =====================
+        #       ERRORS
+        # =====================
+        if(nb_trials<0):
+            print("Erreur sur le nombre de trials")
+            return
+        #END_IF
+
+        # =====================
         #      Variables
         # =====================
-        avg_service = {'all':[],
-                        0   :[],
-                        1   :[],
-                        2   :[],
-                        3   :[],
-                        4   :[]
-        }
-        avg_wait    = {'all':[],0:[],1:[],2:[],3:[],4:[]}
-        nb_patient  = {'all':[],0:[],1:[],2:[],3:[],4:[]}
+        avg_service   = {'all':[],0:[],1:[],2:[],3:[],4:[]}
+        avg_wait      = {'all':[],0:[],1:[],2:[],3:[],4:[]}
+        nb_patient    = {'all':[],0:[],1:[],2:[],3:[],4:[]}
+        interventions = [ {'all':[],0:[],1:[],2:[],3:[],4:[]}, 
+                          {'all':[],0:[],1:[],2:[],3:[],4:[]} ]
 
 
         # =====================
         #      Calculs
         # =====================
 
-        if(nb_trials > 0):
-            for trial in range(nb_trials):
+        for trial in range(nb_trials):
+            if(nb_trials>1):
                 ciw.seed(trial)
-                self.compute(temps)
-
-                if(export):
-                    self.Q.write_records_to_file('./results.csv') 
-                #END_IF
-
-                avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                nb_patient['all'].append(len([r.id_number for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-
-                # Sur de petite duree, il se peut qu'aucune classe 0 n'apparaissent, on doit donc l'ignorer
-                for i in range(5):
-                    try:
-                        avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                        avg_wait[i].append(mean([r.waiting_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                        nb_patient[i].append(len([r.id_number for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                    except Exception as e:
-                        pass
-                    #END_TRY
-                #END_FOR
-            #END_FOR
-        else:
+            #END_IF
             self.compute(temps)
 
+            # ======
+            # Init compteur
+            # ======
+            for entry in nb_patient:
+                nb_patient[entry].append(0)
+            #END_FOR
+
+            for i in range(2):
+                for entry in interventions[i]:
+                    interventions[i][entry].append(0)
+                #END_FOR
+            #END_FOR
+
+
+            # ======
+            # Data recovering
+            # ======
             avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
             avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-            nb_patient['all'].append(len([r.id_number for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-            
+
             # Sur de petite duree, il se peut qu'aucune classe 0 n'apparaissent, on doit donc l'ignorer
             for i in range(5):
                 try:
                     avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
                     avg_wait[i].append(mean([r.waiting_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
-                    nb_patient[i].append(len([r.id_number for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
+                    
+                    # Nombre de patients
+                    temp_patients = []
+                    temp_interv   = [ [], [] ]
+                    for r in self.recs:
+                        if( r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t and r.customer_class==i):
+                            if(r.id_number not in temp_patients):
+                                temp_patients.append(r.id_number)
+                                nb_patient['all'][trial] += 1
+                                nb_patient[i][trial]     += 1
+                            #END_IF
+
+                            if(r.node==3):
+                                interventions[0][i][trial]     += 1
+                                interventions[0]['all'][trial] += 1
+                            #END_IF
+
+                            if(r.node==7):
+                                interventions[1][i][trial]     += 1
+                                interventions[1]['all'][trial] += 1
+                            #END_IF
+
+                        #END_IF
+                    #END_FOR
                 except Exception as e:
                     pass
                 #END_TRY
             #END_FOR
-        #END_IF
+        #END_FOR
 
 
         # =====================
@@ -282,6 +304,11 @@ class Reseau(object):
         #END_TRY
         for i in range(1, 5):
             print("Nombre moyen de patients diagnostiques [Code %d] : %.f (%.2f %%)" % (i+1, mean(nb_patient[i]), mean(nb_patient[i])/mean(nb_patient['all'])*100))
+        #END_FOR
+
+        print("\nNombre moyen de patients en deuxieme intervention : %.f (%.2f %%)" % (mean(interventions[1]['all']), mean(interventions[1]['all'])/mean(interventions[0]['all'])*100))
+        for i in range(1,5):
+            print("Nombre moyen de patients en deuxieme intervention [Code %d] : %.f (%.2f %%)" % (i+1, mean(interventions[1][i]), mean(interventions[1][i])/mean(interventions[0][i])*100))
         #END_FOR
 
         print("\nDuree moyenne d'attente : %.2f mins" % mean(avg_wait['all']))
@@ -398,7 +425,7 @@ if __name__ == '__main__':
     print("OK")
     print("============== COMPUTING ==============")
     # Sur X trials, on effectue une simulation de Y temps et on exporte les resultats si True
-    projet.trials(1000, SEMAINE,True)
+    projet.trials(10, SEMAINE,True)
 
     # On fait par defaut une seule simulation d'une semaine sans exporter les resultats
     #projet.trials()
