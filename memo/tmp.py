@@ -1,20 +1,7 @@
-class Test(object):
-	def __init__(self):
-		self.n = "lol"
-		self.p = "hehe"
-		self.id = 5
-		return
+import matplotlib.pyplot as plt
 
-	def __str__(self):
-		string = (
-		"Personne id        : {}\n"
-		"Nom                : {}\n"
-		"Prenom             : {}\n"
-		).format(5, "JL", "LOL")
-		
-		return string
+D = {u'Label0':26, u'Label1': 17, u'Label2':30}
 
-a = Test()
-print(type(a))
-
-print([5,6,7,8,2,6,8,9].lenght)
+plt.bar(range(len(D)), D.values(), align='center')
+plt.xticks(range(len(D)), D.keys())
+plt.show()
