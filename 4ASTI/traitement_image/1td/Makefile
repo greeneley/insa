@@ -1,2 +1,2 @@
-hello:
-	g++ hello_world.cpp -o app `pkg-config --cflags --libs opencv`
+all:
+	g++ main.cpp main.h -o app `pkg-config --cflags --libs opencv`
