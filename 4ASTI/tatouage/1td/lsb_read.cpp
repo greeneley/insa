@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 
 			if(mtrand()%2)
 			{
-				// Si le LSB etait arme, alors il y a codage
+				// Si LSB est up, alors le pixel etait > 128
 				if(lsb)
 				{
 					dst(x,y) = 255;
@@ -44,6 +44,7 @@ int main(int argc, char** argv)
 			}
 			else
 			{
+				// Si le LSB est up, alors le pixel etait < 128
 				if(lsb)
 				{
 					dst(x,y) = 0;
