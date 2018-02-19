@@ -1,4 +1,11 @@
 /* ===========================
+             MEMO
+   ===========================
+Le type float prend des valeurs entre 0 et 1 !
+
+*/
+
+/* ===========================
             INCLUDES
    =========================== */
 
@@ -18,83 +25,135 @@ using namespace std;
 /* ===========================
             FONCTIONS
    =========================== */
-void init_mask(Mat mask)
+void init_mask(Mat* mask)
 {
-	float matrix[][] = { {0.0,1.0,0.0},{1.0,2.0,1.0},{0.0,1.0,0.0}};
-
-	
+	for(int x=0; x<mask->size().width; x++)
+	{
+		for(int y=0; y<mask->size().height; y++)
+		{
+			mask->at<float>(x,y) = kMask[x+y*kMaskRows];
+		}
+	}
 }
 
-float calc_conv(Mat image, int x, int y, int dimMaskX, int dimMaskY, bool colored)
-{
-	float res = 0.0;
+
+void calc_conv(Mat* src, Mat* dst, Mat* mask, int x, int y, bool colored)
+{	
+	int dimMaskX = mask->size().width;
+	int dimMaskY = mask->size().height;
+	int offsetX  = dimMaskX/2;
+	int offsetY  = dimMaskY/2;
+
 	if(colored)
 	{
-		cout << "TODO" << endl;
+		float blue(0.0), green(0.0), red(0.0);
+		for(int i=(-offsetX); i<(1+offsetX); i++)
+		{
+			for(int j=(-offsetY); j<(1+offsetY); j++)
+			{
+				blue  += (float)src->at<Vec3f>(x-i, y-j)[0] * mask->at<float>(i+offsetX,j+offsetY);
+				green += (float)src->at<Vec3f>(x-i, y-j)[1] * mask->at<float>(i+offsetX,j+offsetY);
+				red   += (float)src->at<Vec3f>(x-i, y-j)[2] * mask->at<float>(i+offsetX,j+offsetY);
+			}
+		}
+		dst->at<Vec3f>(x, y)[0] = blue/kMoyenneur;
+		dst->at<Vec3f>(x, y)[1] = green/kMoyenneur;
+		dst->at<Vec3f>(x, y)[2] = red/kMoyenneur;
 	}
 	else
 	{
-		for(int i=(-dimMaskX/2); i<(1+dimMaskX/2); i++)
+		float res(0.0);
+		for(int i=(-offsetX); i<(1+offsetX); i++)
 		{
-			for(int j=(-dimMaskY/2); j<(1+dimMaskY/2); j++)
+			for(int j=(-offsetY); j<(1+offsetY); j++)
 			{
-				res += (float)image.at<uchar>(x-i, y-j) * (float)mask[i][j];
+				res += (float)src->at<uchar>(x-i, y-j) * mask->at<float>(i+offsetX,j+offsetY);
 			}
 		}
+		dst->at<float>(x,y) = res/kMoyenneur;
 	}
-
-	return res;
 }
 
-void normalize_float(Mat image)
+void normalize_float(Mat* src, bool colored)
 {
-	// Normalisation
-    float max = 0.0;
-    for(int x=0; x<image.size().width; x++)
-    {
-    	for(int y=0; y<image.size().height; y++)
-    	{
-    		if(image.at<float>(x,y)>max)
-    		{
-    			max = image.at<float>(x,y);
-    		}
-    	}
-    }
-
-    for(int x=0; x<image.size().width; x++)
-    {
-    	for(int y=0; y<image.size().height; y++)
-    	{
-		    image.at<float>(x,y) = ((float)image.at<float>(x,y)/(float)max) * 255;
-    	}
-    }
-}
-
-void convolution(Mat image, Mat mask, bool colored)
-{
-	Mat   result;
-	float res  = 0.0;
-	int   dimX = image.size().width-1;
-	int   dimY = image.size().height-1;
-	
+	float max(0.0);
 	if(colored)
 	{
-		cout << "TODO" << endl;
+		for(int x=0; x<src->size().width; x++)
+	    {
+	    	for(int y=0; y<src->size().height; y++)
+	    	{
+	    		for(int i=0; i<3; i++)
+	    		{
+	    			if(src->at<Vec3f>(x,y)[i] > max)
+	    			{
+	    				max = src->at<Vec3f>(x,y)[i];
+	    			}
+	    		}
+	    	}
+	    }
+
+	    for(int x=0; x<src->size().width; x++)
+	    {
+	    	for(int y=0; y<src->size().height; y++)
+	    	{
+			    for(int i=0; i<3; i++)
+	    		{
+	    			src->at<Vec3f>(x,y)[i] /= max;
+	    		}
+	    	}
+	    }
 	}
 	else
 	{
-		Mat result = Mat(dimX, dimY, CV_32FC1);
-		for(int x=1; x<image.size().width; x++)
-		{
-			for(int y=1; y<image.size().height; y++)
-			{
-				result.at<float>(x-1,y-1) = calc_conv(image, x, y, dimMaskX, dimMaskY, colored);
-			}
-		}
-		normalize_float(result);
-		namedWindow("Convolution", WINDOW_AUTOSIZE );
-    	imshow("Convolution", result);
+		for(int x=0; x<src->size().width; x++)
+	    {
+	    	for(int y=0; y<src->size().height; y++)
+	    	{
+	    		if(src->at<float>(x,y)>max)
+	    		{
+	    			max = src->at<float>(x,y);
+	    		}
+	    	}
+	    }
+
+	    for(int x=0; x<src->size().width; x++)
+	    {
+	    	for(int y=0; y<src->size().height; y++)
+	    	{
+			    src->at<float>(x,y) /= max;
+	    	}
+	    }
 	}
+}
+
+
+void convolution(Mat* src, Mat* mask, bool colored)
+{
+	
+	int dimX = src->size().width-1;
+	int dimY = src->size().height-1;
+
+	Mat result;
+	if(colored)
+	{
+		result = Mat(dimX, dimY, CV_32FC3);
+	}
+	else
+	{
+		result = Mat(dimX, dimY, CV_32FC1);
+	}
+	for(int x=1; x<dimX; x++)
+	{
+		for(int y=1; y<dimY; y++)
+		{
+			calc_conv(src, &result, mask, x, y, colored);
+		}
+	}
+
+	normalize_float(&result, colored);
+	namedWindow("Convolution", WINDOW_AUTOSIZE );
+    imshow("Convolution", result);
 }
 
 /* ===========================
@@ -103,30 +162,28 @@ void convolution(Mat image, Mat mask, bool colored)
 
 int main(int argc, char const *argv[])
 {
-	Mat image;
-	bool colored  = false;
+	Mat image, mask;
 
-	if(colored)
+	if(kColored)
 	{
-		image = imread( kFilepath, CV_LOAD_IMAGE_COLOR);
-		//mask  = Mat(kMaskRows, kMaskCols, CV_U8C3);
+		image = imread(kFilepath, CV_LOAD_IMAGE_COLOR);
+		mask  = Mat(kMaskRows, kMaskCols, CV_32FC3);
 
 	}
 	else
 	{
 		image = imread(kFilepath, CV_LOAD_IMAGE_GRAYSCALE);
-		//mask  = Math(kMaskRows, kMaskCols, CV_U8C1);
+		mask  = Mat(kMaskRows, kMaskCols, CV_32FC1);
 	}
 
-    if( !image.data )
+    if(!image.data)
     {
         printf("No image data \n");
         return -1;
     }
 
-    Mat mask = Mat(kMaskRows, kMaskCols, CV_32FC1);
-    init_mask(mask);
-    convolution(image, mask, colored);
+    init_mask(&mask);
+    convolution(&image, &mask, kColored);
 
     namedWindow("Display Image", WINDOW_AUTOSIZE );
     imshow("Display Image", image);
