@@ -1,5 +1,5 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef _HISTOGRAMME_H_
+#define _HISTOGRAMME_H_
 
 /* ===========================
             CONSTANTES
@@ -20,7 +20,5 @@ const unsigned int kHistWidth    = 512;
 const double       kPaddingBGR   = (double)kHistHeight / (double)kMaxIntensity;
 const unsigned int kBarWidth     = 5;
 const unsigned int kBarPadding   = 2;
-
-
 
 #endif

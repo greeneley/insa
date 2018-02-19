@@ -16,7 +16,6 @@
 import ciw
 import random
 from statistics import *
-import matplotlib.pyplot as plt 
 
 
 # ==========================================
@@ -177,13 +176,13 @@ class Reseau(object):
                               'Class 4': 4
             },
             Number_of_servers=[
-                [[4, 480], [6, 960], [4,1440]],
-                [[4, 480], [6, 960], [4,1440]],
-                [[4, 480], [6, 960], [4,1440]],
-                [[4, 480], [6, 960], [4,1440]],
-                [[4, 480], [6, 960], [4,1440]],
-                [[4, 480], [6, 960], [4,1440]],
-                [[4, 480], [6, 960], [4,1440]]
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]],
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]],
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]],
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]],
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]],
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]],
+                [[4, 8*HEURE], [6, 16*HEURE], [4, 24*HEURE]]
             ]
         )
     #END_DEF
@@ -192,12 +191,11 @@ class Reseau(object):
     #      PRINT METHOD
     #########################
 
-    def trials(self, nb_trials=1, temps=SEMAINE, export=False):
+    def trials(self, nb_trials=1, temps=SEMAINE):
         """Effectue et affiche des analyses de la simulation.
 
             @param int     nb_trials Le nombre de trials a effectuer. Si rien n'est indique, n'effectue qu'une seule simulation.
             @param int     temps     Le nombre de temps en minutes a simuler. Une semaine par defaut.
-            @param boolean export    Indique a la classe s'il faut exporter les resultats. False par defaut.s
 
         Les parametres analyses sont actuellement, par classe et globalement :
             - temps de service moyen
@@ -219,6 +217,10 @@ class Reseau(object):
         avg_service   = {'all':[],0:[],1:[],2:[],3:[],4:[]}
         avg_wait      = {'all':[],0:[],1:[],2:[],3:[],4:[]}
         nb_patient    = {'all':[],0:[],1:[],2:[],3:[],4:[]}
+
+        # Permet de determiner la repartition des interventions
+        # index 0 : ceux partant apres la 1ere
+        # index 1 : ceux faisant une deuxieme intervention
         interventions = [ {'all':[],0:[],1:[],2:[],3:[],4:[]}, 
                           {'all':[],0:[],1:[],2:[],3:[],4:[]} ]
 
@@ -234,7 +236,7 @@ class Reseau(object):
             self.compute(temps)
 
             # ======
-            # Init compteur
+            # Init compteur a zero
             # ======
             for entry in nb_patient:
                 nb_patient[entry].append(0)
@@ -253,33 +255,28 @@ class Reseau(object):
             avg_service['all'].append(mean([r.service_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
             avg_wait['all'].append(mean([r.waiting_time for r in self.recs if r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
 
-            # Sur de petite duree, il se peut qu'aucune classe 0 n'apparaissent, on doit donc l'ignorer
+            # Sur de petite duree, il se peut qu'aucune classe 0 n'apparaissent, on doit donc l'ignorer via un try/except
             for i in range(5):
                 try:
                     avg_service[i].append(mean([r.service_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
                     avg_wait[i].append(mean([r.waiting_time for r in self.recs if r.customer_class==i and r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t]))
                     
                     # Nombre de patients
-                    temp_patients = []
-                    temp_interv   = [ [], [] ]
+                    # On va chercher a incrementer les dictionnaires a chaque nouveau patient 
+                    # a la fois dans 'all' et dans sa classe associee
+                    # De plus, on va vouloir eviter de compter les doublons
                     for r in self.recs:
                         if( r.arrival_date > self.warmup and r.arrival_date < self.max_simul_t and r.customer_class==i):
-                            if(r.id_number not in temp_patients):
-                                temp_patients.append(r.id_number)
-                                nb_patient['all'][trial] += 1
-                                nb_patient[i][trial]     += 1
-                            #END_IF
-
-                            if(r.node==3):
+                            if(r.node==1):
+                                nb_patient['all'][trial]       += 1
+                                nb_patient[i][trial]           += 1
+                            elif(r.node==3):
                                 interventions[0][i][trial]     += 1
                                 interventions[0]['all'][trial] += 1
-                            #END_IF
-
-                            if(r.node==7):
+                            elif(r.node==7):
                                 interventions[1][i][trial]     += 1
                                 interventions[1]['all'][trial] += 1
                             #END_IF
-
                         #END_IF
                     #END_FOR
                 except Exception as e:
@@ -424,9 +421,9 @@ if __name__ == '__main__':
     projet = Reseau(WARMUP, COOLDOWN)
     print("OK")
     print("============== COMPUTING ==============")
-    # Sur X trials, on effectue une simulation de Y temps et on exporte les resultats si True
-    projet.trials(10, SEMAINE,True)
+    # Sur X trials, on effectue une simulation de Y temps
+    projet.trials(1000, 2*SEMAINE)
 
-    # On fait par defaut une seule simulation d'une semaine sans exporter les resultats
+    # On fait par defaut une seule simulation d'une semaine
     #projet.trials()
 #END_IF

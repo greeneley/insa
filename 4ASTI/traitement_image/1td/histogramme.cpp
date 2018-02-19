@@ -11,7 +11,7 @@
 #include <highgui.h>
 #include <opencv2/opencv.hpp>
 
-#include "main.h"
+#include "histogramme.h"
 
 /* ===========================
            NAMESPACES
