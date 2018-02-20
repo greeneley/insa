@@ -7,7 +7,9 @@
 
 #define N 		32 
 #define NDCT	12
-#define DELTA 	2.0 
+//#define DELTA 	2.0 
+#define D       256.0
+#define PSNR    40.0
 
 // Les coefficients DCT qui seront marqués 
 static unsigned int C[NDCT] = {1, 2, 3, 4, 8, 9, 10, 11, 16, 17, 18, 24};
@@ -53,16 +55,28 @@ int main(int argc, char** argv)
 		}
 	}
 
+	/* Calcul du delta optimal
+	* On veut calculer la formule suivante :
+	* 10^( (10*log10(d*d*64) - PSNR ) / 20 )
+	*/
+	float num         = 10.0*log10(D*D*64) - PSNR;
+	float x           = num / 20.0;
+	const float DELTA = pow(10, x);
 
 
-	// Lecture du tatouage 
-	// Todo 
+	// Tatouage 
+	/* Todo 
+	 * On veut calculer la formule suivante
+	 * yi =  DELTA * round( (Xi + di + mi*DELTA/2) / DELTA ) - di - mi*DELTA/2
+	*/
 	unsigned long d; // dithering
 	int           index;
 	for(int i=0; i<X.size(); i++)
 	{
-		d     = float(mtrand()%INT_MAX)*DELTA/INT_MAX;
-		index = round(d + *X[i]/DELTA*2);
+		d = float(mtrand()%INT_MAX)*DELTA/INT_MAX;
+
+		// On recupere la valeur par arrondi lors de la lecture
+		index = round((d + *X[i])/DELTA*2);
 
 		if(index%2)
 		{
@@ -82,3 +96,4 @@ int main(int argc, char** argv)
 	
 	return 1; 
 }
+

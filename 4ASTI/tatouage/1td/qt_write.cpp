@@ -2,12 +2,15 @@
 #include "dct.h"
 #include "image.h"
 #include "mtrand.h"
+#include "math.h"
 
 #include <vector>
 
 #define N 		32 
 #define NDCT	12
-#define DELTA 	2.0 
+//#define DELTA 2.0
+#define D       256.0
+#define PSNR    40.0
 
 // Les coefficients DCT qui seront marqués 
 static unsigned int C[NDCT] = {1, 2, 3, 4, 8, 9, 10, 11, 16, 17, 18, 24};
@@ -59,11 +62,23 @@ int main(int argc, char** argv)
 	}
 
 
+	/* Calcul du delta optimal
+	 * On veut calculer la formule suivante :
+	 * DELTA = 10 ^ ( (10*log10(d*d*64) - PSNR ) / 20 )
+	*/
+	float num         = 10.0*log10(D*D*64) - PSNR;
+	float x           = num / 20.0;
+	const float DELTA = pow(10, x);
+
 
 	// Tatouage 
-	// Todo 
+	/* Todo 
+	 * On veut calculer la formule suivante
+	 * yi =  DELTA * round( (Xi + di + mi*DELTA/2) / DELTA ) - di - mi*DELTA/2
+	*/
+
 	long arrondi, res;
-	unsigned long d;
+	unsigned long d; // dithering
 	for(int i=0; i<X.size(); i++)
 	{
 		d       = float(mtrand()%INT_MAX)*DELTA/INT_MAX;
@@ -78,6 +93,7 @@ int main(int argc, char** argv)
 	// Calcul du PSNR
 	double eqm(0); for(int i=0; i<dst.size(); i++) eqm+=(dst[i] - src[i])*(dst[i] - src[i]); 
 	cout << "EQM = " << eqm/dst.size() << " | PSNR = " << log(65025.0/eqm*dst.size())/0.23026 << " dB\n"; 
+	cout << "DELTA = " << DELTA << endl;
 
 	// Sauvegarde de l'image marquée 
 	dst.write(argv[2]); 

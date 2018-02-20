@@ -2,6 +2,7 @@
 #include "image.h"
 #include "mtrand.h"
 
+#include <math.h>
 #include <vector>
 
 #define N 		32 
@@ -55,8 +56,22 @@ int main(int argc, char** argv)
 
 
 	// Lecture du tatouage 	
-	// Todo 
-	
+
+	// Calcul des correlations
+	for(int j=0; j<X.size(); j++)
+	{
+		for(int i=0; i<N; i++)
+		{
+			if(mtrand()%2) // Generation du G(i,j)
+			{
+				M[i] += *X[j]; // cj += 1 * ri
+			}
+			else
+			{
+				M[i] -= *X[j]; // cj += -1 * ri
+			}
+		}
+	}
 	
 
 	// Affichage du message 
