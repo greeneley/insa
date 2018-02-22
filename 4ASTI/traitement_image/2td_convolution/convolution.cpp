@@ -76,36 +76,48 @@ void calc_conv(Mat* src, Mat* dst, Mat* mask, int x, int y, bool colored)
 
 void normalize_float(Mat* src, bool colored)
 {
-	float max(0.0);
 	if(colored)
 	{
+		float bMax(0.0);
+		float gMax(0.0);
+		float rMax(0.0);
+
+		// Recherche du max
 		for(int x=0; x<src->size().width; x++)
 	    {
 	    	for(int y=0; y<src->size().height; y++)
 	    	{
-	    		for(int i=0; i<3; i++)
-	    		{
-	    			if(src->at<Vec3f>(x,y)[i] > max)
-	    			{
-	    				max = src->at<Vec3f>(x,y)[i];
-	    			}
-	    		}
+    			if(src->at<Vec3f>(x,y)[0] > bMax)
+    			{
+    				bMax = src->at<Vec3f>(x,y)[0];
+    			}
+    			if(src->at<Vec3f>(x,y)[1] > gMax)
+    			{
+    				gMax = src->at<Vec3f>(x,y)[1];
+    			}
+    			if(src->at<Vec3f>(x,y)[2] > rMax)
+    			{
+    				rMax = src->at<Vec3f>(x,y)[2];
+    			}
 	    	}
 	    }
 
+	    // Normalisation [0, 1]
 	    for(int x=0; x<src->size().width; x++)
 	    {
 	    	for(int y=0; y<src->size().height; y++)
 	    	{
-			    for(int i=0; i<3; i++)
-	    		{
-	    			src->at<Vec3f>(x,y)[i] /= max;
-	    		}
+			    src->at<Vec3f>(x,y)[0] /= bMax;
+			    src->at<Vec3f>(x,y)[1] /= gMax;
+			    src->at<Vec3f>(x,y)[2] /= rMax;
 	    	}
 	    }
 	}
 	else
 	{
+		float max(0.0);
+
+		// Recherche du max
 		for(int x=0; x<src->size().width; x++)
 	    {
 	    	for(int y=0; y<src->size().height; y++)
@@ -117,6 +129,7 @@ void normalize_float(Mat* src, bool colored)
 	    	}
 	    }
 
+	    // Normalisation [0, 1]
 	    for(int x=0; x<src->size().width; x++)
 	    {
 	    	for(int y=0; y<src->size().height; y++)
