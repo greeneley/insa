@@ -25,22 +25,22 @@ using namespace std;
 /* ===========================
             FONCTIONS
    =========================== */
-void init_mask(Mat* mask)
+void init_mask(Mat& mask)
 {
-	for(int x=0; x<mask->size().width; x++)
+	for(int x=0; x<mask.size().width; x++)
 	{
-		for(int y=0; y<mask->size().height; y++)
+		for(int y=0; y<mask.size().height; y++)
 		{
-			mask->at<float>(x,y) = kMask[x+y*kMaskRows];
+			mask.at<float>(x,y) = kMask[x+y*kMaskRows];
 		}
 	}
 }
 
 
-void calc_conv(Mat* src, Mat* dst, Mat* mask, int x, int y, bool colored)
+void calc_conv(Mat& src, Mat& dst, Mat& mask, int x, int y, bool colored)
 {	
-	int dimMaskX = mask->size().width;
-	int dimMaskY = mask->size().height;
+	int dimMaskX = mask.size().width;
+	int dimMaskY = mask.size().height;
 	int offsetX  = dimMaskX/2;
 	int offsetY  = dimMaskY/2;
 
@@ -51,14 +51,14 @@ void calc_conv(Mat* src, Mat* dst, Mat* mask, int x, int y, bool colored)
 		{
 			for(int j=(-offsetY); j<(1+offsetY); j++)
 			{
-				blue  += (float)src->at<Vec3f>(x-i, y-j)[0] * mask->at<float>(i+offsetX,j+offsetY);
-				green += (float)src->at<Vec3f>(x-i, y-j)[1] * mask->at<float>(i+offsetX,j+offsetY);
-				red   += (float)src->at<Vec3f>(x-i, y-j)[2] * mask->at<float>(i+offsetX,j+offsetY);
+				blue  += (float)src.at<Vec3b>(x-i, y-j)[0] * mask.at<float>(i+offsetX,j+offsetY);
+				green += (float)src.at<Vec3b>(x-i, y-j)[1] * mask.at<float>(i+offsetX,j+offsetY);
+				red   += (float)src.at<Vec3b>(x-i, y-j)[2] * mask.at<float>(i+offsetX,j+offsetY);
 			}
 		}
-		dst->at<Vec3f>(x, y)[0] = blue/kMoyenneur;
-		dst->at<Vec3f>(x, y)[1] = green/kMoyenneur;
-		dst->at<Vec3f>(x, y)[2] = red/kMoyenneur;
+		dst.at<Vec3f>(x, y)[0] = blue/kMoyenneur;
+		dst.at<Vec3f>(x, y)[1] = green/kMoyenneur;
+		dst.at<Vec3f>(x, y)[2] = red/kMoyenneur;
 	}
 	else
 	{
@@ -67,14 +67,14 @@ void calc_conv(Mat* src, Mat* dst, Mat* mask, int x, int y, bool colored)
 		{
 			for(int j=(-offsetY); j<(1+offsetY); j++)
 			{
-				res += (float)src->at<uchar>(x-i, y-j) * mask->at<float>(i+offsetX,j+offsetY);
+				res += (float)src.at<uchar>(x-i, y-j) * mask.at<float>(i+offsetX,j+offsetY);
 			}
 		}
-		dst->at<float>(x,y) = res/kMoyenneur;
+		dst.at<float>(x,y) = res/kMoyenneur;
 	}
 }
 
-void normalize_float(Mat* src, bool colored)
+void normalize_float(Mat& src, bool colored)
 {
 	if(colored)
 	{
@@ -83,33 +83,33 @@ void normalize_float(Mat* src, bool colored)
 		float rMax(0.0);
 
 		// Recherche du max
-		for(int x=0; x<src->size().width; x++)
+		for(int x=0; x<src.size().width; x++)
 	    {
-	    	for(int y=0; y<src->size().height; y++)
+	    	for(int y=0; y<src.size().height; y++)
 	    	{
-    			if(src->at<Vec3f>(x,y)[0] > bMax)
+    			if(src.at<Vec3f>(x,y)[0] > bMax)
     			{
-    				bMax = src->at<Vec3f>(x,y)[0];
+    				bMax = src.at<Vec3f>(x,y)[0];
     			}
-    			if(src->at<Vec3f>(x,y)[1] > gMax)
+    			if(src.at<Vec3f>(x,y)[1] > gMax)
     			{
-    				gMax = src->at<Vec3f>(x,y)[1];
+    				gMax = src.at<Vec3f>(x,y)[1];
     			}
-    			if(src->at<Vec3f>(x,y)[2] > rMax)
+    			if(src.at<Vec3f>(x,y)[2] > rMax)
     			{
-    				rMax = src->at<Vec3f>(x,y)[2];
+    				rMax = src.at<Vec3f>(x,y)[2];
     			}
 	    	}
 	    }
 
 	    // Normalisation [0, 1]
-	    for(int x=0; x<src->size().width; x++)
+	    for(int x=0; x<src.size().width; x++)
 	    {
-	    	for(int y=0; y<src->size().height; y++)
+	    	for(int y=0; y<src.size().height; y++)
 	    	{
-			    src->at<Vec3f>(x,y)[0] /= bMax;
-			    src->at<Vec3f>(x,y)[1] /= gMax;
-			    src->at<Vec3f>(x,y)[2] /= rMax;
+			    src.at<Vec3f>(x,y)[0] /= bMax;
+			    src.at<Vec3f>(x,y)[1] /= gMax;
+			    src.at<Vec3f>(x,y)[2] /= rMax;
 	    	}
 	    }
 	}
@@ -118,34 +118,34 @@ void normalize_float(Mat* src, bool colored)
 		float max(0.0);
 
 		// Recherche du max
-		for(int x=0; x<src->size().width; x++)
+		for(int x=0; x<src.size().width; x++)
 	    {
-	    	for(int y=0; y<src->size().height; y++)
+	    	for(int y=0; y<src.size().height; y++)
 	    	{
-	    		if(src->at<float>(x,y)>max)
+	    		if(src.at<float>(x,y)>max)
 	    		{
-	    			max = src->at<float>(x,y);
+	    			max = src.at<float>(x,y);
 	    		}
 	    	}
 	    }
 
 	    // Normalisation [0, 1]
-	    for(int x=0; x<src->size().width; x++)
+	    for(int x=0; x<src.size().width; x++)
 	    {
-	    	for(int y=0; y<src->size().height; y++)
+	    	for(int y=0; y<src.size().height; y++)
 	    	{
-			    src->at<float>(x,y) /= max;
+			    src.at<float>(x,y) /= max;
 	    	}
 	    }
 	}
 }
 
 
-void convolution(Mat* src, Mat* mask, bool colored)
+void convolution(Mat& src, Mat& mask, bool colored)
 {
 	
-	int dimX = src->size().width-1;
-	int dimY = src->size().height-1;
+	int dimX = src.size().width-1;
+	int dimY = src.size().height-1;
 
 	Mat result;
 	if(colored)
@@ -160,11 +160,11 @@ void convolution(Mat* src, Mat* mask, bool colored)
 	{
 		for(int y=1; y<dimY; y++)
 		{
-			calc_conv(src, &result, mask, x, y, colored);
+			calc_conv(src, result, mask, x, y, colored);
 		}
 	}
 
-	normalize_float(&result, colored);
+	normalize_float(result, colored);
 	namedWindow("Convolution", WINDOW_AUTOSIZE );
     imshow("Convolution", result);
 }
@@ -175,17 +175,25 @@ void convolution(Mat* src, Mat* mask, bool colored)
 
 int main(int argc, char const *argv[])
 {
-	Mat image, mask;
+	if(argc < 3)
+	{
+		cout << "Usage: ./app fp_image colored" << endl
+		<< "fp_image: Filepath to source image" << endl
+		<< "colored:  0 for grayscale, >0 for colored" << endl;
+		return 0;
+	}
+	const int kColored  = strtol(argv[2], NULL, 10);
 
+	Mat image, mask;
 	if(kColored)
 	{
-		image = imread(kFilepath, CV_LOAD_IMAGE_COLOR);
+		image = imread(argv[1], CV_LOAD_IMAGE_COLOR);
 		mask  = Mat(kMaskRows, kMaskCols, CV_32FC3);
 
 	}
 	else
 	{
-		image = imread(kFilepath, CV_LOAD_IMAGE_GRAYSCALE);
+		image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 		mask  = Mat(kMaskRows, kMaskCols, CV_32FC1);
 	}
 
@@ -195,8 +203,8 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    init_mask(&mask);
-    convolution(&image, &mask, kColored);
+    init_mask(mask);
+    convolution(image, mask, kColored);
 
     namedWindow("Display Image", WINDOW_AUTOSIZE );
     imshow("Display Image", image);

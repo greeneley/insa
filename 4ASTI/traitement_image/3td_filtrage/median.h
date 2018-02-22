@@ -7,7 +7,6 @@
 
 // Image test
 const char* kFilepath = "../ressources/lena_impulsion.png";
-const bool  kColored  = false;
 
 // Masque
 const int   kMaskRows  = 3;

@@ -1,11 +1,4 @@
 /* ===========================
-             MEMO
-   ===========================
-Le type float prend des valeurs entre 0 et 1 !
-
-*/
-
-/* ===========================
             INCLUDES
    =========================== */
 
@@ -27,11 +20,12 @@ using namespace std;
    =========================== */
 const int kMedian = round(kMaskRows * kMaskCols / 2);
 
+
 /* ===========================
             FONCTIONS
    =========================== */
 
-void median(Mat* src, Mat* dst, vector<uchar>* mask, int x, int y, bool colored)
+void median(Mat& src, Mat& dst, vector<vector<uchar>>& masks, const int x, const int y, const bool colored)
 {
 	int dimMaskX = kMaskCols-1;
 	int dimMaskY = kMaskRows-1;
@@ -40,20 +34,21 @@ void median(Mat* src, Mat* dst, vector<uchar>* mask, int x, int y, bool colored)
 
 	if(colored)
 	{
-		/* TODO
 		for(int i=(-offsetX); i<(1+offsetX); i++)
 		{
 			for(int j=(-offsetY); j<(1+offsetY); j++)
 			{
-				blue  += (float)src->at<Vec3f>(x-i, y-j)[0] * mask->at<float>(i+offsetX,j+offsetY);
-				green += (float)src->at<Vec3f>(x-i, y-j)[1] * mask->at<float>(i+offsetX,j+offsetY);
-				red   += (float)src->at<Vec3f>(x-i, y-j)[2] * mask->at<float>(i+offsetX,j+offsetY);
+				masks[0].at(i+offsetX + (j+offsetY)*kMaskRows) = src.at<Vec3b>(x-i, y-j)[0];
+				masks[1].at(i+offsetX + (j+offsetY)*kMaskRows) = src.at<Vec3b>(x-i, y-j)[1];
+				masks[2].at(i+offsetX + (j+offsetY)*kMaskRows) = src.at<Vec3b>(x-i, y-j)[2];
 			}
 		}
-		dst->at<Vec3f>(x, y)[0] = blue/kMoyenneur;
-		dst->at<Vec3f>(x, y)[1] = green/kMoyenneur;
-		dst->at<Vec3f>(x, y)[2] = red/kMoyenneur;
-		*/
+		for(int i=0; i<3; i++)
+		{
+			sort(masks[i].begin(), masks[i].end());	
+			dst.at<Vec3b>(x, y)[i] = (uchar)masks[i].at(kMedian);
+		}
+
 	}
 	else
 	{
@@ -61,18 +56,18 @@ void median(Mat* src, Mat* dst, vector<uchar>* mask, int x, int y, bool colored)
 		{
 			for(int j=(-offsetY); j<(1+offsetY); j++)
 			{
-				mask->at(i+offsetX + (j+offsetY)*kMaskRows) = src->at<uchar>(x-i, y-j);
+				masks[3].at(i+offsetX + (j+offsetY)*kMaskRows) = src.at<uchar>(x-i, y-j);
 			}
 		}
-		sort(mask->begin(), mask->end());	
-		dst->at<uchar>(x, y) = (uchar)mask->at(kMedian);
+		sort(masks[3].begin(), masks[3].end());	
+		dst.at<uchar>(x, y) = (uchar)masks[3].at(kMedian);
 	}
 }
 
-void filtre(Mat* src, vector<uchar>* mask, bool colored)
+void filtre(Mat& src, vector<vector<uchar>>& masks, const bool colored)
 {
-	int dimX = src->size().width-1;
-	int dimY = src->size().height-1;
+	int dimX = src.size().width-1;
+	int dimY = src.size().height-1;
 
 	Mat result;
 	if(colored)
@@ -87,7 +82,7 @@ void filtre(Mat* src, vector<uchar>* mask, bool colored)
 	{
 		for(int y=1; y<dimY; y++)
 		{
-			median(src, &result, mask, x, y, colored);
+			median(src, result, masks, x, y, colored);
 		}
 	}
 
@@ -101,6 +96,14 @@ void filtre(Mat* src, vector<uchar>* mask, bool colored)
 
 int main(int argc, char const *argv[])
 {
+	if(argc < 2)
+	{
+		cout << "Usage: ./app colored" << endl
+		<< "colored: int 0 == graysacale, >0 == colored" << endl;
+		return 0;
+	}
+	const int kColored = strtol(argv[1], NULL, 10);
+
 	Mat image;
 	if(kColored)
 	{
@@ -117,8 +120,20 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    vector<uchar> mask(kMaskRows*kMaskCols, 0);
-    filtre(&image, &mask, kColored);
+    // Init des masques de filtre
+	vector<vector<uchar>> masks(4);
+	vector<uchar> maskB(kMaskRows*kMaskCols, 0);
+	vector<uchar> maskV(kMaskRows*kMaskCols, 0);
+	vector<uchar> maskR(kMaskRows*kMaskCols, 0);
+	vector<uchar> maskG(kMaskRows*kMaskCols, 0);
+
+	masks[0] = maskB;
+	masks[1] = maskV;
+	masks[2] = maskR;
+	masks[3] = maskG;
+
+	// Traitement
+    filtre(image, masks, kColored);
 
     namedWindow("Display Image", WINDOW_AUTOSIZE );
     imshow("Display Image", image);

@@ -5,10 +5,6 @@
             CONSTANTES
    =========================== */
 
-// Image test
-const char* kFilepath = "../ressources/cat.jpg";
-const bool  kColored  = false;
-
 // Masque
 const int   kMaskRows  = 3;
 const int   kMaskCols  = 3;

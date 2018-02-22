@@ -1,1 +1,0 @@
-// utiliser loi gamma
