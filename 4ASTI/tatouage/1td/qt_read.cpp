@@ -65,20 +65,21 @@ int main(int argc, char** argv)
 
 
 	// Tatouage 
-	/* Todo 
+	/*
 	 * On veut calculer la formule suivante
 	 * yi =  DELTA * round( (Xi + di + mi*DELTA/2) / DELTA ) - di - mi*DELTA/2
 	*/
-	unsigned long d; // dithering
-	int           index;
+	unsigned long d;     // dithering
+	int           index; // On va stocker l'approximation de l'index
 	for(int i=0; i<X.size(); i++)
 	{
+		// On doit borner la valeur du dithering a cause de l'implementation en C++
 		d = float(mtrand()%INT_MAX)*DELTA/INT_MAX;
 
 		// On recupere la valeur par arrondi lors de la lecture
-		index = round((d + *X[i])/DELTA*2);
+		index = round( (d + *X[i]) / DELTA*2 );
 
-		if(index%2)
+		if(index%2) // Si bit est up
 		{
 			M[i%N]++;
 		}
@@ -93,6 +94,7 @@ int main(int argc, char** argv)
 	long message(0); for(int i=0; i<N; i++) if(M[i]>0) message+=1<<i; 
 		
 	cout << "Message : " << message << endl; 
+	cout << "DELTA : " << DELTA << endl;
 	
 	return 1; 
 }

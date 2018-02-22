@@ -62,7 +62,8 @@ int main(int argc, char** argv)
 	{
 		for(int i=0; i<N; i++)
 		{
-			if(mtrand()%2) // Generation du G(i,j)
+			// Generation du G(i,j)
+			if(mtrand()%2)     // Si LSB est up
 			{
 				M[i] += *X[j]; // cj += 1 * ri
 			}

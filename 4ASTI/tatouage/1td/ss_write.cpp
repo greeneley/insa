@@ -40,14 +40,14 @@ int main(int argc, char** argv)
 	
 	// Transformée DCT de l'image hôte
 	dct::analyse(src, src_dct); 
-	dct::watson(src_dct, src_watson)
+	dct::watson(src_dct, src_watson);
 	
 	// Génération du vecteur hôte 
 	vector<double*> X(NDCT*src_dct.size()/64); 
 	int cur(0); 
 
 	// Generation du vecteur de Watson
-	vector<double> S(NDCT*src_dct.size()/64);
+	vector<double*> S(NDCT*src_dct.size()/64);
 	double moy_watson(0.0);
 
 	for(int by=0; by<src.height()/8; by++)
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 	// Normalisation du message : on remplace les 0 par des -1
 	for(int i=0; i<M.size(); i++)
 	{
-		if(!M[i]) // <0
+		if(!M[i]) // bit < 0
 		{
 			M[i] = -1;
 		}
@@ -93,7 +93,8 @@ int main(int argc, char** argv)
 		double wi(0.0);
 		for(int j=0; j<N; j++)
 		{
-			if(mtrand()%2) // Generation du G(i,j)
+			// Generation du G(i,j)
+			if(mtrand()%2)  // Si LSB est up
 			{
 				wi += M[j]; // wi += 1 * M[j]
 			}
@@ -102,7 +103,8 @@ int main(int argc, char** argv)
 				wi -= M[j]; // wi += -1 * M[j]
 			}
 		}
-		*X[i] += wi * ALPHA * *S[i] / moy_watson;
+		//*X[i] += wi * ALPHA / sqrt(2) * *S[i] / moy_watson;
+		*X[i] += wi * ALPHA;
 	}
 
 	// Transformée inverse 

@@ -6,11 +6,12 @@
 using namespace std; 
 
 #define C 10 
-#define M 5000 
+#define M 50000
 #define tsq vector<double>
 
 // Voir https://www.sstic.org/media/SSTIC2009/SSTIC-actes/Le_tracage_de_traitres_en_multimedia/SSTIC2009-Article-Le_tracage_de_traitres_en_multimedia-furon.pdf
 
+// Generateur binaire 0 ou 1
 double rand01()
 {
     const double d = 999999; 
@@ -20,6 +21,7 @@ double rand01()
 
 #define CARRE(x) ((x)*(x))
 
+// Generateur de vecteur p
 tsq gen_secret(const int key, const int m)
 {
     tsq p(m); 
@@ -62,8 +64,10 @@ double compute_score(const tsq& obs, const tsq& suspect, const tsq& p)
     
     double score = 0;
     
+    // Calcul de scores
     for(int i=0; i<m; i++)
     {
+        // Favorise les cas rares ou discriminants
         if(obs[i]==0)
         {
             if(suspect[i]==0)

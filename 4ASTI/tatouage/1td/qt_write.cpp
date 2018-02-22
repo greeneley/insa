@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 	}
 
 
-	/* Calcul du delta optimal
+	/** Calcul du delta optimal
 	 * On veut calculer la formule suivante :
 	 * DELTA = 10 ^ ( (10*log10(d*d*64) - PSNR ) / 20 )
 	*/
@@ -71,18 +71,22 @@ int main(int argc, char** argv)
 	const float DELTA = pow(10, x);
 
 
-	// Tatouage 
-	/* Todo 
+	// Tatouage
+	/* 
 	 * On veut calculer la formule suivante
 	 * yi =  DELTA * round( (Xi + di + mi*DELTA/2) / DELTA ) - di - mi*DELTA/2
 	*/
 
-	long arrondi, res;
+	long arrondi;
+	long res;        // on y stockera le resultat
 	unsigned long d; // dithering
 	for(int i=0; i<X.size(); i++)
 	{
+		// On doit borner la valeur du dithering a cause de l'implementation en C++
 		d       = float(mtrand()%INT_MAX)*DELTA/INT_MAX;
 		arrondi = round((*X[i] + d + M[i%N]*DELTA/2) / DELTA);
+
+		// On modifie le resultat final selon la formule
 		*X[i]   = DELTA * arrondi - d - (M[i%N]*DELTA) / 2;
 	}
 
