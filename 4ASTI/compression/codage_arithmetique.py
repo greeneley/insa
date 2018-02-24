@@ -1,5 +1,11 @@
 #!/usr/bin/python3.5
 
+# ========================
+#           TODO
+# ========================
+# Faire une classe
+#
+
 """
 class CodeurArithmetique(object):
 	Implementation du codage arithmetique. Permet de decoder et de decoder
@@ -14,6 +20,7 @@ class CodeurArithmetique(object):
 # e, s, i, p
 interv = [0.0, 0.4, 0.6, 0.8, 1.0]
 probs  = [0.4, 0.2, 0.2, 0.2]
+encodage = "esip"
 
 # e, n, t, v, .
 #interv = [0.0, 0.3, 0.6, 0.8, 0.9, 1.0]
@@ -42,10 +49,28 @@ def code(inf, sup):
 		out.append(borne)
 	out.append(sup)
 	return out
-
-
 #END_DEF
 
+def decode(coded, taille):
+	out    = ""
+	nombre = coded
+
+	for _ in range(taille):
+		for i in range(len(interv)-1):
+			if( nombre >= interv[i] and nombre < interv[i+1] ):
+				out += encodage[i]
+				nombre = (nombre - interv[i]) / probs[i]
+				break
+		#END_FOR
+	#END_FOR
+
+	return out
+#END_DEF
+
+
+# ====================
+#        TEST
+# ====================
 #mot = "vent."
 mot = "esipe"
 
@@ -64,5 +89,8 @@ for i in range(len(mot)):
 for intevalles in out:
 	print(intevalles)
 
+print("")
+test_decode = decode(0.221, 5)
 print("Le codage arithmetique de `%s` est [%f, %f]" % (mot, out[-1][0], out[-1][-1]))
+print("Le decodage de 0.221 est `%s`" % (test_decode))
 
