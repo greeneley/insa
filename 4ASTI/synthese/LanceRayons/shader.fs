@@ -14,6 +14,7 @@ struct ray
 struct sphere
 {
 	vec3 C;
+	vec3 color;
 	float r;
 };
 
@@ -61,7 +62,7 @@ float raySphere(ray r, sphere s)
 
 
 // ==================================
-void eclairage(ray r, sphere s, source src, int deja_eclaire)
+void draw_eclairage(ray r, sphere s, source src, int deja_eclaire)
 {
 	r.t = raySphere(r, s);
 	if(r.t >= 0.0) // ne touche pas
@@ -73,12 +74,12 @@ void eclairage(ray r, sphere s, source src, int deja_eclaire)
 		vec3   N       = normalize(I - s.C);
 		vec3   V       = normalize(src.pos - I);
 		float cosTheta = dot(N,V);
-		vec3 kd        = vec3(0.8, 0.1, 0.1);
+		vec3 kd        = s.color;
 
 		// Brillance
 		vec3 V0        = normalize(-r.V);
 		vec3 H         = normalize(V0+V);
-		vec3 ks        = vec3(0.2, 0.2, 0.2);
+		vec3 ks        = vec3(0.1, 0.1, 0.1);
 		float n        = 10.0;
 		float cosAlpha = dot(H,N);
 		vec3 fr        = (kd/PI) + ((n+2.0)/(2.0*PI))*ks*pow(cosAlpha, n);
@@ -106,12 +107,12 @@ void main(void)
 
 	// Initialisation des structs
 	ray    rayon  = ray(vec3(0.0, 0.0, 0.0), pixCenter, -1.0);
-	sphere sph1   = sphere(vec3(0.0, 200.0, 0.0), 25.0);
+	sphere sph1   = sphere(vec3(-50.0, 200.0, 0.0), vec3(0.8, 0.1, 0.1), 25.0);
+	sphere sph2   = sphere(vec3(20.0, 150.0, -20.0), vec3(0.1, 0.1, 0.8), 10.0);
 
 	// Eclairage
 	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-	source src   = source(vec3(130.0, 130.0, 0.0), vec3(10.0, 10.0, 10.0));
-	source src2  = source(vec3(-30.0, 130.0, 0.0), vec3(5.0, 5.0, 5.0));
-	eclairage(rayon, sph1, src, 0);
-	eclairage(rayon, sph1, src2, 1);
+	source src   = source(vec3(0.0, 130.0, 150.0), vec3(10.0, 10.0, 10.0));
+	draw_eclairage(rayon, sph1, src, 0);
+	draw_eclairage(rayon, sph2, src, 0);
 }
