@@ -1,1 +1,0 @@
-/usr/bin/cc      CMakeFiles/aegis.dir/src/main.c.o CMakeFiles/aegis.dir/src/pile.c.o CMakeFiles/aegis.dir/src/vehicule.c.o  -o aegis -rdynamic 

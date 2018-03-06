@@ -1,9 +1,0 @@
-#!/bin/bash
-
-while read prenom nom notes
-do
-	nbNotes=`echo $notes | wc -w`
-	somme=`echo $notes | sed -e 's/ /+/g' | bc`
-	moyenne=`echo "$somme/$nbNotes" | bc`
-	echo $prenom $nom $moyenne
-done < "$1"

@@ -1,6 +1,0 @@
-<project name="aegis" default="compile" xmlns:cpptasks="antlib:net.sf.antcontrib.cpptasks">
-	<target name="compile">
-		<mkdir dir="target/main/obj"/>
-		<cpptasks:cc outtype="executable" subsystem="console" 
-	</target>
-</project>

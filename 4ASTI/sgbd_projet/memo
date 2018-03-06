@@ -1,5 +1,0 @@
-Ajouts possibles pour le projet sgbd
-	- evaluation de requete SQL (de type SELECT FROM WHERE)
-	- indexation, l'optimisation
-	- pipelinage (open,, next, close)
-	- renommage, insertion, transaction
