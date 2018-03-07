@@ -267,13 +267,14 @@ void main(void)
 	sphere sph1   = sphere(vec3(-10.0, 40.0, 0.0), vec3(0.8, 0.1, 0.1), 5.0);
 	sphere sph2   = sphere(vec3(10.0, 40.0, 0.0), vec3(0.1, 0.1, 0.8), 5.0);
 
-	plan   plan1  = plan(vec3(0.0, 0.0, -1.0), vec3(0.0, 0.0, 1.0), vec3(0.6, 0.3, 0.2));
+	plan   plan1  = plan(vec3(0.0, 0.0, -10.0), vec3(0.25, 0.0, 1.0), vec3(0.6, 0.3, 0.2));
 	//plan   plan2  = plan(vec3(0.0, 0.0, 40.0), vec3(0.0, -1.0, 0.0), vec3(0.1, 0.1, 0.9));
 
 	// Init des sources de lumiere
 	source t_src[10];
 	t_src[0] = source(vec3(-20.0, 35.0, 20.0), vec3(7.0, 7.0, 7.0));
-	t_src[1] = source(vec3(20.0, 35.0, 20.0), vec3(7.0, 7.0, 7.0));
+	t_src[1] = source(vec3(20.0, 200.0, 20.0), vec3(7.0, 7.0, 7.0));
+
 	NB_SOURCES = 2;
 
 	// Dessin
@@ -291,7 +292,7 @@ void main(void)
 	shine_sphere(rayon, sph2, t_src);
 
 	// Ombre
-	ombre_sphere(t_src, sph1, plan1);
-	ombre_sphere(t_src, sph2, plan1);
+	//ombre_sphere(t_src, sph1, plan1);
+	//ombre_sphere(t_src, sph2, plan1);
 
 }
