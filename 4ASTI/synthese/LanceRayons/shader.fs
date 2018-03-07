@@ -54,8 +54,11 @@ struct source
 	################################# 
 */
 int   NB_SOURCES = 0;
+int   NB_SPHERES = 0;
 float PI         = 3.14;
 
+sphere t_sph[10];
+source t_src[10];
 
 /* 
 	#################################
@@ -189,16 +192,16 @@ void draw_sphere(ray r, sphere s)
 }
 
 // ==================================
-void shine_sphere(ray r, sphere s, source t_src[10])
+void shine_sphere(ray r, sphere s)
 {
 	r.t = raySphere(r, s);
 	if(r.t >= 0.0)
 	{
 		// Init de la luminance resultante
-		vec3 L0 = vec3(0.0, 0.0, 0.0);
+		vec3 LO = vec3(0.0, 0.0, 0.0);
 
 		// Calcul de la luminance resultatne
-		for(int i=0; i<10; i++)
+		for(int i=0; i<100; i++)
 		{
 			// Pour eviter a devoir changer la taille de la loop
 			if(i>=NB_SOURCES)
@@ -207,92 +210,130 @@ void shine_sphere(ray r, sphere s, source t_src[10])
 			}
 
 			// Eclairage
-			vec3   I        = r.O + r.t*r.V;
-			vec3   N        = normalize(I - s.C);
-			vec3   V        = normalize(t_src[i].pos - I);
-			float cosThetaI = dot(N,V);
-			
-			// Brillance
-			vec3 V0         = normalize(-r.V);
-			vec3 H          = normalize(V0+V);
-			float cosAlphaI = dot(H,N);
+			vec3 I = r.O + r.t*r.V;
 
-			// Calcul de la reflectance
-			vec3 ks = vec3(0.1, 0.1, 0.1);
-			vec3 kd = s.color;
-			float n = 5.0;
-			vec3 reflectance = (kd/PI) + ((n+2.0)/(2.0*PI))*ks*pow(cosAlphaI, n);
+			// On verifie si il y a une ombre ou non
+			for(int j=0; j<100; j++)
+			{
+				if(j >= NB_SPHERES)
+				{
+					break;
+				}
+				
+				if(s.C != t_sph[j].C)
+				{
+					ray   r_sph = ray(I, t_src[i].pos, -1.0);
+					float t_sph = raySphere(r_sph, t_sph[j]);
+					if(t_sph >= 0.0)
+					{
+						LO = vec3(0.0, 0.0, 0.0);
+					}
+				}
+				else
+				{
+					vec3   N        = normalize(I - s.C);
+					vec3   V        = normalize(t_src[i].pos - I);
+					float cosThetaI = dot(N,V);
+					
+					// Vecteurs brillance
+					vec3 V0         = normalize(-r.V);
+					vec3 H          = normalize(V0+V);
+					float cosAlphaI = dot(H,N);
 
-			// Addition d'une source de lumiere
-			L0 = L0 + t_src[i].pow * reflectance * cosThetaI; 
+					// Calcul de la reflectance
+					vec3 ks = vec3(0.1, 0.1, 0.1);
+					vec3 kd = s.color;
+					float n = 5.0;
+					vec3 reflectance = (kd/PI) + ((n+2.0)/(2.0*PI))*ks*pow(cosAlphaI, n);
+
+					// Addition d'une source de lumiere
+					LO = LO + t_src[i].pow * reflectance * cosThetaI; 
+				}
+
+			}
+
 		}
 		
-		// L0 est au final la somme de toutes les luminances	
-		gl_FragColor = vec4(L0, 1.0);
+		// LO est au final la somme de toutes les luminances	
+		gl_FragColor = vec4(LO, 1.0);
 	}
 }
 
 // ==================================
 void ombre_sphere(source t_src[10], sphere s, plan p)
 {
-	for(int i=0; i<10; i++)
-	{
-		if(i >= NB_SOURCES)
-		{
-			break;
-		}
-
-		ray r = ray(t_src[i].pos, pixCenter, -1.0);
-		r.t   = rayPlan(r, p);
-		if(r.t >= 0.0)
-		{
-			// Si le rayon passe par le cercle
-			//gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-		}
-	}
-	
+	// TODO	
 }
 
 
-
-// ==================================
-void main(void) 
+/* 
+	##################################
+	##################################
+				SCENES
+	##################################
+	################################## 
+*/
+// ===================================
+void scene_1(void) 
 {
-	// Par defaut la scene est blanche
-	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) ;
+	// ===== Par defaut la scene est blanche
+	gl_FragColor  = vec4(1.0, 1.0, 1.0, 1.0) ;
 
-	// Init des structs
+	// ===== Init des structs
 	ray    rayon  = ray(vec3(0.0, 0.0, 0.0), pixCenter, -1.0);
 
-	sphere sph1   = sphere(vec3(-10.0, 40.0, 0.0), vec3(0.8, 0.1, 0.1), 5.0);
-	sphere sph2   = sphere(vec3(10.0, 40.0, 0.0), vec3(0.1, 0.1, 0.8), 5.0);
-
-	plan   plan1  = plan(vec3(0.0, 0.0, -10.0), vec3(0.25, 0.0, 1.0), vec3(0.6, 0.3, 0.2));
+	// plan1 est legerement incline vers la droite et est en dessous de la vue
+	plan   plan1  = plan(vec3(0.0, 0.0, -10.0), vec3(0.10, 0.0, 0.75), vec3(0.6, 0.3, 0.2));
 	//plan   plan2  = plan(vec3(0.0, 0.0, 40.0), vec3(0.0, -1.0, 0.0), vec3(0.1, 0.1, 0.9));
 
-	// Init des sources de lumiere
-	source t_src[10];
-	t_src[0] = source(vec3(-20.0, 35.0, 20.0), vec3(7.0, 7.0, 7.0));
-	t_src[1] = source(vec3(20.0, 200.0, 20.0), vec3(7.0, 7.0, 7.0));
+	sphere sph0   = sphere(vec3(-20.0, 240.0, 0.0), vec3(0.8, 0.1, 0.1), 50.0);
+	sphere sph1   = sphere(vec3(0.0, 200.0, 10.0), vec3(0.1, 0.1, 0.8), 10.0);
+	t_sph[0]      = sph0;
+	t_sph[1]      = sph1;
+
+	NB_SPHERES = 2;
+
+	// ===== Init des sources de lumiere
+	t_src[0] = source(vec3(50.0, 100.0, 0.0), vec3(10.0, 10.0, 10.0));
+	t_src[1] = source(vec3(-50.0, 100.0, 0.0), vec3(7.0, 7.0, 7.0));
 
 	NB_SOURCES = 2;
 
-	// Dessin
+	// ===== Dessin
 	draw_plan(rayon, plan1);
 	//draw_plan(rayon, plan2);
 
-	draw_sphere(rayon, sph1);
-	draw_sphere(rayon, sph2);
+	for(int i=0; i<1000; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+		draw_sphere(rayon, t_sph[i]);
+	}
 
-	// Eclairage
+	// ===== Eclairage
 	//shine_plan(rayon, plan2, t_src);
 	shine_plan(rayon, plan1, t_src);
 
-	shine_sphere(rayon, sph1, t_src);
-	shine_sphere(rayon, sph2, t_src);
+	for(int i=0; i<100; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+	shine_sphere(rayon, t_sph[i]);
+	}
 
 	// Ombre
 	//ombre_sphere(t_src, sph1, plan1);
 	//ombre_sphere(t_src, sph2, plan1);
 
 }
+
+// ==================================
+void main(void)
+{
+	scene_1();
+}
+
