@@ -110,7 +110,7 @@ function handleMouseMove(event) {
 
 	// Creation/MaJ de la matrice de rotation
 	mat4.identity(objMatrix);
-	mat4.rotate(objMatrix, rotY*DELTA_ANG, [0, 0, -1]);
+	mat4.rotate(objMatrix, rotY*DELTA_ANG, [0, 0, 1]);
 	mat4.rotate(objMatrix, rotX*DELTA_ANG, [1, 0, 0]);
 	
 
