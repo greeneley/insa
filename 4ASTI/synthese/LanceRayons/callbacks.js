@@ -19,7 +19,7 @@ var Keys = {
     };
 
 var px=0.0, py=0.0, pz=0.0;
-var DELTA_ANG=0.1, DELTA_MOVE=0.5; // Sensibilite
+var DELTA_ANG=0.1, DELTA_MOVE=1.0; // Sensibilite
 
 // =====================================================
 window.requestAnimFrame = (function()
@@ -42,7 +42,7 @@ function tick() {
 
 	if (Keys.up) { // Haut
 		pz+=DELTA_MOVE;
-	    
+
 	}
 	else if (Keys.down) { // Bas
 		pz-=DELTA_MOVE;
@@ -65,7 +65,7 @@ function tick() {
 	vec3.set([px,py,pz], oriVector);
 
 	time+=1;
-	
+
 	// Ne prend effet que si la scene a ete modifiee
 	drawScene();
 }
@@ -105,14 +105,14 @@ function handleMouseMove(event) {
 	// Calcul des nouveaux angles de rotation
 	rotY += degToRad(deltaX / 2);
 	rotX += degToRad(deltaY / 2);
-	
+
 
 
 	// Creation/MaJ de la matrice de rotation
 	mat4.identity(objMatrix);
 	mat4.rotate(objMatrix, rotY*DELTA_ANG, [0, 0, 1]);
 	mat4.rotate(objMatrix, rotX*DELTA_ANG, [1, 0, 0]);
-	
+
 
 	lastMouseX = newX
 	lastMouseY = newY;
@@ -128,7 +128,7 @@ window.onkeydown = function(e) { // Bouton Appuyé
 
     else if (kc === 83) Keys.back = true; // Z -> Avancer
     else if (kc === 90) Keys.go = true; // S -> Reculer
-    
+
     else if (kc === 32) Keys.up = true; // Espace -> Haut
     else if (kc === 17) Keys.down = true; // Ctrl -> Bas
 
@@ -144,7 +144,7 @@ window.onkeyup = function(e) { // Bouton Relaché
 
     else if (kc === 83) Keys.back = false; // Z -> Avancer
     else if (kc === 90) Keys.go = false; // S -> Reculer
-    
+
     else if (kc === 32) Keys.up = false; // Espace -> Haut
     else if (kc === 17) Keys.down = false; // Ctrl -> Bas
 };

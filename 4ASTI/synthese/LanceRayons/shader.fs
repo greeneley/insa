@@ -7,7 +7,7 @@ uniform int uTime;
 
 varying vec3 pixCenter;
 
-/* 
+/*
 	#################################
 	#################################
 				STRUCTURES
@@ -35,7 +35,7 @@ struct plan
 struct sphere
 {
 	vec3  C;     // Centre du cercle
-	vec3  color; 
+	vec3  color;
 	float r;     // Rayon
 };
 
@@ -48,37 +48,29 @@ struct source
 };
 
 
-/* 
+/*
 	#################################
 	#################################
 				GLOBAL
 	#################################
-	################################# 
+	#################################
 */
 int   NB_SOURCES = 0;
 int   NB_SPHERES = 0;
 float PI         = 3.14;
+float VITESSE = float(uTime)/50.0;
 
 sphere t_sph[10];
 source t_src[10];
 
 
-/* 
-	#################################
-	#################################
-			    CAMERA
-	#################################
-	################################# 
-*/
 
-
-
-/* 
+/*
 	#################################
 	#################################
 			FONCTIONS PLAN
 	#################################
-	################################# 
+	#################################
 */
 
 // ==================================
@@ -129,7 +121,7 @@ void shine_plan(ray r, plan p, source t_src[10])
 			vec3   N        = normalize(I - p.S);
 			vec3   V        = normalize(t_src[i].pos - I);
 			float cosThetaI = dot(N,V);
-			
+
 			// Brillance
 			vec3 V0         = normalize(-r.V);
 			vec3 H          = normalize(V0+V);
@@ -142,21 +134,21 @@ void shine_plan(ray r, plan p, source t_src[10])
 			vec3 reflectance = (kd/PI) + ((n+2.0)/(2.0*PI))*ks*pow(cosAlphaI, n);
 
 			// Addition d'une source de lumiere
-			L0 = L0 + t_src[i].pow * reflectance * cosThetaI; 
+			L0 = L0 + t_src[i].pow * reflectance * cosThetaI;
 		}
-		
-		// L0 est au final la somme de toutes les luminances	
+
+		// L0 est au final la somme de toutes les luminances
 		gl_FragColor = vec4(L0, 1.0);
 	}
 }
 
 
-/* 
+/*
 	##################################
 	##################################
 			FONCTIONS SPHERE
 	##################################
-	################################## 
+	##################################
 */
 
 // ==================================
@@ -232,7 +224,7 @@ void shine_sphere(ray r, sphere s)
 				{
 					break;
 				}
-				
+
 				if(s.C != t_sph[j].C)
 				{
 					ray   r_sph = ray(I, t_src[i].pos, -1.0);
@@ -247,7 +239,7 @@ void shine_sphere(ray r, sphere s)
 					vec3   N        = normalize(I - s.C);
 					vec3   V        = normalize(t_src[i].pos - I);
 					float cosThetaI = dot(N,V);
-					
+
 					// Vecteurs brillance
 					vec3 V0         = normalize(-r.V);
 					vec3 H          = normalize(V0+V);
@@ -260,14 +252,14 @@ void shine_sphere(ray r, sphere s)
 					vec3 reflectance = (kd/PI) + ((n+2.0)/(2.0*PI))*ks*pow(cosAlphaI, n);
 
 					// Addition d'une source de lumiere
-					LO = LO + t_src[i].pow * reflectance * cosThetaI; 
+					LO = LO + t_src[i].pow * reflectance * cosThetaI;
 				}
 
 			}
 
 		}
-		
-		// LO est au final la somme de toutes les luminances	
+
+		// LO est au final la somme de toutes les luminances
 		gl_FragColor = vec4(LO, 1.0);
 	}
 }
@@ -275,19 +267,19 @@ void shine_sphere(ray r, sphere s)
 // ==================================
 void ombre_sphere(source t_src[10], sphere s, plan p)
 {
-	// TODO	
+	// TODO
 }
 
 
-/* 
+/*
 	##################################
 	##################################
 				SCENES
 	##################################
-	################################## 
+	##################################
 */
 // ===================================
-void scene_1(void) 
+void scene_Test(void)
 {
 	// ===== Par defaut la scene est blanche
 	gl_FragColor  = vec4(1.0, 1.0, 1.0, 1.0) ;
@@ -344,7 +336,8 @@ void scene_1(void)
 
 }
 
-void scene_SateliteOrbital(void) // Manque rotation orbitale  float(uTime) modulo 
+
+void scene_SateliteOrbital(void) // Manque rotation orbitale  float(uTime) modulo
 {
 	// ===== Par defaut la scene est noire
 	gl_FragColor  = vec4(0.1, 0.1, 0.1, 1.0) ;
@@ -352,22 +345,32 @@ void scene_SateliteOrbital(void) // Manque rotation orbitale  float(uTime) modul
 	// Init des structs
 	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
 
+	//Planete Bleue
+	sphere sph0   = sphere(vec3(-10.0, 1000.0, 0.0), vec3(0.0, 0.0, 0.8), 50.0);
 
-	sphere sph0   = sphere(vec3(-10.0, 300.0, 0.0), vec3(0.0, 0.0, 0.8), 40.0);
-	sphere sph1   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+	// Sattelite Orange
+	sphere sph1   = sphere(vec3(sph0.C.x + (sph0.r + 250.0)*cos(VITESSE), sph0.C.y + (sph0.r + 250.0)*sin(VITESSE), sph0.C.z), vec3(0.88, 0.41, 0.0), 35.0);
+
+	// Sattelite Vert
+	sphere sph2   = sphere(vec3(sph0.C.x + (sph0.r + 100.0)*cos(VITESSE*1.4), sph0.C.y + (sph0.r + 100.0)*sin(VITESSE*1.4), sph0.C.z), vec3(0.62, 1.85, 0.7), 20.0);
+
+	// Sattelite Blanc de Orange
+	sphere sph3   = sphere(vec3(sph1.C.x + (sph1.r + 20.0)*cos(VITESSE*3.0), sph1.C.y + (sph1.r + 20.0)*sin(VITESSE*3.0), sph1.C.z), vec3(1.0, 1.0, 1.0), 5.0);
+
 	t_sph[0]      = sph0;
 	t_sph[1]      = sph1;
+	t_sph[2]      = sph2;
+	t_sph[3]      = sph3;
 
-	NB_SPHERES = 2;
+	NB_SPHERES = 4;
 
 	// ===== Init des sources de lumiere
 	t_src[0] = source(vec3(200.0, 100.0, 0.0), vec3(10.0, 10.0, 10.0));
-	//t_src[1] = source(vec3(-50.0, 100.0, 0.0), vec3(7.0, 7.0, 7.0));
 
 	NB_SOURCES = 1;
 
 	// ===== Dessin
-	
+
 
 	for(int i=0; i<1000; i++)
 	{
@@ -384,11 +387,11 @@ void scene_SateliteOrbital(void) // Manque rotation orbitale  float(uTime) modul
 		{
 			break;
 		}
-	shine_sphere(rayon, t_sph[i]);
+	//shine_sphere(rayon, t_sph[i]);
 	}
 }
-/*
-void scene_Boite_Collier(void) // Rotation du collier horaire et changement des couleurs 
+
+void scene_Boite_Collier(void) // Rotation du collier horaire et changement des couleurs
 {
 	// ===== Par defaut la scene est blancche
 	gl_FragColor  = vec4(1.0, 1.0, 1.0, 1.0) ;
@@ -398,14 +401,14 @@ void scene_Boite_Collier(void) // Rotation du collier horaire et changement des 
 
 	// 5 plans pour la boite
 
-	// 5 spheres pour le collier 
-	 
+	// 5 spheres pour le collier
+
 	sphere sph0   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
 	sphere sph1   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
 	sphere sph2   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
 	sphere sph3   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
 	sphere sph4   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
-=	t_sph[0]      = sph0;
+	t_sph[0]      = sph0;
 	t_sph[1]      = sph1;
 	t_sph[2]      = sph2;
 	t_sph[3]      = sph3;
@@ -419,7 +422,7 @@ void scene_Boite_Collier(void) // Rotation du collier horaire et changement des 
 	NB_SOURCES = 1;
 
 	// ===== Dessin
-	
+
 
 	for(int i=0; i<1000; i++)
 	{
@@ -439,29 +442,39 @@ void scene_Boite_Collier(void) // Rotation du collier horaire et changement des 
 	shine_sphere(rayon, t_sph[i]);
 	}
 }
-*/
-void scene_Lueures(void) //  
+
+void scene_Lueures(void)
 {
-	// ===== Par defaut la scene est noire
-	gl_FragColor  = vec4(0.1, 0.1, 0.1, 1.0) ;
+	// ===== Couleur de la scene
+	gl_FragColor  = vec4(1.0, 1.0, 1.0, 1.0) ;
 
 	// Init des structs
 	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
 
 	// 1 plan pour le sol
+	plan   plan1  = plan(vec3(0.0, 0.0, -10.0), vec3(0.10, 0.0, 0.75), vec3(0.0, 0.5, 0.0));
 
-	// 1 sphere  
-	sphere sph0   = sphere(vec3(-10.0, 200.0, 0.0), vec3(0.8, 0.8, 0.8), 20.0);
+	// 1 sphere
+	sphere sph0   = sphere(vec3(-10.0, 300.0, 0.0), vec3(0.9, 0.9, 0.9), 30.0);
+
+	sphere sph1   = sphere(vec3(sph0.C.x + (sph0.r + 50.0)*cos(VITESSE), sph0.C.y + (sph0.r + 50.0)*sin(VITESSE), sph0.C.z), vec3(10.0, 0.0, 0.0), 1.0);
+	sphere sph2   = sphere(vec3(sph0.C.x - (sph0.r + 50.0)*cos(VITESSE), sph0.C.y + (sph0.r + 50.0)*sin(VITESSE), sph0.C.z), vec3(0.0, 0.0, 10.0), 1.0);
 	t_sph[0]      = sph0;
-	NB_SPHERES = 1;
+	t_sph[1]      = sph1;
+	t_sph[2]      = sph2;
+
+	NB_SPHERES = 3;
 
 	// ===== Init des sources de lumiere
-	t_src[0] = source(vec3(-200.0, 100.0, 0.0), vec3(10.0, 0.0, 0.0));
-	t_src[1] = source(vec3(200.0, 100.0, 0.0), vec3(0.0, 0.0, 10.0));
-	NB_SOURCES = 2;
+	t_src[0] = source(vec3(200.0, 100.0, 0.0), vec3(3.0, 3.0, 3.0));
+	t_src[1] = source(vec3(sph0.C.x + (sph0.r + 50.0)*cos(VITESSE), sph0.C.y + (sph0.r + 50.0)*sin(VITESSE), sph0.C.z), vec3(10.0, 0.0, 0.0));
+	t_src[2] = source(vec3(sph0.C.x - (sph0.r + 50.0)*cos(VITESSE), sph0.C.y + (sph0.r + 50.0)*sin(VITESSE), sph0.C.z), vec3(0.0, 0.0, 10.0));
+	NB_SOURCES = 3;
+
 
 	// ===== Dessin
-	
+
+	draw_plan(rayon, plan1);
 
 	for(int i=0; i<1000; i++)
 	{
@@ -487,8 +500,8 @@ void scene_Lueures(void) //
 // ==================================
 void main(void)
 {
-	//scene_SateliteOrbital();
+	//scene_Test();
+	scene_SateliteOrbital();
 	//scene_Boite_Collier();
-	scene_Lueures();
+	//scene_Lueures();
 }
-
