@@ -1,8 +1,10 @@
 
 precision mediump float;
 
-varying vec3 pixCenter;
 
+uniform vec3 uOriVector;
+
+varying vec3 pixCenter;
 
 /* 
 	#################################
@@ -272,7 +274,7 @@ void main(void)
 	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) ;
 
 	// Init des structs
-	ray    rayon  = ray(vec3(0.0, 0.0, 0.0), pixCenter, -1.0);
+	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
 
 	sphere sph1   = sphere(vec3(-10.0, 40.0, 0.0), vec3(0.8, 0.1, 0.1), 5.0);
 	sphere sph2   = sphere(vec3(10.0, 40.0, 0.0), vec3(0.1, 0.1, 0.8), 5.0);

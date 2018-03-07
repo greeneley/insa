@@ -11,6 +11,7 @@ var pixCenterBuffer;
 
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
+var oriVector = vec3.create([0.0,0.0,0.0]);
 var objMatrix = mat4.create();
 mat4.identity(objMatrix);
 
@@ -147,6 +148,7 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	// Demande d'acces aux variables uPMatrix et uMVMatrix et on recoit un identifiant
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+	shaderProgram.oriVectorUniform = gl.getUniformLocation(shaderProgram, "uOriVector");
 }
 
 
@@ -155,6 +157,7 @@ function setMatrixUniforms() {
 	if(shaderProgram != null) {
 		gl.uniformMatrix3fv(shaderProgram.pMatrixUniform, false, mat4.toMat3(pMatrix));
 		gl.uniformMatrix3fv(shaderProgram.mvMatrixUniform, false, mat4.toMat3(mvMatrix));
+		gl.uniform3fv(shaderProgram.oriVectorUniform, oriVector);
 	}
 }
 
