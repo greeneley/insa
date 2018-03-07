@@ -1,7 +1,6 @@
 
 precision mediump float;
 
-
 varying vec3 pixCenter;
 
 
@@ -55,6 +54,17 @@ struct source
 */
 int   NB_SOURCES = 0;
 float PI         = 3.14;
+
+/* 
+	#################################
+	#################################
+			    CAMERA
+	#################################
+	################################# 
+*/
+
+
+
 
 
 /* 
@@ -286,7 +296,7 @@ void main(void)
 
 	// Eclairage
 	//shine_plan(rayon, plan2, t_src);
-	shine_plan(rayon, plan1, t_src);
+	//shine_plan(rayon, plan1, t_src);
 
 	shine_sphere(rayon, sph1, t_src);
 	shine_sphere(rayon, sph2, t_src);

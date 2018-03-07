@@ -153,8 +153,8 @@ function initShaders(vShaderTxt,fShaderTxt) {
 // =====================================================
 function setMatrixUniforms() {
 	if(shaderProgram != null) {
-		gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-		gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+		gl.uniformMatrix3fv(shaderProgram.pMatrixUniform, false, mat4.toMat3(pMatrix));
+		gl.uniformMatrix3fv(shaderProgram.mvMatrixUniform, false, mat4.toMat3(mvMatrix));
 	}
 }
 
