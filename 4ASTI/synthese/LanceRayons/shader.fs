@@ -1,7 +1,6 @@
 
 precision mediump float;
 
-
 varying vec3 pixCenter;
 
 
@@ -59,6 +58,17 @@ float PI         = 3.14;
 
 sphere t_sph[10];
 source t_src[10];
+
+
+/* 
+	#################################
+	#################################
+			    CAMERA
+	#################################
+	################################# 
+*/
+
+
 
 /* 
 	#################################
@@ -314,7 +324,7 @@ void scene_1(void)
 
 	// ===== Eclairage
 	//shine_plan(rayon, plan2, t_src);
-	shine_plan(rayon, plan1, t_src);
+	//shine_plan(rayon, plan1, t_src);
 
 	for(int i=0; i<100; i++)
 	{
