@@ -3,6 +3,7 @@ precision mediump float;
 
 
 uniform vec3 uOriVector;
+uniform int uTime;
 
 varying vec3 pixCenter;
 
@@ -298,7 +299,7 @@ void scene_1(void)
 	plan   plan1  = plan(vec3(0.0, 0.0, -10.0), vec3(0.10, 0.0, 0.75), vec3(0.6, 0.3, 0.2));
 	//plan   plan2  = plan(vec3(0.0, 0.0, 40.0), vec3(0.0, -1.0, 0.0), vec3(0.1, 0.1, 0.9));
 
-	sphere sph0   = sphere(vec3(-20.0, 240.0, 0.0), vec3(0.8, 0.1, 0.1), 50.0);
+	sphere sph0   = sphere(vec3(-20.0, 240.0+float(uTime), 0.0), vec3(0.8, 0.1, 0.1), 50.0);
 	sphere sph1   = sphere(vec3(0.0, 200.0, 10.0), vec3(0.1, 0.1, 0.8), 10.0);
 	t_sph[0]      = sph0;
 	t_sph[1]      = sph1;

@@ -18,7 +18,8 @@ var Keys = {
         right: false
     };
 
-
+var px=0.0, py=0.0, pz=0.0;
+var DELTA_ANG=0.1, DELTA_MOVE=0.5; // Sensibilite
 
 // =====================================================
 window.requestAnimFrame = (function()
@@ -39,29 +40,31 @@ window.requestAnimFrame = (function()
 function tick() {
 	requestAnimFrame(tick);
 
-	sensib=0.5; // Sensiblité
-	if (Keys.up) {
-	    vec3.add(oriVector, [0.0,0.0,sensib], oriVector); // Haut
+	if (Keys.up) { // Haut
+		pz+=DELTA_MOVE;
+	    
 	}
-	else if (Keys.down) { 
-	    vec3.add(oriVector, [0.0,0.0,-sensib], oriVector); // Bas
-	}
-
-	if (Keys.go) {
-	    vec3.add(oriVector, [0.0,sensib,0.0], oriVector); // Avancer
-	}
-	else if (Keys.back) { 
-	    vec3.add(oriVector, [0.0,-sensib,0.0], oriVector); // Reculer
+	else if (Keys.down) { // Bas
+		pz-=DELTA_MOVE;
 	}
 
-	if (Keys.left) {
-	    vec3.add(oriVector, [-sensib,0.0,0.0], oriVector); // Gauche
+	if (Keys.go) { // Avancer
+		py+=DELTA_MOVE;
 	}
-	else if (Keys.right) {
-	    vec3.add(oriVector, [sensib,0.0,0.0], oriVector);  // Droite
+	else if (Keys.back) { // Reculer
+		py-=DELTA_MOVE;
+	}
+
+	if (Keys.left) { // Gauche
+		px-=DELTA_MOVE;
+	}
+	else if (Keys.right) {  // Droite
+		px+=DELTA_MOVE;
 	}
 	//  -gauche/+droite  -reculer/+avancer   -bas/+haut
-	
+	vec3.set([px,py,pz], oriVector);
+
+	time+=1;
 	
 	// Ne prend effet que si la scene a ete modifiee
 	drawScene();
@@ -97,21 +100,25 @@ function handleMouseMove(event) {
 	var deltaX = newX - lastMouseX;
 	var deltaY = newY - lastMouseY;
 
+
+
 	// Calcul des nouveaux angles de rotation
 	rotY += degToRad(deltaX / 2);
 	rotX += degToRad(deltaY / 2);
 	
+
+
 	// Creation/MaJ de la matrice de rotation
 	mat4.identity(objMatrix);
-	mat4.rotate(objMatrix, rotY*0.1, [0, 0, -1]);
-	mat4.rotate(objMatrix, rotX*0.1, [1, 0, 0]);
+	mat4.rotate(objMatrix, rotY*DELTA_ANG, [0, 0, -1]);
+	mat4.rotate(objMatrix, rotX*DELTA_ANG, [1, 0, 0]);
 	
 
 	lastMouseX = newX
 	lastMouseY = newY;
 }
 
-
+// =====================================================
 window.onkeydown = function(e) { // Bouton Appuyé
     var kc = e.keyCode;
     e.preventDefault();
@@ -125,9 +132,9 @@ window.onkeydown = function(e) { // Bouton Appuyé
     else if (kc === 32) Keys.up = true; // Espace -> Haut
     else if (kc === 17) Keys.down = true; // Ctrl -> Bas
 
-
 };
 
+// =====================================================
 window.onkeyup = function(e) { // Bouton Relaché
     var kc = e.keyCode;
     e.preventDefault();
