@@ -344,9 +344,151 @@ void scene_1(void)
 
 }
 
+void scene_SateliteOrbital(void) // Manque rotation orbitale  float(uTime) modulo 
+{
+	// ===== Par defaut la scene est noire
+	gl_FragColor  = vec4(0.1, 0.1, 0.1, 1.0) ;
+
+	// Init des structs
+	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
+
+
+	sphere sph0   = sphere(vec3(-10.0, 300.0, 0.0), vec3(0.0, 0.0, 0.8), 40.0);
+	sphere sph1   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+	t_sph[0]      = sph0;
+	t_sph[1]      = sph1;
+
+	NB_SPHERES = 2;
+
+	// ===== Init des sources de lumiere
+	t_src[0] = source(vec3(200.0, 100.0, 0.0), vec3(10.0, 10.0, 10.0));
+	//t_src[1] = source(vec3(-50.0, 100.0, 0.0), vec3(7.0, 7.0, 7.0));
+
+	NB_SOURCES = 1;
+
+	// ===== Dessin
+	
+
+	for(int i=0; i<1000; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+		draw_sphere(rayon, t_sph[i]);
+	}
+
+	for(int i=0; i<100; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+	shine_sphere(rayon, t_sph[i]);
+	}
+}
+/*
+void scene_Boite_Collier(void) // Rotation du collier horaire et changement des couleurs 
+{
+	// ===== Par defaut la scene est blancche
+	gl_FragColor  = vec4(1.0, 1.0, 1.0, 1.0) ;
+
+	// Init des structs
+	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
+
+	// 5 plans pour la boite
+
+	// 5 spheres pour le collier 
+	 
+	sphere sph0   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+	sphere sph1   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+	sphere sph2   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+	sphere sph3   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+	sphere sph4   = sphere(vec3(50.0, 250.0, 10.0), vec3(0.88, 0.41, 0.0), 10.0);
+=	t_sph[0]      = sph0;
+	t_sph[1]      = sph1;
+	t_sph[2]      = sph2;
+	t_sph[3]      = sph3;
+	t_sph[4]      = sph4;
+
+	NB_SPHERES = 5;
+
+	// ===== Init des sources de lumiere
+	t_src[0] = source(vec3(200.0, 100.0, 0.0), vec3(10.0, 10.0, 10.0));
+
+	NB_SOURCES = 1;
+
+	// ===== Dessin
+	
+
+	for(int i=0; i<1000; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+		draw_sphere(rayon, t_sph[i]);
+	}
+
+	for(int i=0; i<100; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+	shine_sphere(rayon, t_sph[i]);
+	}
+}
+*/
+void scene_Lueures(void) //  
+{
+	// ===== Par defaut la scene est noire
+	gl_FragColor  = vec4(0.1, 0.1, 0.1, 1.0) ;
+
+	// Init des structs
+	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
+
+	// 1 plan pour le sol
+
+	// 1 sphere  
+	sphere sph0   = sphere(vec3(-10.0, 200.0, 0.0), vec3(0.8, 0.8, 0.8), 20.0);
+	t_sph[0]      = sph0;
+	NB_SPHERES = 1;
+
+	// ===== Init des sources de lumiere
+	t_src[0] = source(vec3(-200.0, 100.0, 0.0), vec3(10.0, 0.0, 0.0));
+	t_src[1] = source(vec3(200.0, 100.0, 0.0), vec3(0.0, 0.0, 10.0));
+	NB_SOURCES = 2;
+
+	// ===== Dessin
+	
+
+	for(int i=0; i<1000; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+		draw_sphere(rayon, t_sph[i]);
+	}
+
+	for(int i=0; i<100; i++)
+	{
+		if(i >= NB_SPHERES)
+		{
+			break;
+		}
+	shine_sphere(rayon, t_sph[i]);
+	}
+}
+
+
+
 // ==================================
 void main(void)
 {
-	scene_1();
+	//scene_SateliteOrbital();
+	//scene_Boite_Collier();
+	scene_Lueures();
 }
 
