@@ -54,7 +54,7 @@ struct source
 	#################################
 	#################################
 */
-
+// ==================================
 int NB_SOURCES = 0;
 int NB_SPHERES = 0;
 int NB_PLANS   = 0;
@@ -67,11 +67,10 @@ sphere T_SPH[100];
 source T_SRC[100];
 plan   T_PLANS[100];
 
-
 /*
 	#################################
 	#################################
-			FONCTIONS TIERS
+			FONCTIONS DESSIN
 	#################################
 	#################################
 */
@@ -366,38 +365,34 @@ void draw_shined_all(ray rayon, float unicolor)
 */
 
 // ==================================
-
 void scene_SateliteOrbital(void)
 {
-	// ===== Init des structs
-	ray    rayon  = ray(uOriVector, pixCenter, -1.0);
+	// ===== Rayon
+	ray rayon  = ray(uOriVector, pixCenter, -1.0);
 
-	// Plans
-	NB_PLANS      = 0;
+	// ===== Plans
+	NB_PLANS   = 0;
 
-	// Spheres
+	// ===== Spheres
 	//Planete Bleue
-	sphere sph0   = sphere(vec3(-10.0, 1000.0, 0.0), vec3(0.0, 0.0, 0.8), 25.0);
+	T_SPH[0]   = sphere(vec3(-10.0, 1000.0, 0.0), vec3(0.0, 0.0, 0.8), 25.0);
 
 	// Sattelite Orange
-	sphere sph1   = sphere(vec3(sph0.C.x + (sph0.r + 250.0)*cos(VITESSE), sph0.C.y + (sph0.r + 250.0)*sin(VITESSE), sph0.C.z), vec3(0.88, 0.41, 0.0), 35.0);
+	T_SPH[1]   = sphere(vec3(T_SPH[0].C.x + (T_SPH[0].r + 250.0)*cos(VITESSE), T_SPH[0].C.y + (T_SPH[0].r + 250.0)*sin(VITESSE), T_SPH[0].C.z), vec3(0.88, 0.41, 0.0), 35.0);
 
 	// Sattelite Vert
-	sphere sph2   = sphere(vec3(sph0.C.x + (sph0.r + 100.0)*cos(VITESSE*1.4), sph0.C.y + (sph0.r + 100.0)*sin(VITESSE*1.4), sph0.C.z), vec3(0.62, 1.85, 0.7), 20.0);
+	T_SPH[2]   = sphere(vec3(T_SPH[0].C.x + (T_SPH[0].r + 100.0)*cos(VITESSE*1.4), T_SPH[0].C.y + (T_SPH[0].r + 100.0)*sin(VITESSE*1.4), T_SPH[0].C.z), vec3(0.62, 1.85, 0.7), 20.0);
 
 	// Sattelite Blanc de Orange
-	sphere sph3   = sphere(vec3(sph1.C.x + (sph1.r + 20.0)*cos(VITESSE*3.0), sph1.C.y + (sph1.r + 20.0)*sin(VITESSE*3.0), sph1.C.z), vec3(1.0, 1.0, 1.0), 5.0);
+	T_SPH[3]   = sphere(vec3(T_SPH[1].C.x + (T_SPH[1].r + 20.0)*cos(VITESSE*3.0), T_SPH[1].C.y + (T_SPH[1].r + 20.0)*sin(VITESSE*3.0), T_SPH[1].C.z), vec3(1.0, 1.0, 1.0), 5.0);
+
+	// Satelite rouge
+	T_SPH[4]   = sphere(vec3(T_SPH[0].C.x - (T_SPH[0].r + 300.0)*cos(VITESSE*1.5), T_SPH[0].C.y + (T_SPH[0].r + 300.0)*sin(VITESSE*1.5), T_SPH[0].C.z), vec3(1.0, 0.0, 0.0), 20.0);
 
 	// Etoile lointaine
-	sphere sph4   = sphere(vec3(210, 100.0, 0.0), vec3(0.9, 0.9, 0.0), 1.0);
+	T_SPH[5]   = sphere(vec3(210, 100.0, 0.0), vec3(0.9, 0.9, 0.0), 1.0);
 
-	T_SPH[0]      = sph0;
-	T_SPH[1]      = sph1;
-	T_SPH[2]      = sph2;
-	T_SPH[3]      = sph3;
-	T_SPH[4]      = sph4;
-
-	NB_SPHERES    = 5;
+	NB_SPHERES = 6;
 
 	// ===== Init des sources de lumiere
 	T_SRC[0] = source(vec3(200.0, 100.0, 0.0), vec3(7.0, 7.0, 7.0));
@@ -409,10 +404,12 @@ void scene_SateliteOrbital(void)
 	draw_shined_all(rayon, 0.1);
 }
 
-void scene_Boite_Collier(void) // Rotation du collier horaire et changement des couleurs
+// ==================================
+void scene_Boite(void) // Rotation du collier horaire et changement des couleurs
 {
 	// ===== Init des structs
 	ray rayon  = ray(uOriVector, pixCenter, -1.0);
+
 
 	// 5 plans pour la boite
 	T_PLANS[0] = plan(vec3(  0.0, 0.0,-5.0), vec3( 0.0, 0.0, 1.0), vec3(0.1, 0.1, 0.9)); // sol
@@ -423,13 +420,13 @@ void scene_Boite_Collier(void) // Rotation du collier horaire et changement des 
 
 	NB_PLANS = 4;
 
-	// spheres 
-	T_SPH[0]   = sphere(vec3(0.0, 60.0, -1.0), vec3(0.88, 0.41, 0.0), 4.0);
+	vec3 centre = vec3(0.0, 60.0, -1.0);
+	T_SPH[0]   = sphere(vec3(centre.x + 5.0*cos(VITESSE*10.0), centre.y, centre.z), vec3(0.88, 0.41, 0.0), 4.0);
 
 	NB_SPHERES = 1;
 
 	// ===== Init des sources de lumiere
-	T_SRC[0] = source(vec3(0.0, 50.0, 0.0), vec3(1.0, 1.0, 1.0));
+	T_SRC[0] = source(vec3(0.0, 50.0, 0.0), vec3(3.0, 3.0, 3.0));
 
 	NB_SOURCES = 1;
 
@@ -438,6 +435,8 @@ void scene_Boite_Collier(void) // Rotation du collier horaire et changement des 
 	draw_shined_all(rayon, 1.0);
 }
 
+
+// ===================================
 void scene_Lueures(void)
 {
 	// ===== Init des structs
@@ -495,8 +494,9 @@ void scene_atome(void)
 	NB_SPHERES = 7;
 
 	// ===== Init des sources de lumiere
-	T_SRC[0]   = source(vec3(20.0, centre-25.0, 20.0), vec3(5.0, 5.0, 5.0));
-	NB_SOURCES = 1;
+	T_SRC[0]   = source(vec3(100.0, 300.0, 100.0), vec3(5.0, 5.0, 5.0));
+	T_SRC[1]   = source(vec3(-100.0, -300.0, -100.0), vec3(5.0, 5.0, 5.0));
+	NB_SOURCES = 2;
 
 	// ===== Dessin avec scene blanche par default
 	//draw_raw_all(rayon, 1.0);
@@ -507,7 +507,7 @@ void scene_atome(void)
 void main(void)
 {
 	//scene_SateliteOrbital();
-	//scene_Boite_Collier();
-	scene_Lueures();
+	scene_Boite();
+	//scene_Lueures();
 	//scene_atome();
 }

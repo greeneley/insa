@@ -19,7 +19,7 @@ var Keys = {
     };
 
 var px=0.0, py=0.0, pz=0.0;
-var DELTA_ANG=0.1, DELTA_MOVE=1.0; // Sensibilite
+var DELTA_ANG=0.1, DELTA_MOVE=2.0; // Sensibilite
 
 // =====================================================
 window.requestAnimFrame = (function()
