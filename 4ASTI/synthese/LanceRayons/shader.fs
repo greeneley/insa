@@ -177,7 +177,7 @@ void eclaire_ombre_point(ray r_src, vec3 pt_repere, vec3 kd)
 
 			// Calcul de la reflectance
 			vec3 ks = vec3(0.1, 0.1, 0.1);
-			float n = 7.0;
+			float n = 5.0;
 			vec3 reflectance = (kd/PI) + ((n+2.0)/(2.0*PI))*ks*pow(cosAlphaI, n);
 
 			// Addition d'une source de lumiere
@@ -469,45 +469,9 @@ void scene_Lueures(void)
 
 
 // ==================================
-void scene_atome(void)
-{
-
-	// ===== Init des structures
-	ray rayon  = ray(uOriVector, pixCenter, -1.0);
-
-	// Plans
-	NB_PLANS   = 0;
-
-	// Spheres
-	float r_atome    = 5.0;
-	float r_electron = 2.0;
-	float centre     = 150.0;
-	vec3  bleu       = vec3(0.2, 0.2, 0.8);
-	vec3  rouge      = vec3(0.8, 0.2, 0.2);
-	T_SPH[0]         = sphere(vec3( 0.0, centre-5.0,  0.0), bleu, r_atome); // premiere bleue
-	T_SPH[1]         = sphere(vec3(-5.0, centre+5.0,  5.0), bleu, r_atome); // bleue haut gauche
-	T_SPH[2]         = sphere(vec3( 5.0, centre+5.0,  5.0), bleu, r_atome); // bleue haut droit
-	T_SPH[3]         = sphere(vec3( 0.0, centre+5.0, -5.0), bleu, r_atome); // bleue bas
-	T_SPH[4]         = sphere(vec3( 0.0, centre,      5.0), rouge, r_atome); // rouge haute
-	T_SPH[5]         = sphere(vec3(-5.0, centre,     -5.0), rouge, r_atome); // rouge bas gauche
-	T_SPH[6]         = sphere(vec3( 5.0, centre,     -5.0), rouge, r_atome); // rouge bas droite
-	NB_SPHERES = 7;
-
-	// ===== Init des sources de lumiere
-	T_SRC[0]   = source(vec3(100.0, 300.0, 100.0), vec3(5.0, 5.0, 5.0));
-	T_SRC[1]   = source(vec3(-100.0, -300.0, -100.0), vec3(5.0, 5.0, 5.0));
-	NB_SOURCES = 2;
-
-	// ===== Dessin avec scene blanche par default
-	//draw_raw_all(rayon, 1.0);
-	draw_shined_all(rayon, 1.0);
-}
-
-// ==================================
 void main(void)
 {
 	//scene_SateliteOrbital();
 	scene_Boite();
 	//scene_Lueures();
-	//scene_atome();
 }
