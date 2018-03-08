@@ -75,6 +75,9 @@ plan   T_PLANS[100];
 	#################################
 */
 // ==================================
+// 
+
+
 float rayPlan(ray r, plan p)
 {
 	vec3 OS     = p.S - r.O; // Vecteur OS
@@ -422,7 +425,11 @@ void scene_Boite(void) // Rotation du collier horaire et changement des couleurs
 
 	vec3 centre = vec3(0.0, 60.0, -1.0);
 	T_SPH[0]   = sphere(vec3(centre.x + 5.0*cos(VITESSE*10.0), centre.y, centre.z), vec3(0.88, 0.41, 0.0), 4.0);
-
+	if(T_SPH[0].C.x <=centre.x){
+		T_SPH[0].color=vec3(0.88, 0.41, 0.0);
+	}else{
+		T_SPH[0].color=vec3(1.0, 0.41, 1.0);
+	}
 	NB_SPHERES = 1;
 
 	// ===== Init des sources de lumiere
@@ -469,45 +476,9 @@ void scene_Lueures(void)
 
 
 // ==================================
-void scene_atome(void)
-{
-
-	// ===== Init des structures
-	ray rayon  = ray(uOriVector, pixCenter, -1.0);
-
-	// Plans
-	NB_PLANS   = 0;
-
-	// Spheres
-	float r_atome    = 5.0;
-	float r_electron = 2.0;
-	float centre     = 150.0;
-	vec3  bleu       = vec3(0.2, 0.2, 0.8);
-	vec3  rouge      = vec3(0.8, 0.2, 0.2);
-	T_SPH[0]         = sphere(vec3( 0.0, centre-5.0,  0.0), bleu, r_atome); // premiere bleue
-	T_SPH[1]         = sphere(vec3(-5.0, centre+5.0,  5.0), bleu, r_atome); // bleue haut gauche
-	T_SPH[2]         = sphere(vec3( 5.0, centre+5.0,  5.0), bleu, r_atome); // bleue haut droit
-	T_SPH[3]         = sphere(vec3( 0.0, centre+5.0, -5.0), bleu, r_atome); // bleue bas
-	T_SPH[4]         = sphere(vec3( 0.0, centre,      5.0), rouge, r_atome); // rouge haute
-	T_SPH[5]         = sphere(vec3(-5.0, centre,     -5.0), rouge, r_atome); // rouge bas gauche
-	T_SPH[6]         = sphere(vec3( 5.0, centre,     -5.0), rouge, r_atome); // rouge bas droite
-	NB_SPHERES = 7;
-
-	// ===== Init des sources de lumiere
-	T_SRC[0]   = source(vec3(100.0, 300.0, 100.0), vec3(5.0, 5.0, 5.0));
-	T_SRC[1]   = source(vec3(-100.0, -300.0, -100.0), vec3(5.0, 5.0, 5.0));
-	NB_SOURCES = 2;
-
-	// ===== Dessin avec scene blanche par default
-	//draw_raw_all(rayon, 1.0);
-	draw_shined_all(rayon, 1.0);
-}
-
-// ==================================
 void main(void)
 {
 	//scene_SateliteOrbital();
 	scene_Boite();
 	//scene_Lueures();
-	//scene_atome();
 }
