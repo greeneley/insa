@@ -75,9 +75,6 @@ plan   T_PLANS[100];
 	#################################
 */
 // ==================================
-// 
-
-
 float rayPlan(ray r, plan p)
 {
 	vec3 OS     = p.S - r.O; // Vecteur OS
@@ -425,11 +422,13 @@ void scene_Boite(void) // Rotation du collier horaire et changement des couleurs
 
 	vec3 centre = vec3(0.0, 60.0, -1.0);
 	T_SPH[0]   = sphere(vec3(centre.x + 5.0*cos(VITESSE*10.0), centre.y, centre.z), vec3(0.88, 0.41, 0.0), 4.0);
-	if(T_SPH[0].C.x <=centre.x){
+
+	if(T_SPH[0].C.x <= centre.x){
 		T_SPH[0].color=vec3(0.88, 0.41, 0.0);
 	}else{
 		T_SPH[0].color=vec3(1.0, 0.41, 1.0);
 	}
+
 	NB_SPHERES = 1;
 
 	// ===== Init des sources de lumiere
@@ -479,6 +478,6 @@ void scene_Lueures(void)
 void main(void)
 {
 	//scene_SateliteOrbital();
-	scene_Boite();
-	//scene_Lueures();
+	//scene_Boite();
+	scene_Lueures();
 }
