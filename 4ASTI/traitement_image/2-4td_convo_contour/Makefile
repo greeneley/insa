@@ -1,2 +1,2 @@
 all:
-	g++ contour.cpp contour.h -o app `pkg-config --cflags --libs opencv`
+	g++ contour.cpp contour.h -o app -Wall `pkg-config --cflags --libs opencv`

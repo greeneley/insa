@@ -9,10 +9,6 @@ Le type float prend des valeurs entre 0 et 1 !
 			INCLUDES
    =========================== */
 
-#include <stdio.h>
-#include <highgui.h>
-#include <opencv2/opencv.hpp>
-
 #include "contour.h"
 
 /* ===========================
@@ -21,6 +17,55 @@ Le type float prend des valeurs entre 0 et 1 !
 
 using namespace cv;
 using namespace std;
+
+
+/* ===========================
+			  MAIN 
+   =========================== */
+
+int main(int argc, char const *argv[])
+{
+	if(argc < 2)
+	{
+		cout << "Usage: ./app fp_image" << endl
+		//cout << "Usage: ./app fp_image colored" << endl
+		<< "fp_image: Filepath to source image" << endl;
+		//<< "colored:  0 for grayscale, >0 for colored" << endl;
+		return 0;
+	}
+	//const int kColored  = strtol(argv[2], NULL, 10);
+
+	Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+	if(!image.data)
+	{
+		printf("No image data \n");
+		return -1;
+	}
+
+	// Derivation selon x
+	Mat mask1 = Mat(1, 2, CV_32FC1);
+	init_mask_float(mask1, kMask3);
+	Mat h1 = convolution_float(image, mask1);
+	affiche_image(h1, "h1");
+	// Derivation selon y
+	Mat mask2 = Mat(2, 1, CV_32FC1);
+	init_mask_float(mask2, kMask4);
+	Mat h2 = convolution_float(image, mask2);
+	affiche_image(h2, "h2");
+	// Addition dx + dy
+	Mat result = h1 + h2;
+	affiche_image(result, "h1+h2");
+	// 
+	Mat gradient = module_gradient_float(image, h1 ,h2);
+	affiche_image(gradient, "module");
+	//
+	affiche_image(image, "image");
+
+	waitKey(0);
+
+	return 0;
+}
+
 
 /* ===========================
 			FONCTIONS
@@ -45,6 +90,8 @@ void calc_conv_grey_float(Mat& src, Mat& dst, Mat& mask, int x, int y)
 	int offsetY  = dimMaskY/2;
 
 	float res(0.0);
+
+	// Algo de convolution generalise pour toute matrice
 	for(int j=(-offsetY); j<(1+offsetY); j++)
 		for(int i=(-offsetX); i<(1+offsetX); i++)
 			res += (float)src.at<uchar>(x-i, y-j) * mask.at<float>(i+offsetX,j+offsetY);
@@ -81,6 +128,7 @@ Mat convolution_float(Mat& src, Mat& mask)
 		for(int x=1; x<dimX; x++)
 			calc_conv_grey_float(src, result, mask, x, y);
 
+	normalize_float(result);
 	return result;
 }
 
@@ -90,7 +138,7 @@ Mat square_float(Mat& src)
 
 	for(int y=1; y<src.size().width; y++)
 		for(int x=1; x<src.size().height; x++)
-			result.at<uchar>(x,y) = src.at<uchar>(x, y)*src.at<uchar>(x, y);
+			result.at<float>(x,y) = src.at<float>(x, y)*src.at<float>(x, y);
 
 	return result;
 }
@@ -101,10 +149,11 @@ Mat module_gradient_float(Mat& src, Mat& h1, Mat& h2)
 	Mat sq_h2 = square_float(h2);
 
 	result += sq_h2;
-	for(int y=1; y<src.size().width; x++)
-		for(int x=1; x<src.size().height; y++)
-			result.at<float>(x,y) = sqrt(result.at<float>(x, y) + result.at<float>(x, y));
+	for(int y=0; y<src.size().width; y++)
+		for(int x=0; x<src.size().height; x++)
+			result.at<float>(x,y) = sqrt(result.at<float>(x,y));
 
+	normalize_float(result);
 	return result;
 }
 
@@ -112,52 +161,4 @@ void affiche_image(Mat& src, String name)
 {
 	namedWindow(name, WINDOW_AUTOSIZE );
 	imshow(name, src);
-}
-
-/* ===========================
-			  MAIN 
-   =========================== */
-
-int main(int argc, char const *argv[])
-{
-	if(argc < 2)
-	{
-		cout << "Usage: ./app fp_image" << endl
-		//cout << "Usage: ./app fp_image colored" << endl
-		<< "fp_image: Filepath to source image" << endl;
-		//<< "colored:  0 for grayscale, >0 for colored" << endl;
-		return 0;
-	}
-	//const int kColored  = strtol(argv[2], NULL, 10);
-
-	Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
-	if(!image.data)
-	{
-		printf("No image data \n");
-		return -1;
-	}
-
-	//
-	Mat mask1 = Mat(1, 2, CV_32FC1);
-	init_mask_float(mask1, kMask3);
-	Mat h1 = convolution_float(image, mask1);
-	normalize_float(h1);
-	affiche_image(h1, "h1");
-	//
-	Mat mask2 = Mat(2, 1, CV_32FC1);
-	init_mask_float(mask2, kMask4);
-	Mat h2 = convolution_float(image, mask2);
-	normalize_float(h2);
-	affiche_image(h2, "h2");
-	//
-	Mat result = h1 + h2;
-	normalize_float(result);
-	affiche_image(result, "h1+h2");
-	//
-	affiche_image(image, "image");
-
-
-	waitKey(0);
-
-	return 0;
 }
