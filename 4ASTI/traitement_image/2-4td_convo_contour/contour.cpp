@@ -80,7 +80,7 @@ void init_mask_float(Mat& mask, const float values[])
 
 
 // =========================== CONVOLUTION
-Mat convolution_float(Mat& src, Mat& mask)
+Mat convolution_float(const Mat& src, const Mat& mask)
 {
     // La convolution reduit la taille de 1 en x et y
     int dimX = src.size().height-1;  
@@ -95,7 +95,7 @@ Mat convolution_float(Mat& src, Mat& mask)
     return result;
 }
 
-void calc_conv_grey_float(Mat& src, Mat& dst, Mat& mask, int x, int y)
+void calc_conv_grey_float(const Mat& src, Mat& dst, const Mat& mask, int x, int y)
 {   
     int dimMaskX = mask.size().height;
     int dimMaskY = mask.size().width;
@@ -133,7 +133,7 @@ void normalize_float(Mat& src)
             src.at<float>(x,y) /= max;
 }
 
-Mat square_float(Mat& src)
+Mat square_float(const Mat& src)
 {
     Mat result = Mat(src.size().height, src.size().width, CV_32FC1);
 
@@ -144,14 +144,13 @@ Mat square_float(Mat& src)
     return result;
 }
 
-Mat module_gradient_float(Mat& src, Mat& h1, Mat& h2)
-{
-    Mat result = square_float(h1);
-    Mat sq_h2  = square_float(h2);
+Mat module_gradient_float(const Mat& h1, const Mat& h2)
+{    
+    Mat result = Mat(h1.size().height, h1.size().width, CV_32FC1);
+    result     = square_float(h1) + square_float(h2);
 
-    result += sq_h2;
-    for(int y=0; y<src.size().width; y++)
-        for(int x=0; x<src.size().height; x++)
+    for(int y=0; y<h1.size().width; y++)
+        for(int x=0; x<h1.size().height; x++)
             result.at<float>(x,y) = sqrt(result.at<float>(x,y));
 
     normalize_float(result);
@@ -159,16 +158,14 @@ Mat module_gradient_float(Mat& src, Mat& h1, Mat& h2)
 }
 
 // =========================== PRINT
-
-void affiche_image(Mat& src, String name)
+void affiche_image(const Mat& src, String name)
 {
     namedWindow(name, WINDOW_AUTOSIZE );
     imshow(name, src);
 }
 
 // =========================== OPERATEURS
-
-Mat end_operateur(Mat& src, Mat& mask1, Mat& mask2)
+Mat end_operateur(const Mat& src, const Mat& mask1, const Mat& mask2)
 {
     Mat h1 = convolution_float(src, mask1);
     Mat h2 = convolution_float(src, mask2);
@@ -176,10 +173,10 @@ Mat end_operateur(Mat& src, Mat& mask1, Mat& mask2)
     affiche_image(h1, "h1");
     affiche_image(h2, "h2");
 
-    return module_gradient_float(src, h1, h2);
+    return module_gradient_float(h1, h2);
 }
 
-Mat robert(Mat& src)
+Mat robert(const Mat& src)
 {
     Mat mask1 = Mat(2, 2, CV_32FC1);
     Mat mask2 = Mat(2, 2, CV_32FC1);
@@ -190,7 +187,7 @@ Mat robert(Mat& src)
     return end_operateur(src, mask1, mask2);
 }
 
-Mat prewitt(Mat& src)
+Mat prewitt(const Mat& src)
 {
     Mat mask1 = Mat(3, 3, CV_32FC1);
     Mat mask2 = Mat(3, 3, CV_32FC1);
@@ -201,7 +198,7 @@ Mat prewitt(Mat& src)
     return end_operateur(src, mask1, mask2);
 }
 
-Mat sobel(Mat& src)
+Mat sobel(const Mat& src)
 {
     Mat mask1 = Mat(3, 3, CV_32FC1);
     Mat mask2 = Mat(3, 3, CV_32FC1);
@@ -211,3 +208,4 @@ Mat sobel(Mat& src)
 
     return end_operateur(src, mask1, mask2);
 }
+

@@ -49,21 +49,21 @@ const float kMaskSobel2[]     = { -1.0, -2.0, -1.0,
 void init_mask_float(cv::Mat& mask, const float values[]);
 
 // === Convolution
-cv::Mat convolution_float(cv::Mat& src, cv::Mat& mask);
-void calc_conv_grey_float(cv::Mat& src, cv::Mat& dst, cv::Mat& mask, int x, int y);
+cv::Mat convolution_float(const cv::Mat& src, const cv::Mat& mask);
+void calc_conv_grey_float(const cv::Mat& src, cv::Mat& dst, const cv::Mat& mask, int x, int y);
 
 // === Misc
 void normalize_float(cv::Mat& src);
-cv::Mat square_float(cv::Mat& src);
-cv::Mat module_gradient_float(cv::Mat& src, cv::Mat& h1, cv::Mat& h2);
+cv::Mat square_float(const cv::Mat& src);
+cv::Mat module_gradient_float(const cv::Mat& h1, const cv::Mat& h2);
 
 // === Print
-void affiche_image(cv::Mat& src, cv::String name);
+void affiche_image(const cv::Mat& src, const cv::String name);
 
 // === Operateurs
-cv::Mat end_operateur(cv::Mat& src, cv::Mat& mask1, cv::Mat& mask2);
-cv::Mat robert(cv::Mat& src);
-cv::Mat prewitt(cv::Mat& src);
-cv::Mat sobel(cv::Mat& src);
+cv::Mat end_operateur(const cv::Mat& src, const cv::Mat& mask1, const cv::Mat& mask2);
+cv::Mat robert(const cv::Mat& src);
+cv::Mat prewitt(const cv::Mat& src);
+cv::Mat sobel(const cv::Mat& src);
 
 #endif
