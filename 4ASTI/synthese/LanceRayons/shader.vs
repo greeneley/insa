@@ -4,8 +4,8 @@ attribute vec2 aVertexPosition;
 attribute vec3 aPixCenterPosition;
 
 // uniform: donnees recuperees qu'une seule fois
-uniform mat4 uMVMatrix; // Model View: rotation
-uniform mat4 uPMatrix;  // Projection
+uniform mat3 uMVMatrix; // Model View: rotation
+uniform mat3 uPMatrix;  // Projection
 
 // 
 varying vec3 pixCenter;
@@ -13,6 +13,6 @@ varying vec3 pixCenter;
 
 // ========= MAIN =========
 void main(void) {
-	pixCenter   = aPixCenterPosition;
-	gl_Position = vec4(aVertexPosition, 0.0, 1.0);
+	pixCenter   = aPixCenterPosition * uMVMatrix;
+	gl_Position =  vec4(aVertexPosition, 0.0, 1.0);
 }
