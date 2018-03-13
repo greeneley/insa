@@ -50,10 +50,10 @@ void init_mask_float(cv::Mat& mask, const float values[]);
 
 // === Convolution
 cv::Mat convolution_float(const cv::Mat& src, const cv::Mat& mask);
-void calc_conv_grey_float(const cv::Mat& src, cv::Mat& dst, const cv::Mat& mask, int x, int y);
+float   calc_conv_grey_float(const cv::Mat& src, const cv::Mat& mask, int x, int y);
 
 // === Misc
-void normalize_float(cv::Mat& src);
+void    normalize_float(cv::Mat& src);
 cv::Mat square_float(const cv::Mat& src);
 cv::Mat module_gradient_float(const cv::Mat& h1, const cv::Mat& h2);
 

@@ -89,13 +89,13 @@ Mat convolution_float(const Mat& src, const Mat& mask)
     Mat result = Mat(dimX, dimY, CV_32FC1);
     for(int y=1; y<dimY; y++)
         for(int x=1; x<dimX; x++)
-            calc_conv_grey_float(src, result, mask, x, y);
+            result.at<float>(x,y) = calc_conv_grey_float(src, mask, x, y);
 
     normalize_float(result);
     return result;
 }
 
-void calc_conv_grey_float(const Mat& src, Mat& dst, const Mat& mask, int x, int y)
+float calc_conv_grey_float(const Mat& src, const Mat& mask, int x, int y)
 {   
     int dimMaskX = mask.size().height;
     int dimMaskY = mask.size().width;
@@ -112,7 +112,7 @@ void calc_conv_grey_float(const Mat& src, Mat& dst, const Mat& mask, int x, int 
         for(int i=(-offsetX); i<limitX; i++)
             res += (float)src.at<uchar>(x-i, y-j) * mask.at<float>(i+offsetX,j+offsetY);
 
-    dst.at<float>(x,y) = res/kMoyenneur;
+    return res/kMoyenneur;
 }
 
 // =========================== MISC
