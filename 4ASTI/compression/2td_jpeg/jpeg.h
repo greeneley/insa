@@ -43,10 +43,10 @@ void    quantify_block(cv::Mat& block_src);
 
 // =========================== ZIGZAG
 void zigzag_block_write(const cv::Mat& src, int* dst);
-void zigzag_diagonal_down_to_col(const cv::Mat& src, int* dst, const int col, int& x, int& y);
-void zigzag_diagonal_down_to_row(const cv::Mat& src, int* dst, const int row, int& x, int& y);
-void zigzag_diagonal_up_to_col(const cv::Mat& src, int* dst, const int col, int& x, int& y);
-void zigzag_diagonal_up_to_row(const cv::Mat& src, int* dst, const int row, int& x, int& y);
+void zigzag_diagonal_down_to_col(const cv::Mat& src, int* dst, const int col, int& index, int& x, int& y);
+void zigzag_diagonal_down_to_row(const cv::Mat& src, int* dst, const int row, int& index, int& x, int& y);
+void zigzag_diagonal_up_to_col(const cv::Mat& src, int* dst, const int col, int& index, int& x, int& y);
+void zigzag_diagonal_up_to_row(const cv::Mat& src, int* dst, const int row, int& index, int& x, int& y);
 
 // =========================== RLE
 std::string rle_block(int* src);
