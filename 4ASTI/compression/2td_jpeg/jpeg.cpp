@@ -19,7 +19,9 @@ Faire une fonction qui decoupe l'image en 8x8
             INCLUDES
    =========================== */
 
+#include "noeud.h"
 #include "jpeg.h"
+#include <vector>
 
 /* ===========================
            NAMESPACES
@@ -76,10 +78,13 @@ void compress_write_jpeg(const Mat& src)
             
             center_zero(curr_block);
             dct(curr_block, block);
+
             quantify_block(block);
 
-            int res_zigzag[kBlockSize*kBlockSize] = {0};
+            int res_zigzag[kBlockSize*kBlockSize];
             zigzag_block_write(block, res_zigzag);
+
+            affiche_array(res_zigzag, 64);
 
             String code = rle_block(res_zigzag);
 
@@ -102,6 +107,14 @@ Mat normalize_size_8x8(const Mat& src)
             res.at<float>(x,y) = (float)src.at<uchar>(x,y);
 
     return res;
+}
+
+template <class T>
+void affiche_array(T* tab, int taille)
+{
+    for(int i=0; i<taille; i++)
+        cout << tab[i] << " ";
+    cout << endl;
 }
 
 // =========================== BLOCK
@@ -135,39 +148,38 @@ void quantify_block(Mat& src)
 // =========================== ZIGZAG
 void zigzag_block_write(const Mat& src, int* dst)
 {
-    int* pt = dst;
-
     int x(0);
     int y(0);
+    int limit = kBlockSize/2 - 1; // Servira pour le nombre de patterns
 
     // On enregistre la valeur a (0,0)
-    *pt = (int)src.at<float>(x,y);
-    pt++; 
+    *dst = (int)src.at<float>(x,y);
+    dst++; 
     y++; // vers la droite
 
     // Premiere moitie du zigzag (superieur gauche)
-    for(int i=0; i<3; i++)
+    for(int i=0; i<limit; i++)
     {
-        zigzag_diagonal_down_to_col(src, pt, 0, x, y);
+        zigzag_diagonal_down_to_col(src, dst, 0, x, y);
         x++; // vers le bas
-        zigzag_diagonal_up_to_row(src, pt, 0, x, y);
+        zigzag_diagonal_up_to_row(src, dst, 0, x, y);
         y++;
     } 
 
     // Diagonal du bloc : haut-droit vers bas-gauche
-    zigzag_diagonal_down_to_col(src, pt, 0, x, y);
+    zigzag_diagonal_down_to_col(src, dst, 0, x, y);
     y++;
 
     // Deuxieme moitie du zigzag (inferieur droit)
-    for(int i=0; i<3; i++)
+    for(int i=0; i<limit; i++)
     {
-        zigzag_diagonal_up_to_col(src, pt, kBlockSize-1, x, y);
+        zigzag_diagonal_up_to_col(src, dst, kBlockSize-1, x, y);
         x++;
-        zigzag_diagonal_down_to_row(src, pt, kBlockSize-1, x, y);
+        zigzag_diagonal_down_to_row(src, dst, kBlockSize-1, x, y);
         y++;
     }
 
-    *pt = (int)src.at<float>(x,y);
+    *dst = (int)src.at<float>(x,y);
 }
 
 void zigzag_diagonal_down_to_col(const Mat& src, int* dst, const int col, int& x, int& y)
@@ -242,4 +254,6 @@ string rle_block(int* src)
 
     return coded;
 }
+
+// =========================== HUFFMAN
 

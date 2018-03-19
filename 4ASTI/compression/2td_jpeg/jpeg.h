@@ -33,6 +33,9 @@ void compress_write_jpeg(const cv::Mat& src);
 // =========================== UTILITIES
 cv::Mat normalize_size_8x8(const cv::Mat& src);
 
+template <class T>
+void affiche_array(T* tab, int taille);
+
 // =========================== BLOCK
 cv::Mat get_block(const cv::Mat& src, const int x, const int y);
 void    center_zero(cv::Mat& src);
@@ -47,6 +50,9 @@ void zigzag_diagonal_up_to_row(const cv::Mat& src, int* dst, const int row, int&
 
 // =========================== RLE
 std::string rle_block(int* src);
+
+// =========================== HUFFMAN
+
 
 
 #endif
