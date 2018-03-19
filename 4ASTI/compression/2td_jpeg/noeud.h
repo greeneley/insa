@@ -16,12 +16,12 @@ class Noeud
 	Noeud*  m_pere;
 	Noeud*  m_fg;
 	Noeud*  m_fd;
-	int     m_value;
-	std::string  m_label;
 
 	public:
+	int     m_value;
+	std::string  m_label;
 		// =================== CONSTRUCTOR
-		Noeud(Noeud* pere, int val, std::string label, Noeud* fg, Noeud* fd);
+		Noeud(Noeud* pere, int val, char label, Noeud* fg, Noeud* fd);
 
 		// =================== GETTERS
 		// =================== SETTERS

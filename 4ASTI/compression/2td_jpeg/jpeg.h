@@ -5,6 +5,7 @@
 #include <string>
 #include <highgui.h>
 #include <opencv2/opencv.hpp>
+#include "noeud.h"
 
 /* ===========================
             CONSTANTES
@@ -50,9 +51,10 @@ void zigzag_diagonal_up_to_row(const cv::Mat& src, int* dst, const int row, int&
 
 // =========================== RLE
 std::string rle_block(int* src);
+std::vector<Noeud> rle_block_to_vector(std::string src);
 
 // =========================== HUFFMAN
-
+void huffman(std::string src);
 
 
 #endif

@@ -22,6 +22,7 @@ Faire une fonction qui decoupe l'image en 8x8
 #include "noeud.h"
 #include "jpeg.h"
 #include <vector>
+#include <map>
 
 /* ===========================
            NAMESPACES
@@ -78,20 +79,16 @@ void compress_write_jpeg(const Mat& src)
             
             center_zero(curr_block);
             dct(curr_block, block);
-
             quantify_block(block);
 
             int res_zigzag[kBlockSize*kBlockSize];
             zigzag_block_write(block, res_zigzag);
 
-            affiche_array(res_zigzag, 64);
-
             String code = rle_block(res_zigzag);
 
-            //Huffmann
+            huffman(code);
         }
     }
-    // Enregistrement dans un fichier binaire
 }
 
 // =========================== UTILITIES
@@ -234,21 +231,21 @@ string rle_block(int* src)
 
     int compteur(0);
     int i(0);
-    while(i<64)
+    while(i<(kBlockSize*kBlockSize - 1))
     {
-        if(src[i] == 0)
+        if(src[i] == src[i+1])
         {
-            compteur = 0;
-            while(src[i] == 0)
+            compteur = 1;
+            while(src[i] == src[i+1])
             {
                 compteur++;
                 i++;
             }
-            coded += ",("+to_string(compteur)+")";
+            coded += to_string(src[i])+":"+to_string(compteur)+",";
         }
         else
         {
-            coded += ","+to_string(src[i]);
+            coded += to_string(src[i])+",";
             i++;
         }
     }
@@ -256,5 +253,43 @@ string rle_block(int* src)
     return coded;
 }
 
-// =========================== HUFFMAN
+vector<Noeud> rle_block_to_vector(std::string src)
+{
+    vector<Noeud> res = {};
 
+    // Creation de la map
+    map<char, int> m;
+    map<char, int>::iterator it;
+    for(uint i=0; i<src.length(); i++)
+    {
+        it = m.find(src.at(i));
+        if(it == m.end()) m[src.at(i)] = 1;
+        else              m[src.at(i)]++;
+    }
+
+    // Creation des noeuds et remplissage de l'output
+    for(auto element : m)
+    {
+        Noeud node = Noeud(NULL, (int)element.second, (char)element.first, NULL, NULL);
+        res.push_back(node);
+    }
+
+    return res;
+}
+
+
+// =========================== HUFFMAN
+void huffman(string src)
+{
+    std::vector<Noeud> noeuds = rle_block_to_vector(src);
+
+    for(auto noeud : noeuds)
+    {
+        cout << noeud.m_label << " : " << noeud.m_value << endl;
+    }
+
+    cout<<"todo"<<endl;
+    // faire l'iteration sur le vector pour construire l'arbre
+    // itereren recursivite l'arbre pour consuitre une map 
+    // parcourir la map pour pouvoir ecrire dans un fichier
+}

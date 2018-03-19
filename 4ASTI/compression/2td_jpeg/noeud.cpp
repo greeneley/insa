@@ -15,7 +15,7 @@ using namespace std;
    =========================== */
 
 // =========================== CONSTRUCTOR
-Noeud::Noeud(Noeud* pere, int val, string label=NULL, Noeud* fg=NULL, Noeud* fd=NULL)
+Noeud::Noeud(Noeud* pere, int val, char label=NULL, Noeud* fg=NULL, Noeud* fd=NULL)
 {
     m_pere  = pere;
     m_label = label,
