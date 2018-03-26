@@ -1,21 +1,4 @@
 /* ===========================
-            TODO
-   =========================== 
-    Faire la procedure JPEG
-DCT (pas la fonction, la procedure)
-Algo de zigzag
-RLE
-Ne pas coder Huffmann
-
-
-=== Fonctions
-Faire une fonction qui decoupe l'image en 8x8
-
-
-*/
-
-
-/* ===========================
             INCLUDES
    =========================== */
 
@@ -23,6 +6,7 @@ Faire une fonction qui decoupe l'image en 8x8
 #include "jpeg.h"
 #include <vector>
 #include <map>
+#include <bitset>
 
 /* ===========================
            NAMESPACES
@@ -30,7 +14,6 @@ Faire une fonction qui decoupe l'image en 8x8
 
 using namespace cv;
 using namespace std;
-
 
 /* ===========================
               MAIN 
@@ -68,6 +51,7 @@ void compress_write_jpeg(const Mat& src)
 {
     int n_blocks_x(src.size().height / kBlockSize);
     int n_blocks_y(src.size().width  / kBlockSize);
+    string code = to_string(n_blocks_x)+","+to_string(n_blocks_y)+",";
 
     // Parcours en blocks 8x8
     for(int y=0; y<n_blocks_y; y++)
@@ -84,11 +68,15 @@ void compress_write_jpeg(const Mat& src)
             int res_zigzag[kBlockSize*kBlockSize];
             zigzag_block_write(block, res_zigzag);
 
-            String code = rle_block(res_zigzag);
+            code += rle_block(res_zigzag);
 
-            huffman(code);
+            if(y==(n_blocks_y-1) && x==(n_blocks_x-1))
+                code += "#"; // indicateur de fin
+            else
+                code += "$"; // separateur de blocs
         }
     }
+    huffman(code);
 }
 
 // =========================== UTILITIES
@@ -115,7 +103,7 @@ void affiche_array(T* tab, int taille)
 }
 
 // =========================== BLOCK
-Mat get_block(const Mat& src, const int x, const int y)
+Mat get_block(const Mat& src, int x, int y)
 {
     Mat res = Mat(kBlockSize, kBlockSize, CV_32FC1);
 
@@ -180,7 +168,7 @@ void zigzag_block_write(const Mat& src, int* dst)
     dst[index] = (int)src.at<float>(x,y);
 }
 
-void zigzag_diagonal_down_to_col(const Mat& src, int* dst, const int col,  int& index, int& x, int& y)
+void zigzag_diagonal_down_to_col(const Mat& src, int* dst, int col,  int& index, int& x, int& y)
 {
     while(y!=col)
     {
@@ -191,7 +179,7 @@ void zigzag_diagonal_down_to_col(const Mat& src, int* dst, const int col,  int& 
     index++;
 }
 
-void zigzag_diagonal_down_to_row(const Mat& src, int* dst, const int row, int& index, int& x, int& y)
+void zigzag_diagonal_down_to_row(const Mat& src, int* dst, int row, int& index, int& x, int& y)
 {
     while(x!=row)
     {
@@ -202,7 +190,7 @@ void zigzag_diagonal_down_to_row(const Mat& src, int* dst, const int row, int& i
     index++;
 }
 
-void zigzag_diagonal_up_to_col(const Mat& src, int* dst, const int col, int& index,  int& x, int& y)
+void zigzag_diagonal_up_to_col(const Mat& src, int* dst, int col, int& index,  int& x, int& y)
 {
     while(y!=col)
     {
@@ -213,7 +201,7 @@ void zigzag_diagonal_up_to_col(const Mat& src, int* dst, const int col, int& ind
     index++;
 }
 
-void zigzag_diagonal_up_to_row(const Mat& src, int* dst, const int row,  int& index, int& x, int& y)
+void zigzag_diagonal_up_to_row(const Mat& src, int* dst, int row,  int& index, int& x, int& y)
 {
     while(x!=row)
     {
@@ -241,7 +229,7 @@ string rle_block(int* src)
                 compteur++;
                 i++;
             }
-            coded += to_string(src[i])+":"+to_string(compteur)+",";
+            coded += to_string(src[i])+"@"+to_string(compteur)+",";
         }
         else
         {
@@ -253,9 +241,9 @@ string rle_block(int* src)
     return coded;
 }
 
-vector<Noeud> rle_block_to_vector(std::string src)
+vector<Noeud*> rle_block_to_vector(std::string src)
 {
-    vector<Noeud> res = {};
+    vector<Noeud*> res = {};
 
     // Creation de la map
     map<char, int> m;
@@ -270,7 +258,7 @@ vector<Noeud> rle_block_to_vector(std::string src)
     // Creation des noeuds et remplissage de l'output
     for(auto element : m)
     {
-        Noeud node = Noeud(NULL, (int)element.second, (char)element.first, NULL, NULL);
+        Noeud* node = new Noeud(NULL, (int)element.second, (char)element.first, NULL, NULL);
         res.push_back(node);
     }
 
@@ -281,15 +269,127 @@ vector<Noeud> rle_block_to_vector(std::string src)
 // =========================== HUFFMAN
 void huffman(string src)
 {
-    std::vector<Noeud> noeuds = rle_block_to_vector(src);
+    vector<Noeud*> ptr_noeuds = rle_block_to_vector(src);
 
-    for(auto noeud : noeuds)
+    huffman_create_tree_recursive(ptr_noeuds);
+    map<char, string> m;
+    huffman_tree_to_binary_map_recursive(m, ptr_noeuds.at(0), "");
+
+    cout << "TEST TREE<<<<<<<<<<<<<<<" << endl;
+    for(uint i=0; i<ptr_noeuds.size(); i++)
     {
-        cout << noeud.m_label << " : " << noeud.m_value << endl;
+        Noeud n = *(ptr_noeuds.at(i));
+        cout << i << " : " << n.getLabel() << " " << n.getValue() << endl;
     }
 
-    cout<<"todo"<<endl;
+    cout << "TEST BINARY<<<<<<<<<<<<<" << endl;
+    for(auto element : m)
+    {
+        cout << (char)element.first << " : " << (string)element.second << endl;
+    }
+
+
     // faire l'iteration sur le vector pour construire l'arbre
     // itereren recursivite l'arbre pour consuitre une map 
     // parcourir la map pour pouvoir ecrire dans un fichier
+}
+
+void huffman_create_tree_recursive(vector<Noeud*>& v)
+{
+    if(v.size() > 1)
+    {
+        for(uint i=0; i<v.size(); i++)
+        {
+            cout << i << " : " << v.at(i)->getLabel() << " " << v.at(i)->getValue() << endl;
+        }
+
+        cout << "=====================" << endl;
+
+        uint index_mins[2];
+        huffman_get_mins(v, index_mins);
+        huffman_fuse_min_nodes(v, index_mins);
+        huffman_create_tree_recursive(v);
+    }
+}
+
+void huffman_get_mins(vector<Noeud*>& v, uint mins[2])
+{
+    int min0;
+    int min1; // min0 < min1
+    if(v.at(0)->getValue() < v.at(1)->getValue())
+    {
+        min0    = v.at(0)->getValue();
+        min1    = v.at(1)->getValue();
+        mins[0] = 0; // mins[0] == min1
+        mins[1] = 1;
+    }
+    else
+    {
+        min0 = v.at(1)->getValue();
+        min1 = v.at(0)->getValue();
+        mins[0] = 1;
+        mins[1] = 0;
+    }
+
+    // On va garder l'organisation suivante :
+    // min0 < min1
+    for(uint i=2; i<v.size(); i++)
+    {
+        if(v.at(i)->getValue() < min0)
+        {
+            min1    = min0;
+            min0    = v.at(i)->getValue();
+            mins[1] = mins[0];
+            mins[0] = i;
+        }
+        else if(v.at(i)->getValue() < min1)
+        {
+            min1    = v.at(i)->getValue();
+            mins[1] = i;
+        }
+    }
+}
+
+void huffman_fuse_min_nodes(vector<Noeud*>& v, uint mins[2])
+{
+    uint min0, min1;
+    if(mins[1] > mins[0])
+    {
+        min0 = mins[0];
+        min1 = mins[1];
+    }
+    else
+    {
+        min0 = mins[1];
+        min1 = mins[0];
+    }
+
+    int newVal      = v.at(min0)->getValue() + v.at(min1)->getValue();
+    Noeud* newNoeud = new Noeud(NULL, newVal, 'n', v.at(min0), v.at(min1));
+    v.erase(v.begin()+(int)min1);
+    v.erase(v.begin()+(int)min0);
+    v.push_back(newNoeud);
+}
+
+void huffman_tree_to_binary_map_recursive(map<char, string>& m, Noeud* v, string binary)
+{
+    if(v->getLabel() == 'n')
+    {
+        huffman_tree_to_binary_map_recursive(m, v->getFilsGauche(), binary+"0");
+        huffman_tree_to_binary_map_recursive(m, v->getFilsDroit(), binary+"1");
+    }
+    else
+    {
+        m[v->getLabel()] = binary;
+    }
+}
+
+void huffman_write_binary(std::map<char, std::string>& m)
+{
+    cout << "todo" << endl;
+}
+
+void huffman_free_memory(std::vector<Noeud*>& v)
+{
+    cout << "todo" << endl;
 }

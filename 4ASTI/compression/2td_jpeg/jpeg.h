@@ -38,23 +38,28 @@ template <class T>
 void affiche_array(T* tab, int taille);
 
 // =========================== BLOCK
-cv::Mat get_block(const cv::Mat& src, const int x, const int y);
+cv::Mat get_block(const cv::Mat& src, int x, int y);
 void    center_zero(cv::Mat& src);
 void    quantify_block(cv::Mat& block_src);
 
 // =========================== ZIGZAG
 void zigzag_block_write(const cv::Mat& src, int* dst);
-void zigzag_diagonal_down_to_col(const cv::Mat& src, int* dst, const int col, int& index, int& x, int& y);
-void zigzag_diagonal_down_to_row(const cv::Mat& src, int* dst, const int row, int& index, int& x, int& y);
-void zigzag_diagonal_up_to_col(const cv::Mat& src, int* dst, const int col, int& index, int& x, int& y);
-void zigzag_diagonal_up_to_row(const cv::Mat& src, int* dst, const int row, int& index, int& x, int& y);
+void zigzag_diagonal_down_to_col(const cv::Mat& src, int* dst, int col, int& index, int& x, int& y);
+void zigzag_diagonal_down_to_row(const cv::Mat& src, int* dst, int row, int& index, int& x, int& y);
+void zigzag_diagonal_up_to_col(const cv::Mat& src, int* dst, int col, int& index, int& x, int& y);
+void zigzag_diagonal_up_to_row(const cv::Mat& src, int* dst, int row, int& index, int& x, int& y);
 
 // =========================== RLE
-std::string rle_block(int* src);
-std::vector<Noeud> rle_block_to_vector(std::string src);
+std::string         rle_block          (int* src);
+std::vector<Noeud*> rle_block_to_vector(std::string src);
 
 // =========================== HUFFMAN
 void huffman(std::string src);
-
+void huffman_create_tree_recursive(std::vector<Noeud*>& v);
+void huffman_tree_to_binary_map_recursive(std::map<char, std::string>& m, Noeud* v, std::string binary);
+void huffman_get_mins(std::vector<Noeud*>& v, uint mins[2]);
+void huffman_fuse_min_nodes(std::vector<Noeud*>& v, uint mins[2]);
+void huffman_write_binary(std::map<char, std::string>& m);
+void huffman_free_memory(std::vector<Noeud*>& v);
 
 #endif

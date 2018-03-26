@@ -13,21 +13,35 @@
    =========================== */
 class Noeud
 {
-	Noeud*  m_pere;
-	Noeud*  m_fg;
-	Noeud*  m_fd;
+	Noeud* m_pere;
+	Noeud* m_fg;
+	Noeud* m_fd;
+	int    m_value;
+	char   m_label;
 
 	public:
-	int     m_value;
-	std::string  m_label;
 		// =================== CONSTRUCTOR
 		Noeud(Noeud* pere, int val, char label, Noeud* fg, Noeud* fd);
 
 		// =================== GETTERS
+		char   getLabel();
+		int    getValue();
+		Noeud* getFilsDroit();
+		Noeud* getFilsGauche();
+		Noeud* getPere();
+
 		// =================== SETTERS
+		void setLabel(char newLabel);
+		void setValue(int newVal);
+		void setFilsDroit(Noeud* newFd);
+		void setFilsGauche(Noeud* newFg);
+		void setPere(Noeud* newPere);
+
 		// =================== PRINT
 		// =================== UTILITIES
-		int getMax() const;
+		bool hasFilsDroit();
+		bool hasFilsGauche();
+		bool hasPere();
 };
 
 #endif
