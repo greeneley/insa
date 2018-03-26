@@ -18,7 +18,15 @@
             PROTOTYPES
    =========================== */
 
-// =========================== NOM
+// =========================== PRINT
+void afficheImage(const cv::Mat& src, std::string name);
 
+// =========================== CONNECTED-COMPONENT
+void labelize(const cv::Mat& src, cv::Mat& dst);
+void firstPass(const cv::Mat& src, cv::Mat& dst);
+void secondPass(const cv::Mat& src, cv::Mat& dst);
+
+// =========================== UTILITIES
+void binarize(cv::Mat& src);
 
 #endif
