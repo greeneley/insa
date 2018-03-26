@@ -119,6 +119,7 @@ bool inImage(int x, int y, int sizeX, int sizeY)
 bool inArea(const Mat& src, int x, int y, float mean, float threshold)
 {
     float res = abs((float)src.at<uchar>(x, y) - mean);
+    res = res * res;
 
     return (res < threshold);
 }
