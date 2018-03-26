@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
 
     // === Recursivite
     dst.at<uchar>(x,y) = 255; // situation initiale
-    growing(image, dst, Point(x,y), seed, n, threshold);
+    growing(image, dst, x, y, seed, n, threshold);
 
     // === Print
     afficheImage(image, "Source");
@@ -76,26 +76,24 @@ void afficheImage(const Mat& src, String name)
 
 
 // =========================== GROWING-REGION
-void growing(const Mat& src, Mat& dst, Point current, float& sum, int& n, float& threshold)
+void growing(const Mat& src, Mat& dst, int x, int y, float& sum, int& n, float& threshold)
 {
 	float mean  = sum / (float)n;
     int   sizeX = src.size().height;
     int   sizeY = src.size().width;
-    int   x     = current.x;
-    int   y     = current.y;
     float value = 0;
 
     dst.at<uchar>(x, y) = 255; // On colorie celui sur lequel on est
     for(int voisin=kGauche; voisin<kTousLesVoisins; voisin++)
     {
-        if(isValid(dst, Point(x+kMvtX[voisin], y+kMvtY[voisin]), sizeX, sizeY))
+        if(isValid(dst, x+kMvtX[voisin], y+kMvtY[voisin], sizeX, sizeY))
         {
-            if(inArea(src, Point(x+kMvtX[voisin], y+kMvtY[voisin]), mean, threshold))
+            if(inArea(src, x+kMvtX[voisin], y+kMvtY[voisin], mean, threshold))
             {
                 value = (float)src.at<uchar>(x+kMvtX[voisin], y+kMvtY[voisin]);
                 update(value, sum, n, threshold);
 
-                growing(src, dst, Point(x+kMvtX[voisin], y+kMvtY[voisin]), sum, n, threshold);
+                growing(src, dst, x+kMvtX[voisin], y+kMvtY[voisin], sum, n, threshold);
             }
             else dst.at<uchar>(x+kMvtX[voisin], y+kMvtY[voisin]) = 128; // rejected
         }
@@ -111,23 +109,23 @@ void update(float value, float& sum, int& n, float& threshold)
 
 // =========================== BOOLEAN
 
-bool inImage(Point pix, int sizeX, int sizeY)
+bool inImage(int x, int y, int sizeX, int sizeY)
 {
-    if(pix.x < 0     || pix.y < 0)     return false;
-    if(pix.x > sizeX || pix.y > sizeY) return false;
+    if(x < 0     || y < 0)     return false;
+    if(x > sizeX || y > sizeY) return false;
     return true;
 }
 
-bool inArea(const Mat& src, Point voisin, float mean, float threshold)
+bool inArea(const Mat& src, int x, int y, float mean, float threshold)
 {
-    float res = abs((float)src.at<uchar>(voisin.x, voisin.y) - mean);
+    float res = abs((float)src.at<uchar>(x, y) - mean);
 
     return (res < threshold);
 }
 
-bool isMarked(Mat& dst, Point pix)
+bool isMarked(Mat& dst, int x, int y)
 {
-    int value = (int)dst.at<uchar>(pix.x, pix.y);
+    int value = (int)dst.at<uchar>(x, y);
 
     if(value == 255) return true;
     if(value == 128) return true;
@@ -135,9 +133,9 @@ bool isMarked(Mat& dst, Point pix)
     return false;
 }
 
-bool isValid(Mat& dst, Point pix, int sizeX, int sizeY)
+bool isValid(Mat& dst, int x, int y, int sizeX, int sizeY)
 {
-    if(inImage(pix, sizeX, sizeY)) 
-        return !isMarked(dst, pix);
+    if(inImage(x, y, sizeX, sizeY)) 
+        return !isMarked(dst, x, y);
     return false;
 }

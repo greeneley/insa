@@ -26,13 +26,13 @@ const int kMvtY[4] = {-1,  0, 1, 0};
 void afficheImage(const cv::Mat& src, cv::String name);
 
 // =========================== GROWING-REGION
-void growing(const cv::Mat& src, cv::Mat& dst, cv::Point current, float& sum, int& n, float& threshold);
+void growing(const cv::Mat& src, cv::Mat& dst, int x, int y, float& sum, int& n, float& threshold);
 void update(float value, float& sum, int& n, float& threshold);
 
 // =========================== BOOLEAN
-bool inImage(cv::Point pix, int sizeX, int sizeY);
-bool inArea(const cv::Mat& src, cv::Point voisin, float mean, float threshold);
-bool isMarked(cv::Mat& dst, cv::Point pix);
-bool isValid(cv::Mat& dst, cv::Point pix, int sizeX, int sizeY);
+bool inImage(int x, int y, int sizeX, int sizeY);
+bool inArea(const cv::Mat& src, int x, int y, float mean, float threshold);
+bool isMarked(cv::Mat& dst, int x, int y);
+bool isValid(cv::Mat& dst, int x, int y, int sizeX, int sizeY);
 
 #endif
