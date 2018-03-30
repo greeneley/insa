@@ -7,6 +7,9 @@
 #include <vector>
 #include <map>
 #include <bitset>
+#include <iostream>
+#include <fstream>
+
 
 /* ===========================
            NAMESPACES
@@ -37,6 +40,8 @@ int main(int argc, char const *argv[])
 
     Mat norm_src = normalize_size_8x8(image); // Multiple de 8x8
     compress_write_jpeg(norm_src);
+
+    cout << "taux de compression : " << taux_compression(argv[1], "out.bin") << endl;
 
     return 0;
 }
@@ -93,6 +98,31 @@ Mat normalize_size_8x8(const Mat& src)
 
     return res;
 }
+
+float taux_compression(const string src, const string out)
+{
+    ifstream source(src, ifstream::ate | ios::binary);
+    if (!source)
+    {
+        cout << "erreur creation" << endl;
+        exit(1);
+    }
+
+    ifstream output(out, ifstream::ate | ios::binary);
+    if (!output)
+    {
+        cout << "erreur creation" << endl;
+        exit(1);
+    }
+
+    float res = (float)source.tellg() / (float)output.tellg();
+
+    source.close();
+    output.close();
+
+    return res;
+}
+
 
 template <class T>
 void affiche_array(T* tab, int taille)
@@ -275,36 +305,20 @@ void huffman(string src)
     map<char, string> m;
     huffman_tree_to_binary_map_recursive(m, ptr_noeuds.at(0), "");
 
-    cout << "TEST TREE<<<<<<<<<<<<<<<" << endl;
-    for(uint i=0; i<ptr_noeuds.size(); i++)
-    {
-        Noeud n = *(ptr_noeuds.at(i));
-        cout << i << " : " << n.getLabel() << " " << n.getValue() << endl;
-    }
-
-    cout << "TEST BINARY<<<<<<<<<<<<<" << endl;
+    cout << "CODE DE HUFFMAN<<<<<<<<<<<<<" << endl;
     for(auto element : m)
     {
         cout << (char)element.first << " : " << (string)element.second << endl;
     }
 
+    huffman_write_binary(m, src);
 
-    // faire l'iteration sur le vector pour construire l'arbre
-    // itereren recursivite l'arbre pour consuitre une map 
-    // parcourir la map pour pouvoir ecrire dans un fichier
 }
 
 void huffman_create_tree_recursive(vector<Noeud*>& v)
 {
     if(v.size() > 1)
     {
-        for(uint i=0; i<v.size(); i++)
-        {
-            cout << i << " : " << v.at(i)->getLabel() << " " << v.at(i)->getValue() << endl;
-        }
-
-        cout << "=====================" << endl;
-
         uint index_mins[2];
         huffman_get_mins(v, index_mins);
         huffman_fuse_min_nodes(v, index_mins);
@@ -384,12 +398,26 @@ void huffman_tree_to_binary_map_recursive(map<char, string>& m, Noeud* v, string
     }
 }
 
-void huffman_write_binary(std::map<char, std::string>& m)
+void huffman_write_binary(std::map<char, std::string>& m, string chaine)
 {
-    cout << "todo" << endl;
+    ofstream outputFile("out.bin", ofstream::out | ios::binary);
+    if (!outputFile)
+    {
+        cout << "erreur creation" << endl;
+        exit(1);
+    }
+
+    for(char c : chaine)
+    {
+        outputFile.write(m[c].c_str(), m[c].size());
+    }
+
+    outputFile.flush();
+    outputFile.close();
 }
 
 void huffman_free_memory(std::vector<Noeud*>& v)
 {
     cout << "todo" << endl;
 }
+

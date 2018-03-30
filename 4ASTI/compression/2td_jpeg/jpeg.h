@@ -33,6 +33,7 @@ void compress_write_jpeg(const cv::Mat& src);
 
 // =========================== UTILITIES
 cv::Mat normalize_size_8x8(const cv::Mat& src);
+float   taux_compression(const std::string src, const std::string out);
 
 template <class T>
 void affiche_array(T* tab, int taille);
@@ -59,7 +60,7 @@ void huffman_create_tree_recursive(std::vector<Noeud*>& v);
 void huffman_tree_to_binary_map_recursive(std::map<char, std::string>& m, Noeud* v, std::string binary);
 void huffman_get_mins(std::vector<Noeud*>& v, uint mins[2]);
 void huffman_fuse_min_nodes(std::vector<Noeud*>& v, uint mins[2]);
-void huffman_write_binary(std::map<char, std::string>& m);
+void huffman_write_binary(std::map<char, std::string>& m, std::string chaine);
 void huffman_free_memory(std::vector<Noeud*>& v);
 
 #endif
