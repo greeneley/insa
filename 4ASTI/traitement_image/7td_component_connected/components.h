@@ -8,18 +8,25 @@
 #include <stdio.h>
 #include <highgui.h>
 #include <opencv2/opencv.hpp>
+#include <map>
+
 
 /* ===========================
              GLOBAL
    =========================== */
 
-int LABEL      = 1;
-int INCR_LABEL = 1;
-int FORMES     = 0;
+int LABEL              = 1;
+int VALEUR_GRIS        = 20;
+int INCR_VALEUR_GRIS   = 1;
+int FORMES             = 1;
 
-const int kNbVoisins   = 8;
-const int kVoisinsX[8] = {0, -1,  0, 1,  1, 1, -1, -1};
-const int kVoisinsY[8] = {1,  0, -1, 0, -1, 1, -1,  1};
+const int kNbVoisinsIter   = 4;
+const int kVoisinsXIter[4] = {0, -1, -1, -1};
+const int kVoisinsYIter[4] = {-1, -1, 0, +1};
+
+const int kNbVoisinsRecur   = 8;
+const int kVoisinsXRecur[8] = {0, -1,  0, 1,  1, 1, -1, -1};
+const int kVoisinsYRecur[8] = {1,  0, -1, 0, -1, 1, -1,  1};
 
 /* ===========================
             PROTOTYPES
@@ -28,20 +35,22 @@ const int kVoisinsY[8] = {1,  0, -1, 0, -1, 1, -1,  1};
 // =========================== PRINT
 void afficheImage(const cv::Mat& src, std::string name);
 
-// =========================== CONNECTED-COMPONENT
-void labelize(cv::Mat& src);
-void firstPass(cv::Mat& src);
-void secondPass(cv::Mat& src);
-void initNeighbourLabel(cv::Mat& src, int& labelA, int& labelB);
-void propagateLeftLabel(cv::Mat& src, int oldLabel, int newLabel, int x, int y);
-void propagateUpLabel(cv::Mat& src, int oldLabel, int newLabel, int x, int y);
+// =========================== CONNECTED-COMPONENT SEQUENTIAL
+void labelizeIter(cv::Mat& src);
 
-// =========================== CONNECTED-COMPONENT
-void labelizeRecursive(cv::Mat& src);
-void connectedComponentRecursive(cv::Mat& src, int x, int y, int label);
+void firstPass(cv::Mat& src, std::map<int, int>& valeurLabel);
+void secondPass(cv::Mat& src, std::map<int, int>& valeurLabel);
+
+int  getMinLabel(int labelW, int labelNW, int labelN, int labelNE);
+void changeParents(cv::Mat& src, int x, int y, int min, std::map<int, int>& valeurLabel);
+
+// =========================== CONNECTED-COMPONENT RECURSIVE
+void labelizeRecur(cv::Mat& src);
+void connectedComponentRecur(cv::Mat& src, int x, int y, int label);
 
 // =========================== UTILITIES
 void binarizeFondBlanc(cv::Mat& src);
-void copyMatNorm(const cv::Mat& src, cv::Mat& dst);
+void binarizeFondNoir(cv::Mat& src);
+bool inImage(cv::Mat& src, int x, int y);
 
 #endif

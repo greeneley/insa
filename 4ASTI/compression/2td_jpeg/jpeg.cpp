@@ -2,13 +2,14 @@
             INCLUDES
    =========================== */
 
-#include "noeud.h"
-#include "jpeg.h"
 #include <vector>
 #include <map>
 #include <bitset>
 #include <iostream>
 #include <fstream>
+
+#include "noeud.h"
+#include "jpeg.h"
 
 
 /* ===========================

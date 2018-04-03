@@ -23,11 +23,11 @@ const int kMvtY[4] = {-1,  0, 1, 0};
    =========================== */
 
 // =========================== PRINT
-void afficheImage(const cv::Mat& src, cv::String name);
+void afficheImage(const cv::Mat& src, std::string name);
 
 // =========================== GROWING-REGION
-void growing(const cv::Mat& src, cv::Mat& dst, int x, int y, float& sum, int& n, float& threshold);
-void update(float value, float& sum, int& n, float& threshold);
+void growing_recursive(const cv::Mat& src, cv::Mat& dst, int x, int y, float& sum, int& n, float& threshold);
+void update(float value, float& sum, int& n);
 
 // =========================== BOOLEAN
 bool inImage(int x, int y, int sizeX, int sizeY);
