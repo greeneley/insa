@@ -39,10 +39,10 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    Mat norm_src = normalize_size_8x8(image); // Multiple de 8x8
+    Mat norm_src = normalize_size(image); // Multiple de 8x8
     compress_write_jpeg(norm_src);
 
-    cout << "taux de compression : " << taux_compression(argv[1], "out.bin") << endl;
+    print_taux(argv[1], G_COMPRESSED_FILE);
 
     return 0;
 }
@@ -55,8 +55,8 @@ int main(int argc, char const *argv[])
 // =========================== JPEG
 void compress_write_jpeg(const Mat& src)
 {
-    int n_blocks_x(src.size().height / kBlockSize);
-    int n_blocks_y(src.size().width  / kBlockSize);
+    int n_blocks_x(src.size().height / G_BLOCK_SIZE);
+    int n_blocks_y(src.size().width  / G_BLOCK_SIZE);
     string code = to_string(n_blocks_x)+","+to_string(n_blocks_y)+",";
 
     // Parcours en blocks 8x8
@@ -64,14 +64,14 @@ void compress_write_jpeg(const Mat& src)
     {
         for(int x=0; x<n_blocks_x; x++)
         {
-            Mat curr_block = get_block(src, x*kBlockSize, y*kBlockSize);
-            Mat block      = Mat(kBlockSize, kBlockSize, CV_32FC1);
+            Mat curr_block = get_block(src, x*G_BLOCK_SIZE, y*G_BLOCK_SIZE);
+            Mat block      = Mat(G_BLOCK_SIZE, G_BLOCK_SIZE, CV_32FC1);
             
             center_zero(curr_block);
             dct(curr_block, block);
             quantify_block(block);
 
-            int res_zigzag[kBlockSize*kBlockSize];
+            int res_zigzag[G_BLOCK_SIZE*G_BLOCK_SIZE];
             zigzag_block_write(block, res_zigzag);
 
             code += rle_block(res_zigzag);
@@ -82,25 +82,41 @@ void compress_write_jpeg(const Mat& src)
                 code += "$"; // separateur de blocs
         }
     }
-    huffman(code);
+
+    huffman_to_file(code);
 }
 
 // =========================== UTILITIES
-Mat normalize_size_8x8(const Mat& src)
+Mat normalize_size(const Mat& src)
 {
-    int width(src.size().width / kBlockSize);
-    int height(src.size().height / kBlockSize);
+
+    bool pad_width  = src.size().width  % G_BLOCK_SIZE;
+    bool pad_height = src.size().height % G_BLOCK_SIZE;
+
+    int width  = src.size().width;
+    int height = src.size().height;
+
+    if(pad_width)  width  += (G_BLOCK_SIZE - pad_width);
+    if(pad_height) height += (G_BLOCK_SIZE - pad_height);
 
     Mat res = Mat(height, width, CV_32FC1);
+    for(int row=0; row<src.size().height; row++)
+    {
+        for(int col=0; col<src.size().width; col++)
+            res.at<float>(row,col) = (float)src.at<uchar>(row,col);
 
-    for(int y=0; y<width; y++)
-        for(int x=0; x<height; x++)
-            res.at<float>(x,y) = (float)src.at<uchar>(x,y);
+        for(int col=src.size().width; col<width; col++)
+            res.at<float>(row,col) = 0.0;
+    }
+
+    for(int row=src.size().height; row<height; row++)
+        for(int col=0; col<width; col++)
+            res.at<float>(row,col) = 0.0;
 
     return res;
 }
 
-float taux_compression(const string src, const string out)
+void print_taux(const string src, const string out)
 {
     ifstream source(src, ifstream::ate | ios::binary);
     if (!source)
@@ -116,12 +132,16 @@ float taux_compression(const string src, const string out)
         exit(1);
     }
 
+    source.seekg (0, source.end);
+    output.seekg (0, output.end);
     float res = (float)source.tellg() / (float)output.tellg();
 
-    source.close();
-    output.close();
+    cout << "Taille originale  : " << (float)source.tellg() << endl;
+    cout << "Taille compressee : " << (float)output.tellg() << endl;
+    cout << "Taux de compression : " << res << endl;
 
-    return res;
+    source.close();
+    output.close(); 
 }
 
 
@@ -136,10 +156,10 @@ void affiche_array(T* tab, int taille)
 // =========================== BLOCK
 Mat get_block(const Mat& src, int x, int y)
 {
-    Mat res = Mat(kBlockSize, kBlockSize, CV_32FC1);
+    Mat res = Mat(G_BLOCK_SIZE, G_BLOCK_SIZE, CV_32FC1);
 
-    for(int j=0; j<kBlockSize; j++)
-        for(int i=0; i<kBlockSize; i++)
+    for(int j=0; j<G_BLOCK_SIZE; j++)
+        for(int i=0; i<G_BLOCK_SIZE; i++)
             res.at<float>(i,j) = (float)src.at<uchar>(x+i,y+j);
 
     return res;
@@ -167,7 +187,7 @@ void zigzag_block_write(const Mat& src, int* dst)
     int index(0);
     int x(0);
     int y(0);
-    int limit = kBlockSize/2 - 1; // Servira pour le nombre de patterns
+    int limit = G_BLOCK_SIZE/2 - 1; // Servira pour le nombre de patterns
 
     // On enregistre la valeur a (0,0)
     dst[index] = (int)src.at<float>(x,y);
@@ -190,9 +210,9 @@ void zigzag_block_write(const Mat& src, int* dst)
     // Deuxieme moitie du zigzag (inferieur droit)
     for(int i=0; i<limit; i++)
     {
-        zigzag_diagonal_up_to_col(src, dst, kBlockSize-1, index, x, y);
+        zigzag_diagonal_up_to_col(src, dst, G_BLOCK_SIZE-1, index, x, y);
         x++;
-        zigzag_diagonal_down_to_row(src, dst, kBlockSize-1, index, x, y);
+        zigzag_diagonal_down_to_row(src, dst, G_BLOCK_SIZE-1, index, x, y);
         y++;
     }
 
@@ -250,7 +270,7 @@ string rle_block(int* src)
 
     int compteur(0);
     int i(0);
-    while(i<(kBlockSize*kBlockSize - 1))
+    while(i<(G_BLOCK_SIZE*G_BLOCK_SIZE - 1))
     {
         if(src[i] == src[i+1])
         {
@@ -298,13 +318,14 @@ vector<Noeud*> rle_block_to_vector(std::string src)
 
 
 // =========================== HUFFMAN
-void huffman(string src)
+void huffman_to_file(string src)
 {
     vector<Noeud*> ptr_noeuds = rle_block_to_vector(src);
 
     huffman_create_tree_recursive(ptr_noeuds);
     map<char, string> m;
     huffman_tree_to_binary_map_recursive(m, ptr_noeuds.at(0), "");
+    //huffman_binary_to_hex(m);
 
     cout << "CODE DE HUFFMAN<<<<<<<<<<<<<" << endl;
     for(auto element : m)
@@ -401,7 +422,7 @@ void huffman_tree_to_binary_map_recursive(map<char, string>& m, Noeud* v, string
 
 void huffman_write_binary(std::map<char, std::string>& m, string chaine)
 {
-    ofstream outputFile("out.bin", ofstream::out | ios::binary);
+    ofstream outputFile(G_COMPRESSED_FILE, ofstream::out | ios::binary);
     if (!outputFile)
     {
         cout << "erreur creation" << endl;
@@ -414,11 +435,5 @@ void huffman_write_binary(std::map<char, std::string>& m, string chaine)
     }
 
     outputFile.flush();
-    outputFile.close();
+    outputFile.close(); 
 }
-
-void huffman_free_memory(std::vector<Noeud*>& v)
-{
-    cout << "todo" << endl;
-}
-

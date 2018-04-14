@@ -10,7 +10,7 @@
 /* ===========================
             CONSTANTES
    =========================== */
-const int kBlockSize = 8;
+const int G_BLOCK_SIZE = 8;
 
 const float kCoeff[64] = {
   16.0, 11.0, 10.0, 16.0,  24.0,  40.0,  51.0,  61.0,
@@ -23,6 +23,10 @@ const float kCoeff[64] = {
   72.0, 92.0, 95.0, 98.0, 112.0, 100.0, 103.0,  99.0
 };
 
+const std::string G_COMPRESSED_FILE = "out.bin";
+
+const std::string G_HEX[16] = {"0","1","2","3","4","5","6","7",
+                   "8","9","A","B","C","D","E","F"};
 
 /* ===========================
             PROTOTYPES
@@ -32,8 +36,8 @@ const float kCoeff[64] = {
 void compress_write_jpeg(const cv::Mat& src);
 
 // =========================== UTILITIES
-cv::Mat normalize_size_8x8(const cv::Mat& src);
-float   taux_compression(const std::string src, const std::string out);
+cv::Mat normalize_size(const cv::Mat& src);
+void    print_taux(const std::string src, const std::string out);
 
 template <class T>
 void affiche_array(T* tab, int taille);
@@ -55,7 +59,7 @@ std::string         rle_block          (int* src);
 std::vector<Noeud*> rle_block_to_vector(std::string src);
 
 // =========================== HUFFMAN
-void huffman(std::string src);
+void huffman_to_file(std::string src);
 void huffman_create_tree_recursive(std::vector<Noeud*>& v);
 void huffman_tree_to_binary_map_recursive(std::map<char, std::string>& m, Noeud* v, std::string binary);
 void huffman_get_mins(std::vector<Noeud*>& v, uint mins[2]);
