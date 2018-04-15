@@ -18,10 +18,10 @@ using namespace std;
 Noeud::Noeud(Noeud* pere, int val, char label='n', Noeud* fg=NULL, Noeud* fd=NULL)
 {
     m_pere  = pere;
-    m_label = label,
-    m_value = val;
-    m_fg    = fg;
-    m_fd    = fd;
+    m_label = label, // 'n' == noeud, autre == symbole associe
+    m_value = val;   // poids numerique
+    m_fg    = fg;    // fils gauche
+    m_fd    = fd;    // fils droite
 }
 
 

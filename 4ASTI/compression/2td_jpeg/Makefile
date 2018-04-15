@@ -1,2 +1,5 @@
+SRC= jpeg.cpp jpeg.h noeud.cpp noeud.h zigzag.cpp rle.cpp huffman.cpp
+CFLAGS= -Wall -Wpedantic -std=c++11 `pkg-config --cflags --libs opencv`
+
 all:
-	g++ jpeg.cpp jpeg.h noeud.cpp noeud.h -o jpeg -Wall -std=c++11 `pkg-config --cflags --libs opencv`
+	g++ $(CFLAGS) $(SRC) -o jpeg

@@ -1,2 +1,4 @@
+CFLAGS= -std=c++11 -Wpedantic -Wall `pkg-config --cflags --libs opencv`
+
 all:
-	g++ -std=c++11 components.cpp components.h -o app -std=c++11 -Wall `pkg-config --cflags --libs opencv`
+	g++ $(CFLAGS) components.cpp components.h -o components 

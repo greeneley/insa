@@ -25,9 +25,6 @@ const float kCoeff[64] = {
 
 const std::string G_COMPRESSED_FILE = "out.bin";
 
-const std::string G_HEX[16] = {"0","1","2","3","4","5","6","7",
-                   "8","9","A","B","C","D","E","F"};
-
 /* ===========================
             PROTOTYPES
    =========================== */
@@ -61,7 +58,7 @@ std::vector<Noeud*> rle_block_to_vector(std::string src);
 // =========================== HUFFMAN
 void huffman_to_file(std::string src);
 void huffman_create_tree_recursive(std::vector<Noeud*>& v);
-void huffman_tree_to_binary_map_recursive(std::map<char, std::string>& m, Noeud* v, std::string binary);
+void huffman_tree_to_binary_map_recursive(std::map<char, std::string>& m, Noeud* node, std::string binary);
 void huffman_get_mins(std::vector<Noeud*>& v, uint mins[2]);
 void huffman_fuse_min_nodes(std::vector<Noeud*>& v, uint mins[2]);
 void huffman_write_binary(std::map<char, std::string>& m, std::string chaine);

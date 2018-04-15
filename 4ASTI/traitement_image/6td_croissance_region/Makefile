@@ -1,2 +1,4 @@
+CFLAGS= -Wpedantic -Wall -std=c++11 `pkg-config --cflags --libs opencv`
+
 all:
-	g++ -std=c++11 growing_regions.cpp growing_regions.h -o app -Wall `pkg-config --cflags --libs opencv`
+	g++ $(CFLAGS) growing_regions.cpp growing_regions.h -o growing_regions 

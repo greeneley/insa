@@ -8,14 +8,15 @@
 /* ===========================
             CONSTANTES
    =========================== */
-const int kGauche         = 0;
-const int kHaut           = 1;
-const int kDroite         = 2;
-const int kBas            = 3;
-const int kTousLesVoisins = 4;
+const int G_DROITE           = 0;
+const int G_HAUT             = 1;
+const int G_GAUCHE           = 2;
+const int G_BAS              = 3;
+const int G_TOUS_LES_VOISINS = 4;
 
-const int kMvtX[4] = { 0, -1, 0, 1};
-const int kMvtY[4] = {-1,  0, 1, 0};
+// Les valeurs d'index i correspondent aux constantes au-dessus
+const int G_OFFSET_ROW[4] = {0, -1,  0, 1};
+const int G_OFFSET_COL[4] = {1,  0, -1, 0};
 
 
 /* ===========================
@@ -26,13 +27,13 @@ const int kMvtY[4] = {-1,  0, 1, 0};
 void afficheImage(const cv::Mat& src, std::string name);
 
 // =========================== GROWING-REGION
-void growing_recursive(const cv::Mat& src, cv::Mat& dst, int x, int y, float& sum, int& n, float& threshold);
+void growing_recursive(const cv::Mat& src, cv::Mat& dst, int row, int col, float& sum, int& n, float& threshold);
 void update(float value, float& sum, int& n);
 
 // =========================== BOOLEAN
-bool inImage(int x, int y, int sizeX, int sizeY);
-bool inArea(const cv::Mat& src, int x, int y, float mean, float threshold);
-bool isMarked(cv::Mat& dst, int x, int y);
-bool isValid(cv::Mat& dst, int x, int y, int sizeX, int sizeY);
+bool inImage(int row, int col, int height, int width);
+bool inArea(const cv::Mat& img, int row, int col, float mean, float threshold);
+bool isMarked(cv::Mat& img, int row, int col);
+bool isValid(cv::Mat& img, int row, int col, int height, int width);
 
 #endif

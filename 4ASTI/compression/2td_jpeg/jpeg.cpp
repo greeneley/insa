@@ -2,15 +2,11 @@
             INCLUDES
    =========================== */
 
-#include <vector>
-#include <map>
-#include <bitset>
 #include <iostream>
 #include <fstream>
 
 #include "noeud.h"
 #include "jpeg.h"
-
 
 /* ===========================
            NAMESPACES
@@ -27,21 +23,22 @@ int main(int argc, char const *argv[])
 {
     if(argc < 2)
     {
-        cout << "Usage: ./app fp_image" << endl
+        cout << "Usage: ./jpeg fp_image" << endl
         << "fp_image: Filepath to source image" << endl;
-        return 0;
+        return -1;
     }
 
     Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
     if(!image.data)
     {
-        printf("No image data \n");
+        cout << "No image data" << endl;
         return -1;
     }
 
-    Mat norm_src = normalize_size(image); // Multiple de 8x8
-    compress_write_jpeg(norm_src);
+    // On normalise l'image en une matrice multiple de 8x8
+    Mat norm_src = normalize_size(image);
 
+    compress_write_jpeg(norm_src);
     print_taux(argv[1], G_COMPRESSED_FILE);
 
     return 0;
@@ -53,62 +50,89 @@ int main(int argc, char const *argv[])
    =========================== */
 
 // =========================== JPEG
+
+/**
+ *  Effectue un parcours par blocs de 8x8 et construit le RLE en eme temps.
+ *
+ *  Sur chaque bloc, effectue les operations suivantes :
+ *    - centre les valeurs du bloc en 0 ;
+ *    - applique la dct d'OpenCV 3 ;
+ *    - quantifie le bloc ;
+ *    - effectue un parcours en zigzag ;
+ *    - ajoute le parcours dans le string du futur RLE.
+ *
+ *  A la fin du parcours de la matrice, applique le RLE sur le string construit.
+ */
 void compress_write_jpeg(const Mat& src)
 {
     int n_blocks_x(src.size().height / G_BLOCK_SIZE);
     int n_blocks_y(src.size().width  / G_BLOCK_SIZE);
+
+    // On ajoute la taille de l'image dans le string du RLE
     string code = to_string(n_blocks_x)+","+to_string(n_blocks_y)+",";
 
     // Parcours en blocks 8x8
-    for(int y=0; y<n_blocks_y; y++)
+    for(int x=0; x<n_blocks_x; x++)
     {
-        for(int x=0; x<n_blocks_x; x++)
+        for(int y=0; y<n_blocks_y; y++)
         {
+            // Block courant
             Mat curr_block = get_block(src, x*G_BLOCK_SIZE, y*G_BLOCK_SIZE);
+
+            // On initialise un nouveau bloc ou on effectue toutes les operations
             Mat block      = Mat(G_BLOCK_SIZE, G_BLOCK_SIZE, CV_32FC1);
             
             center_zero(curr_block);
             dct(curr_block, block);
             quantify_block(block);
 
+            // Un tableau qui recevra la valeur des int du bloc
             int res_zigzag[G_BLOCK_SIZE*G_BLOCK_SIZE];
+
+            // On effectue un parcours en zigzag et on stock tout dans res_zigzag
             zigzag_block_write(block, res_zigzag);
 
+            // On convertie le bloc en string et on l'append au string du RLE
             code += rle_block(res_zigzag);
-
-            if(y==(n_blocks_y-1) && x==(n_blocks_x-1))
-                code += "#"; // indicateur de fin
-            else
-                code += "$"; // separateur de blocs
         }
     }
 
+    // Toutes les operations de Huffman + ecriture fichier
     huffman_to_file(code);
 }
 
 // =========================== UTILITIES
+
+/**
+ *  Renvoie une matrice a la taille normalisee en multiple de 8x8
+ */
 Mat normalize_size(const Mat& src)
 {
-
+    // Pour ajouter des valeurs si la taille n'est pas multiple de 8x8
     bool pad_width  = src.size().width  % G_BLOCK_SIZE;
     bool pad_height = src.size().height % G_BLOCK_SIZE;
 
     int width  = src.size().width;
     int height = src.size().height;
 
+    // Ajout des pixels si non multiple
     if(pad_width)  width  += (G_BLOCK_SIZE - pad_width);
     if(pad_height) height += (G_BLOCK_SIZE - pad_height);
 
+    // Construction de la matrice normalisee
     Mat res = Mat(height, width, CV_32FC1);
     for(int row=0; row<src.size().height; row++)
     {
+        // Copie des elements originaux
         for(int col=0; col<src.size().width; col++)
             res.at<float>(row,col) = (float)src.at<uchar>(row,col);
 
+        // Ajout de pixels nuls pour normaliser les colonnes manquantes
         for(int col=src.size().width; col<width; col++)
             res.at<float>(row,col) = 0.0;
     }
 
+    // Ajout de pixels nuls pour normaliser les lignes manquantes
     for(int row=src.size().height; row<height; row++)
         for(int col=0; col<width; col++)
             res.at<float>(row,col) = 0.0;
@@ -116,6 +140,9 @@ Mat normalize_size(const Mat& src)
     return res;
 }
 
+/**
+ *  Affiche les tailles source et compressee et le taux de compression.
+ */
 void print_taux(const string src, const string out)
 {
     ifstream source(src, ifstream::ate | ios::binary);
@@ -144,16 +171,10 @@ void print_taux(const string src, const string out)
     output.close(); 
 }
 
-
-template <class T>
-void affiche_array(T* tab, int taille)
-{
-    for(int i=0; i<taille; i++)
-        cout << tab[i] << " ";
-    cout << endl;
-}
-
 // =========================== BLOCK
+/**
+ *  Renvoie le block 8x8 associe au pixel Mat(x,y)
+ */
 Mat get_block(const Mat& src, int x, int y)
 {
     Mat res = Mat(G_BLOCK_SIZE, G_BLOCK_SIZE, CV_32FC1);
@@ -172,268 +193,14 @@ void center_zero(Mat& src)
             src.at<float>(x,y) -= 128.0;
 }
 
+/**
+ *  Quantifie le block 8x8 et arrondie a la valeur inferieure.
+ */
 void quantify_block(Mat& src)
 {
-    int dimX(src.size().height);
+    int dimX = src.size().height;
 
     for(int y=0; y<src.size().width; y++)
         for(int x=0; x<dimX; x++)
             src.at<float>(x,y) = (int)(src.at<float>(x,y)/kCoeff[x*dimX + y]);
-}
-
-// =========================== ZIGZAG
-void zigzag_block_write(const Mat& src, int* dst)
-{
-    int index(0);
-    int x(0);
-    int y(0);
-    int limit = G_BLOCK_SIZE/2 - 1; // Servira pour le nombre de patterns
-
-    // On enregistre la valeur a (0,0)
-    dst[index] = (int)src.at<float>(x,y);
-    index++; 
-    y++; // vers la droite
-
-    // Premiere moitie du zigzag (superieur gauche)
-    for(int i=0; i<limit; i++)
-    {
-        zigzag_diagonal_down_to_col(src, dst, 0, index, x, y);
-        x++; // vers le bas
-        zigzag_diagonal_up_to_row(src, dst, 0, index, x, y);
-        y++;
-    } 
-
-    // Diagonal du bloc : haut-droit vers bas-gauche
-    zigzag_diagonal_down_to_col(src, dst, 0, index, x, y);
-    y++;
-
-    // Deuxieme moitie du zigzag (inferieur droit)
-    for(int i=0; i<limit; i++)
-    {
-        zigzag_diagonal_up_to_col(src, dst, G_BLOCK_SIZE-1, index, x, y);
-        x++;
-        zigzag_diagonal_down_to_row(src, dst, G_BLOCK_SIZE-1, index, x, y);
-        y++;
-    }
-
-    dst[index] = (int)src.at<float>(x,y);
-}
-
-void zigzag_diagonal_down_to_col(const Mat& src, int* dst, int col,  int& index, int& x, int& y)
-{
-    while(y!=col)
-    {
-        dst[index] = (int)src.at<float>(x,y);
-        index++; x++; y--;
-    }
-    dst[index] = (int)src.at<float>(x,y);
-    index++;
-}
-
-void zigzag_diagonal_down_to_row(const Mat& src, int* dst, int row, int& index, int& x, int& y)
-{
-    while(x!=row)
-    {
-        dst[index] = (int)src.at<float>(x,y);
-        index++; x++; y--;
-    }
-    dst[index] = (int)src.at<float>(x,y);
-    index++;
-}
-
-void zigzag_diagonal_up_to_col(const Mat& src, int* dst, int col, int& index,  int& x, int& y)
-{
-    while(y!=col)
-    {
-        dst[index] = (int)src.at<float>(x,y);
-        index++; x--; y++;
-    }
-    dst[index] = (int)src.at<float>(x,y);
-    index++;
-}
-
-void zigzag_diagonal_up_to_row(const Mat& src, int* dst, int row,  int& index, int& x, int& y)
-{
-    while(x!=row)
-    {
-        dst[index] = (int)src.at<float>(x,y);
-        index++; x--; y++;
-    }
-    dst[index] = (int)src.at<float>(x,y);
-    index++;
-}
-
-// =========================== RLE
-string rle_block(int* src)
-{
-    string coded("");
-
-    int compteur(0);
-    int i(0);
-    while(i<(G_BLOCK_SIZE*G_BLOCK_SIZE - 1))
-    {
-        if(src[i] == src[i+1])
-        {
-            compteur = 1;
-            while(src[i] == src[i+1])
-            {
-                compteur++;
-                i++;
-            }
-            coded += to_string(src[i])+"@"+to_string(compteur)+",";
-        }
-        else
-        {
-            coded += to_string(src[i])+",";
-            i++;
-        }
-    }
-
-    return coded;
-}
-
-vector<Noeud*> rle_block_to_vector(std::string src)
-{
-    vector<Noeud*> res = {};
-
-    // Creation de la map
-    map<char, int> m;
-    map<char, int>::iterator it;
-    for(uint i=0; i<src.length(); i++)
-    {
-        it = m.find(src.at(i));
-        if(it == m.end()) m[src.at(i)] = 1;
-        else              m[src.at(i)]++;
-    }
-
-    // Creation des noeuds et remplissage de l'output
-    for(auto element : m)
-    {
-        Noeud* node = new Noeud(NULL, (int)element.second, (char)element.first, NULL, NULL);
-        res.push_back(node);
-    }
-
-    return res;
-}
-
-
-// =========================== HUFFMAN
-void huffman_to_file(string src)
-{
-    vector<Noeud*> ptr_noeuds = rle_block_to_vector(src);
-
-    huffman_create_tree_recursive(ptr_noeuds);
-    map<char, string> m;
-    huffman_tree_to_binary_map_recursive(m, ptr_noeuds.at(0), "");
-    //huffman_binary_to_hex(m);
-
-    cout << "CODE DE HUFFMAN<<<<<<<<<<<<<" << endl;
-    for(auto element : m)
-    {
-        cout << (char)element.first << " : " << (string)element.second << endl;
-    }
-
-    huffman_write_binary(m, src);
-
-}
-
-void huffman_create_tree_recursive(vector<Noeud*>& v)
-{
-    if(v.size() > 1)
-    {
-        uint index_mins[2];
-        huffman_get_mins(v, index_mins);
-        huffman_fuse_min_nodes(v, index_mins);
-        huffman_create_tree_recursive(v);
-    }
-}
-
-void huffman_get_mins(vector<Noeud*>& v, uint mins[2])
-{
-    int min0;
-    int min1; // min0 < min1
-    if(v.at(0)->getValue() < v.at(1)->getValue())
-    {
-        min0    = v.at(0)->getValue();
-        min1    = v.at(1)->getValue();
-        mins[0] = 0; // mins[0] == min1
-        mins[1] = 1;
-    }
-    else
-    {
-        min0 = v.at(1)->getValue();
-        min1 = v.at(0)->getValue();
-        mins[0] = 1;
-        mins[1] = 0;
-    }
-
-    // On va garder l'organisation suivante :
-    // min0 < min1
-    for(uint i=2; i<v.size(); i++)
-    {
-        if(v.at(i)->getValue() < min0)
-        {
-            min1    = min0;
-            min0    = v.at(i)->getValue();
-            mins[1] = mins[0];
-            mins[0] = i;
-        }
-        else if(v.at(i)->getValue() < min1)
-        {
-            min1    = v.at(i)->getValue();
-            mins[1] = i;
-        }
-    }
-}
-
-void huffman_fuse_min_nodes(vector<Noeud*>& v, uint mins[2])
-{
-    uint min0, min1;
-    if(mins[1] > mins[0])
-    {
-        min0 = mins[0];
-        min1 = mins[1];
-    }
-    else
-    {
-        min0 = mins[1];
-        min1 = mins[0];
-    }
-
-    int newVal      = v.at(min0)->getValue() + v.at(min1)->getValue();
-    Noeud* newNoeud = new Noeud(NULL, newVal, 'n', v.at(min0), v.at(min1));
-    v.erase(v.begin()+(int)min1);
-    v.erase(v.begin()+(int)min0);
-    v.push_back(newNoeud);
-}
-
-void huffman_tree_to_binary_map_recursive(map<char, string>& m, Noeud* v, string binary)
-{
-    if(v->getLabel() == 'n')
-    {
-        huffman_tree_to_binary_map_recursive(m, v->getFilsGauche(), binary+"0");
-        huffman_tree_to_binary_map_recursive(m, v->getFilsDroit(), binary+"1");
-    }
-    else
-    {
-        m[v->getLabel()] = binary;
-    }
-}
-
-void huffman_write_binary(std::map<char, std::string>& m, string chaine)
-{
-    ofstream outputFile(G_COMPRESSED_FILE, ofstream::out | ios::binary);
-    if (!outputFile)
-    {
-        cout << "erreur creation" << endl;
-        exit(1);
-    }
-
-    for(char c : chaine)
-    {
-        outputFile.write(m[c].c_str(), m[c].size());
-    }
-
-    outputFile.flush();
-    outputFile.close(); 
 }

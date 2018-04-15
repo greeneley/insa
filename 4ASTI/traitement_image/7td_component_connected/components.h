@@ -15,18 +15,18 @@
              GLOBAL
    =========================== */
 
-int LABEL              = 1;
-int VALEUR_GRIS        = 20;
-int INCR_VALEUR_GRIS   = 1;
-int FORMES             = 1;
+int       g_label            = 1;
+int       g_valeurGris       = 20;
+int       g_nbFormes         = 1;
+const int G_INCR_VALEUR_GRIS = 1;
 
-const int kNbVoisinsIter   = 4;
-const int kVoisinsXIter[4] = {0, -1, -1, -1};
-const int kVoisinsYIter[4] = {-1, -1, 0, +1};
+const int G_NB_VOISINS_ITER      = 4;
+const int G_VOISINS_ROW_ITER[4]  = {0, -1, -1, -1};
+const int G_VOISINS_COL_ITER[4]  = {-1, -1, 0, +1};
 
-const int kNbVoisinsRecur   = 8;
-const int kVoisinsXRecur[8] = {0, -1,  0, 1,  1, 1, -1, -1};
-const int kVoisinsYRecur[8] = {1,  0, -1, 0, -1, 1, -1,  1};
+const int G_NB_VOISINS_RECUR     = 8;
+const int G_VOISINS_ROW_RECUR[8] = {0, -1,  0, 1,  1, 1, -1, -1};
+const int G_VOISINS_COL_RECUR[8] = {1,  0, -1, 0, -1, 1, -1,  1};
 
 /* ===========================
             PROTOTYPES
@@ -42,15 +42,15 @@ void firstPass(cv::Mat& src, std::map<int, int>& valeurLabel);
 void secondPass(cv::Mat& src, std::map<int, int>& valeurLabel);
 
 int  getMinLabel(int labelW, int labelNW, int labelN, int labelNE);
-void changeParents(cv::Mat& src, int x, int y, int min, std::map<int, int>& valeurLabel);
+void changeParents(cv::Mat& src, int row, int col, int min, std::map<int, int>& valeurLabel);
 
 // =========================== CONNECTED-COMPONENT RECURSIVE
 void labelizeRecur(cv::Mat& src);
-void connectedComponentRecur(cv::Mat& src, int x, int y, int label);
+void connectedComponentRecur(cv::Mat& src, int row, int col, int label);
 
 // =========================== UTILITIES
 void binarizeFondBlanc(cv::Mat& src);
 void binarizeFondNoir(cv::Mat& src);
-bool inImage(cv::Mat& src, int x, int y);
+bool inImage(const cv::Mat& src, int row, int col);
 
 #endif

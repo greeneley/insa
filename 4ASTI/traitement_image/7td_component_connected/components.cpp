@@ -21,30 +21,30 @@ int main(int argc, char const *argv[])
 {
 	if(argc < 4)
     {
-        cout << "Usage: ./app fp_image color_bg mode" << endl
+        cout << "Usage: ./components fp_image color_bg mode" << endl
              << "fp_image: Filepath to source image" << endl
              << "color_bg: 0|1 (black|white) -- Color of the background in image" << endl
              << "mode    : 0|1 (iterative|recursive)" << endl;
-        return 0;
+        return -1;
     }
 
     Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
     if(!image.data)
     {
-        printf("No image data \n");
+        cout << "No image data" << endl;
         return -1;
     }
 
     // === Init
     Mat dst = Mat(image.size().height, image.size().width, CV_8UC1);
 
-    if(strtol(argv[2], NULL, 10) == 0) binarizeFondBlanc(image);
-    else                               binarizeFondNoir(image);
+    if(stoi(argv[2])) binarizeFondBlanc(image);
+    else              binarizeFondNoir(image);                
     image.copyTo(dst);
 
     // === Algo
-    if(strtol(argv[3], NULL, 10) == 0) labelizeIter(dst);
-    else                               labelizeRecur(dst);
+    if(stoi(argv[3])) labelizeRecur(dst);
+    else              labelizeIter(dst);
 
     // === Print
     afficheImage(image, "Source");
@@ -66,76 +66,107 @@ void afficheImage(const Mat& src, string name)
     imshow(name, src);
 }
 
-// =========================== CONNECTED-COMPONENT
+// =========================== CONNECTED-COMPONENT ITERATIF
+
+// Algorithme two-steps qui fonctionne via la reconnaissance en 8-connectivity
 void labelizeIter(Mat& src)
 {
-	map<int, int> m;
-	firstPass(src, m);
-	secondPass(src, m);
+	map<int, int> m;    // Permet d'associer une valeur de gris a un label
+	firstPass(src, m);  // On construit la map
+	secondPass(src, m); // On cree l'image resultante et on compte les formes
 }
 
+/**
+ *	Parcourt tous les pixels a partir du pixel dans le coin superieur gauche,
+ *  jusqu'au pixel dans le coin inferieur droit.
+ *
+ *  Applique le masque de reconnaissance en forme de "L" vu en cours.
+ *
+ *  Pour chaque pixel, associe un label parent. Creer un nouveau label parent 
+ *  si aucun label parent sur les pixels voisins. Affecte le label parent le
+ *  plus petit si presence sur les voisins. Met a jour les labels parents des
+ *  voisins si plusieurs labels parents presents.
+ *
+ */
 void firstPass(Mat& src, map<int, int>& valeurLabel)
 {
 	// NE, N, NW et W == position cardinaux des voisins
+	// On obtient un masque en "L"
 	int labelNE, labelN, labelNW, labelW;
 	int minLabel;
 
-	for(int x=0; x<src.size().height; x++)
+	for(int row=0; row<src.size().height; row++)
 	{
-		for(int y=0; y<src.size().width; y++)
+		for(int col=0; col<src.size().width; col++)
 		{
 			// On ignore les background pixels
-			if(src.at<uchar>(x,y) == 0) continue;
+			if(src.at<uchar>(row,col) == 0) continue;
 
-			// On recupere les labels des voisins d'orientation 4 a 1
-			labelW  = inImage(src, x,   y-1) ? src.at<uchar>(x,  y-1) : 0;
-			labelNW = inImage(src, x-1, y-1) ? src.at<uchar>(x-1,y-1) : 0;
-			labelN  = inImage(src, x-1, y)   ? src.at<uchar>(x-1,y)   : 0;
-			labelNE = inImage(src, x-1, y+1) ? src.at<uchar>(x-1,y+1) : 0;
+			// On recupere les labels des voisins d'orientation 4 a 1 en 8-connectivity
+			// 0 signifie qu'il est hors image et est alors considere comme du background
+			labelW  = inImage(src, row,   col-1) ? src.at<uchar>(row,  col-1) : 0;
+			labelNW = inImage(src, row-1, col-1) ? src.at<uchar>(row-1,col-1) : 0;
+			labelN  = inImage(src, row-1, col)   ? src.at<uchar>(row-1,col)   : 0;
+			labelNE = inImage(src, row-1, col+1) ? src.at<uchar>(row-1,col+1) : 0;
 
 			// Recuperation du label minimum
 			minLabel = getMinLabel(labelW, labelNW, labelN, labelNE);
 
 			if(minLabel > 0) // Label existant
 			{
-				src.at<uchar>(x,y) = minLabel;
+				src.at<uchar>(row,col) = minLabel;
 
-				// On modifie les labels root des voisins en cas de conflit de label
-				changeParents(src, x, y, minLabel, valeurLabel);
+				// Si plusieurs labels existent, on modifie la map pour indiquer une fusion
+				changeParents(src, row, col, minLabel, valeurLabel);
 			}
 			else // Nouveau label
 			{
-				src.at<uchar>(x,y) = LABEL;      
-			    valeurLabel[LABEL] = VALEUR_GRIS; // Gris associe au label
+				src.at<uchar>(row,col) = g_label;      
+			    valeurLabel[g_label]   = g_valeurGris; // Gris associe au label
 
-			    LABEL++;
-			    VALEUR_GRIS += INCR_VALEUR_GRIS;
+			    g_label++;
+			    g_valeurGris += G_INCR_VALEUR_GRIS;
 			}
 		}
 	}
 }
 
+/**
+ *  Affecte la valeur de gris final associe a chaque label parent.
+ *  Compte le nombre de formes determinees.
+ */
 void secondPass(Mat& src, map<int, int>& valeurLabel)
 {
 	int currentLabel;
-	set<int> setLabel;
 
-	for(int x=0; x<src.size().height; x++)
+	// On considere : 1 niveau de gris = 1 label
+	// On stock de maniere unique chaque niveau de gris comme des labels
+	set<int> setLabel; 
+
+	for(int row=0; row<src.size().height; row++)
 	{
-		for(int y=0; y<src.size().width; y++)
+		for(int col=0; col<src.size().width; col++)
 		{
-			if(src.at<uchar>(x,y) == 0) continue;
+			// Pixel background
+			if(src.at<uchar>(row,col) == 0) continue;
 
-			currentLabel = src.at<uchar>(x,y);
+			currentLabel = src.at<uchar>(row,col);
+
+			// La valeur ne sera pas inseree si elle existe deja
 			setLabel.insert(valeurLabel[currentLabel]);
-			src.at<uchar>(x,y) = valeurLabel[currentLabel];
+
+			src.at<uchar>(row,col) = valeurLabel[currentLabel];
 		}
 	}
 
 	cout << "Nombre de formes : " << setLabel.size() << endl;
 }
 
-int  getMinLabel(int labelW, int labelNW, int labelN, int labelNE)
+/** 
+ *  Recupere le label parent le plus vieux (donc a l'ID minimum)
+ *  Renvoie 0 si aucun des voisins n'a de labels
+ */
+int getMinLabel(int labelW, int labelNW, int labelN, int labelNE)
 {
 	int min = 256;
 
@@ -148,92 +179,124 @@ int  getMinLabel(int labelW, int labelNW, int labelN, int labelNE)
 	return min;
 }
 
-void changeParents(cv::Mat& src, int x, int y, int min, std::map<int, int>& valeurLabel)
+/**
+ *  Passe en revue tous les voisins appartenant au masque en "L" d'un pixel donne.
+ *  Modifie la valeur du label parent des pixels qui ont une valeur differente du 'min'.
+ */
+void changeParents(Mat& src, int row, int col, int min, map<int, int>& valeurLabel)
 {
 	int labelTemp;
-	int offsetX, offsetY;
+	int offsetRow, offsetCol;
 
-	for(int i=0; i<kNbVoisinsIter; i++)
+	for(int i=0; i<G_NB_VOISINS_ITER; i++)
 	{
 		// Pour rentrer tous les tests en une seule boucle for
-		offsetX = kVoisinsXIter[i];
-		offsetY = kVoisinsYIter[i];
+		offsetRow = G_VOISINS_ROW_ITER[i];
+		offsetCol = G_VOISINS_COL_ITER[i];
 
-		if(inImage(src, x+offsetX, y+offsetY))
+		if(inImage(src, row+offsetRow, col+offsetCol))
 		{
 			// Si non background et label different du min
-			if( (src.at<uchar>(x+offsetX, y+offsetY) > 0) && (src.at<uchar>(x+offsetX, y+offsetY) != min) )
+			// Note: on est sur a ce stade qu'on compare avec le min
+			if( (src.at<uchar>(row+offsetRow, col+offsetCol) > 0) && (src.at<uchar>(row+offsetRow, col+offsetCol) != min) )
 			{
-				labelTemp = src.at<uchar>(x+offsetX, y+offsetY);
+				labelTemp = src.at<uchar>(row+offsetRow, col+offsetCol);
 
-				// Update du label root
+				// Update du label parent
 				valeurLabel[labelTemp] = valeurLabel[min];
 
 				// Update du label du pixel voisin pour eviter de futurs tests
-				src.at<uchar>(x+offsetX, y+offsetY) = min;
+				src.at<uchar>(row+offsetRow, col+offsetCol) = min;
 			}
 		}
 	}
 }
 
 
-// =========================== CONNECTED-COMPONENT
-void labelizeRecur(cv::Mat& src)
+// =========================== CONNECTED-COMPONENT RECURSIF
+
+/**
+ *  Pour chaque pixel, si le pixel n'est pas marque, lui affecte un label puis
+ *  propage ce pixel a tous les voisins non marques en 8-connectivity.
+ */
+void labelizeRecur(Mat& src)
 {
-	for(int y=0; y<src.size().width; y++)
+	for(int col=0; col<src.size().width; col++)
 	{
-		for(int x=0; x<src.size().height; x++)
+		for(int row=0; row<src.size().height; row++)
 		{
-			if(src.at<uchar>(x,y) == 255)
+			if(src.at<uchar>(row,col) == 255)
 			{
-				connectedComponentRecur(src, x, y, VALEUR_GRIS);
-				putText(src, "#"+to_string(FORMES),Point(y,x), FONT_HERSHEY_PLAIN, 1, 253);
-				VALEUR_GRIS += INCR_VALEUR_GRIS;
-				FORMES++;
+				connectedComponentRecur(src, row, col, g_valeurGris);
+				putText(src, "#"+to_string(g_nbFormes),Point(col,row), FONT_HERSHEY_PLAIN, 1, 253);
+				g_valeurGris += G_INCR_VALEUR_GRIS;
+				g_nbFormes++;
 			}
 		}
 	}
 
-	cout << "Nombre de formes : " << FORMES - 1 << endl;
+	cout << "Nombre de formes : " << g_nbFormes - 1 << endl;
 }
 
-void connectedComponentRecur(Mat& src, int x, int y, int label)
+/**
+ *  Marque le pixel comme appartenant a un label puis le propage a ses voisins non marques.
+ */
+void connectedComponentRecur(Mat& src, int row, int col, int label)
 {
-	src.at<uchar>(x,y) = label;
+	src.at<uchar>(row,col) = label; // On marque le pixel visite
 
-	for(int i=0; i<kNbVoisinsRecur; i++)
+	// Sert a dynamiquement parcourir les voisins
+	int rowVoisin, colVoisin;
+
+	for(int i=0; i<G_NB_VOISINS_RECUR; i++)
 	{
-		if(src.at<uchar>(x + kVoisinsXRecur[i], y + kVoisinsYRecur[i]) == 255)
-		{
-			connectedComponentRecur(src, x + kVoisinsXRecur[i], y + kVoisinsYRecur[i], label);
-		}
+		rowVoisin = row + G_VOISINS_ROW_RECUR[i];
+		colVoisin = col + G_VOISINS_COL_RECUR[i];
+
+		if(inImage(src, rowVoisin, colVoisin))
+			if(src.at<uchar>(rowVoisin, colVoisin) == 255) // Non visite
+				connectedComponentRecur(src, rowVoisin, colVoisin, label);
 	}
 }
 
 // =========================== UTILITIES
+
+/**
+ *  Binarise l'image source en considerant que le fond blanc est du background.
+ *  A l'output : 0 == background et 255 == pixels d'interets
+ */
 void binarizeFondBlanc(Mat& src)
 {
-	for(int y=0; y<src.size().width; y++)
-		for(int x=0; x<src.size().height; x++)
-			if((int)src.at<uchar>(x,y) < 128)
-				src.at<uchar>(x, y) = 255;
-			else src.at<uchar>(x, y) = 0;
+	for(int col=0; col<src.size().width; col++)
+	{
+		for(int row=0; row<src.size().height; row++)
+		{
+			if((int)src.at<uchar>(row,col) < 128)
+				src.at<uchar>(row, col) = 255;
+			else src.at<uchar>(row, col) = 0;
+		}
+	}
 }
 
+/**
+ *  Binarise l'image source en considerant que le fond noir est du background.
+ *  A l'output : 0 == background et 255 == pixels d'interets
+ */
 void binarizeFondNoir(Mat& src)
 {
-	for(int y=0; y<src.size().width; y++)
-		for(int x=0; x<src.size().height; x++)
-			if((int)src.at<uchar>(x,y) < 128)
-				src.at<uchar>(x, y) = 0;
-			else src.at<uchar>(x, y) = 255;
+	for(int col=0; col<src.size().width; col++)
+		for(int row=0; row<src.size().height; row++)
+			if((int)src.at<uchar>(row,col) < 128)
+				src.at<uchar>(row, col) = 0;
+			else src.at<uchar>(row, col) = 255;
 }
 
-bool inImage(Mat& src, int x, int y)
+bool inImage(const Mat& src, int row, int col)
 {
-	if( (x > 0) && (x < src.size().height) )
-		if( (y > 0) && (y < src.size().width) )
+	if( (row > 0) && (row < src.size().height) )
+		if( (col > 0) && (col < src.size().width) )
 			return true;
 
 	return false;
 }
+
