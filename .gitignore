@@ -2,4 +2,6 @@ Java/.metadata/.plugins
 *.dot
 *.o
 ./memo/
+*/.idea/
+.DS_STORE
 
