@@ -23,9 +23,10 @@ public class CompetenceMembre {
 
     public CompetenceMembre(){};
 
-    public CompetenceMembre(int niveau, String commentaire)
+    public CompetenceMembre(Competence competence, int niveau, String commentaire)
     {
-        this.niveau = niveau;
+        this.competence  = competence;
+        this.niveau      = niveau;
         this.commentaire = commentaire;
     }
 

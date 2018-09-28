@@ -1,5 +1,7 @@
 package beans;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Projet {
@@ -36,6 +38,9 @@ public class Projet {
     {
         this.intitule = intitule;
         this.description = description;
+
+        this.participants = new ArrayList<>();
+        this.competencesRequises = new ArrayList<>();
     }
 
 
@@ -95,4 +100,47 @@ public class Projet {
      *                           Methods
      * ===============================================================
      */
+    public void addParticipant(Membre participant)
+    {
+        this.participants.add(participant);
+    }
+
+    public void removeParticipant(Membre participant)
+    {
+        Iterator<Membre> i = this.participants.iterator();
+        while(i.hasNext())
+        {
+            Membre m = i.next();
+            if(m.equals(participant))
+            {
+                i.remove();
+                break;
+            }
+        }
+    }
+
+    public void addCompetence(Competence competence)
+    {
+        if(!this.competencesRequises.contains(competence))
+        {
+            this.competencesRequises.add(competence);
+        }
+    }
+
+    public boolean hasParticipant(Membre m)
+    {
+        return this.participants.contains(m);
+    }
+
+    public boolean isCompatible(Membre m)
+    {
+        for(Competence c : this.competencesRequises)
+        {
+            for(CompetenceMembre cm : m.getCompetences())
+            {
+                if(cm.getCompetence().equals(c)) return true;
+            }
+        }
+        return false;
+    }
 }

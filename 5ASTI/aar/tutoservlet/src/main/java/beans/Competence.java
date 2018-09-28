@@ -1,5 +1,6 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Competence {
@@ -29,6 +30,9 @@ public class Competence {
     {
         this.intitule = intitule;
         this.description = description;
+
+        this.projets = new ArrayList<>();
+        this.competenceMembres = new ArrayList<>();
     }
 
 

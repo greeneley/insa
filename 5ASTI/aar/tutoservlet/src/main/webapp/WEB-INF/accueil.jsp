@@ -11,18 +11,18 @@
     <title>Accueil</title>
 </head>
 <body>
-    <p>Formulaire de connexion</p>
+    <h1>Formulaire de connexion</h1>
     <c:if test="${not empty(error) }">
         <p style="color:red">${error}</p>
     </c:if>
 
     <form action="/" method="post">
         <input hidden name="TODO" value="selogguer">
-        Login: <input type="text" name="login" type="text">
+        Login: <input type="text" name="login">
         <br />
-        Mot de passe: <input type="text" name="mdp" type="text">
+        Mot de passe: <input type="password" name="mdp">
         <br />
         <input type="submit" value="Se connecter">
-    </form>
+
 </body>
 </html>

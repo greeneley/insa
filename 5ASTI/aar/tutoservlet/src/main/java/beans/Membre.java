@@ -1,5 +1,6 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Membre {
@@ -61,6 +62,10 @@ public class Membre {
         this.login      = login;
         this.motdepasse = motdepasse;
         this.surnom     = surnom;
+
+        this.competences = new ArrayList<>();
+        this.projetsResponsable = new ArrayList<>();
+        this.projetsParticipant = new ArrayList<>();
     }
 
     /* ===============================================================
@@ -126,5 +131,50 @@ public class Membre {
      * ===============================================================
      */
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null) return false;
+        if(o == this) return true;
+        if(!(o instanceof Membre)) return false;
 
+        Membre test = (Membre)o;
+        if(this.login == test.login
+            && this.motdepasse == test.motdepasse
+            && this.surnom     == test.surnom)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void addCompetence(Competence competence, int niveau, String commentaires)
+    {
+        this.competences.add(new CompetenceMembre(competence, niveau, commentaires));
+    }
+
+    public boolean isResponsable(Projet projet)
+    {
+        return this.equals(projet.getResponsable());
+    }
+
+    public void updateCompetence(Competence competence, int niveau, String commentaire)
+    {
+        boolean isNew = true;
+        for(CompetenceMembre c : this.competences)
+        {
+            if(c.getCompetence().getIntitule() == competence.getIntitule())
+            {
+                c.setNiveau(niveau);
+                c.setCommentaire(commentaire);
+                isNew = false;
+                break;
+            }
+        }
+
+        if(isNew)
+        {
+            this.addCompetence(competence, niveau, commentaire);
+        }
+    }
 }
