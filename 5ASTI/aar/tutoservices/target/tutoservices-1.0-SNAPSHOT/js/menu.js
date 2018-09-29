@@ -1,0 +1,4 @@
+
+function addCompetenceRow() {
+    alert("ok");
+}
