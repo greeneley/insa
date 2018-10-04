@@ -10,7 +10,7 @@ function addCompetenceRow(){
     showFormCompetences();
 
     var row = document.createElement("tr");
-    var select = createOptions(n);
+    var select = createOptions("competences");
     var niveau = createInputNiveau();
     var commentaire = createInputCommentaire();
 
@@ -23,7 +23,7 @@ function addCompetenceRow(){
 }
 
 function addProjetRow(){
-    var td = createOptions(m);
+    var td = createOptions("projet");
 
     document.getElementById("div-projet").appendChild(document.createElement("br"));
     document.getElementById("div-projet").appendChild(td.firstChild);
@@ -32,16 +32,14 @@ function addProjetRow(){
 }
 
 function updateN(){
-    document.getElementById("input-number-competence").setAttribute("value", n);
     n++;
 }
 
 function updateM(){
-    document.getElementById("input-number-projet").setAttribute("value", m);
     m++;
 }
 
-function createOptions(valeur) {
+function createOptions(typeForm) {
     var select = document.createElement("select");
     competences.forEach(function(competence){
         var option = document.createElement("option");
@@ -49,7 +47,15 @@ function createOptions(valeur) {
         option.innerText = competence;
         select.appendChild(option);
     });
-    select.setAttribute("name", "select"+valeur);
+
+    if(typeForm === "competences")
+    {
+        select.setAttribute("name", "list["+n+"].competence.intitule");
+    }
+    else if (typeForm === "projet")
+    {
+        select.setAttribute("name", "competencesRequises["+m+"].intitule");
+    }
 
     var td = document.createElement("td");
     td.appendChild(select);
@@ -58,7 +64,7 @@ function createOptions(valeur) {
 
 function createInputNiveau(){
     var niveau = document.createElement("input");
-    niveau.setAttribute("name", "niveau"+n);
+    niveau.setAttribute("name", "list["+n+"].niveau");
     niveau.setAttribute("type", "number");
     niveau.setAttribute("value", "0");
 
@@ -69,7 +75,7 @@ function createInputNiveau(){
 
 function createInputCommentaire(){
     var commentaire = document.createElement("input");
-    commentaire.setAttribute("name", "commentaire"+n);
+    commentaire.setAttribute("name", "list["+n+"].commentaire");
     commentaire.setAttribute("type", "text");
     commentaire.setAttribute("value", "");
 

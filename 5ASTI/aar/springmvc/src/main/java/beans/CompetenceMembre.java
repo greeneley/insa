@@ -1,5 +1,9 @@
 package beans;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
 public class CompetenceMembre {
 
     /* ===============================================================
@@ -7,12 +11,28 @@ public class CompetenceMembre {
      * ===============================================================
      */
 
+    /**
+     * Valeur numérique représentant le niveau de la compétence.
+     * Min: 0; Max: 20
+     */
+    @Min(0)
+    @Max(20)
+    @NotEmpty
     private int niveau;
 
+    /**
+     * Commentaire personnalisé sur la compétence du membre.
+     */
     private String commentaire;
 
+    /**
+     * Le membre auquel est liée cette compétence.
+     */
     private Membre membre;
 
+    /**
+     * La compétence associée.
+     */
     private Competence competence;
 
 

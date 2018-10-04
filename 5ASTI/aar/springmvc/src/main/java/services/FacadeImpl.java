@@ -156,4 +156,16 @@ public class FacadeImpl implements Facade {
         return membreConnecte;
     }
 
+    public Membre getMembre(String login)
+    {
+        for (Membre m : this.membres)
+        {
+            if(m.getLogin().equals(login))
+            {
+                return m;
+            }
+        }
+        return null;
+    }
+
 }

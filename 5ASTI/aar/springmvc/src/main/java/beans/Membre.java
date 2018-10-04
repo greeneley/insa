@@ -1,5 +1,8 @@
 package beans;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +16,14 @@ public class Membre {
     /**
      * Login du membre.
      */
+    @NotEmpty
+    @Size(min = 3)
     private String login;
 
     /**
      * Mot de passe du membre.
      */
+    @NotEmpty
     private String motdepasse;
 
     /**

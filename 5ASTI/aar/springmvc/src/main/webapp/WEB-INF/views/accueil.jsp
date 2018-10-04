@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: ikau
@@ -12,17 +13,28 @@
 </head>
 <body>
     <h1>Formulaire de connexion</h1>
-    <c:if test="${not empty(error) }">
-        <p style="color:red">${error}</p>
-    </c:if>
 
-    <form action="/selogguer" method="post">
-        <input hidden name="TODO" value="selogguer">
+    <form:form action="/member" method="post" modelAttribute="memberAccueil">
+        <form:label path="login"/>
+        Login: <form:input type="text" path="login"/>
+        <form:errors path="login" cssStyle="color:red;"/>
+
+        <form:label path="motdepasse"/>
+        <br />Mot de passe: <form:input type="password" path="motdepasse"/>
+        <form:errors path="motdepasse" cssStyle="color:red;"/>
+
+        <br /><form:errors cssStyle="color:red;"/>
+        <br /><input type="submit" value="Se connecter"/>
+    </form:form>
+    <!--
+    <hr />
+    <h1>Formulaire d'inscription</h1>
+    <form action="/signup" method="post">
         Login: <input type="text" name="login">
-        <br />
-        Mot de passe: <input type="password" name="motdepasse">
-        <br />
-        <input type="submit" value="Se connecter">
+        <br/>Mot de passe: <input type="password" name="motdepasse"/>
+        Confirmer le mot de passe <input type="password" name="confirmation"/>
+    </form>
+    -->
 
 </body>
 </html>

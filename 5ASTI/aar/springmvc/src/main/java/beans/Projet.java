@@ -11,14 +11,30 @@ public class Projet {
      * ===============================================================
      */
 
+    /**
+     * L'intitulé du projet.
+     */
     private String intitule;
 
+    /**
+     * La description du projet.
+     */
     private String description;
 
+    /**
+     * Le membre responsable de ce projet.
+     * Note: un responsable n'est pas forcément membre !
+     */
     private Membre responsable;
 
+    /**
+     * La liste des membres participants.
+     */
     private List<Membre> participants;
 
+    /**
+     * La liste des compétences nécessaire au bon fonctionnement de ce projet.
+     */
     private List<Competence> competencesRequises;
 
 
@@ -100,11 +116,23 @@ public class Projet {
      *                           Methods
      * ===============================================================
      */
+
+    /**
+     * Ajoute un membre en tant que participant s'il n'est pas déjà participant.
+     * @param participant
+     */
     public void addParticipant(Membre participant)
     {
-        this.participants.add(participant);
+        if(!this.hasParticipant(participant))
+        {
+            this.participants.add(participant);
+        }
     }
 
+    /**
+     * Retire le membre de la liste des participants.
+     * @param participant
+     */
     public void removeParticipant(Membre participant)
     {
         Iterator<Membre> i = this.participants.iterator();
@@ -119,6 +147,10 @@ public class Projet {
         }
     }
 
+    /**
+     * Ajoute la compétence à la liste des compétences nécessaires s'il n'est pas présent.
+     * @param competence
+     */
     public void addCompetence(Competence competence)
     {
         if(!this.competencesRequises.contains(competence))
@@ -127,11 +159,21 @@ public class Projet {
         }
     }
 
+    /**
+     * Indique si le membre participe au projet ou non.
+     * @param m Le membre à tester.
+     * @return true si le membre participe; false sinon.
+     */
     public boolean hasParticipant(Membre m)
     {
         return this.participants.contains(m);
     }
 
+    /**
+     * Indique si le membre possède une compétence nécessaire au projet.
+     * @param m Le membre dont les compétences sont à tester.
+     * @return true si au moins une compétence est nécessaire au projet.
+     */
     public boolean isCompatible(Membre m)
     {
         for(Competence c : this.competencesRequises)

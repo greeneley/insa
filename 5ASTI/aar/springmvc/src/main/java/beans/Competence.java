@@ -1,5 +1,6 @@
 package beans;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +11,25 @@ public class Competence {
      * ===============================================================
      */
 
+    /**
+     * L'intitulé de la compétence.
+     */
+    @NotEmpty
     private String intitule;
 
+    /**
+     * La description de la compétence.
+     */
     private String description;
 
+    /**
+     * La liste des projets nécessitant la présence de cette compétence.
+     */
     private List<Projet> projets;
 
+    /**
+     * La liste des CompetenceMembre liés à cette compétence.
+     */
     private List<CompetenceMembre> competenceMembres;
 
 
