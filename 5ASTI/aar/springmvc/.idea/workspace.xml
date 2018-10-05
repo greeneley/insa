@@ -8,35 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5e79eabf-3355-4da2-bfd4-3f24efcce279" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/beans/Competence.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/beans/Competence.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/beans/CompetenceMembre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/beans/CompetenceMembre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/beans/Membre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/beans/Membre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/beans/Projet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/beans/Projet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/Controleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/Controleur.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/filtres/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/filtres/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/FacadeImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/FacadeImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/dispatcher-servlet.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/dispatcher-servlet.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/menu.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/membre.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/minimaliste.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/js/membre.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/beans/Competence.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/beans/Competence.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/beans/CompetenceMembre.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/beans/CompetenceMembre.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/beans/Projet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/beans/Projet.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/Controleur.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/Controleur.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/filtres/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/filtres/Filter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/services/FacadeImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/FacadeImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/beans/Competence.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/beans/Competence.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/beans/CompetenceMembre.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/beans/CompetenceMembre.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/beans/Projet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/beans/Projet.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/controllers/Controleur.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/controllers/Controleur.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/filtres/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/filtres/Filter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/services/FacadeImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/classes/services/FacadeImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/dispatcher-servlet.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/dispatcher-servlet.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/views/accueil.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/views/accueil.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/WEB-INF/views/menu.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/minimaliste.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/tutoservices-1.0-SNAPSHOT/resources/menu.js" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -50,12 +23,12 @@
     <session id="-1077247301">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="7" />
-          <entry key="project.open.time.15" value="3" />
+          <entry key="project.closed" value="9" />
+          <entry key="project.open.time.15" value="4" />
           <entry key="project.open.time.19" value="1" />
-          <entry key="project.open.time.2" value="2" />
+          <entry key="project.open.time.2" value="3" />
           <entry key="project.open.time.22" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -98,11 +71,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/controllers/Controleur.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="214" column="11" lean-forward="true" selection-start-line="214" selection-start-column="11" selection-end-line="214" selection-end-column="11" />
+            <state relative-caret-position="1410">
+              <caret line="94" column="57" selection-start-line="94" selection-start-column="25" selection-end-line="94" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -122,8 +95,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/beans/CompetenceMembre.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="191">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+            <state relative-caret-position="315">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -140,11 +113,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="17" column="34" lean-forward="true" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="34" />
+            <state relative-caret-position="135">
+              <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -198,11 +171,11 @@
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/projet.jsp" />
         <option value="$PROJECT_DIR$/src/main/java/beans/Projet.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/membre.jsp" />
-        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp" />
         <option value="$PROJECT_DIR$/src/main/java/beans/CompetenceMembre.java" />
         <option value="$PROJECT_DIR$/src/main/java/beans/Competence.java" />
         <option value="$PROJECT_DIR$/src/main/java/beans/Membre.java" />
         <option value="$PROJECT_DIR$/src/main/java/controllers/Controleur.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp" />
       </list>
     </option>
   </component>
@@ -236,7 +209,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -362,6 +334,7 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -373,7 +346,7 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -490,17 +463,19 @@
       <workItem from="1538652478241" duration="2658000" />
       <workItem from="1538655805140" duration="2028000" />
       <workItem from="1538658552904" duration="1868000" />
+      <workItem from="1538686297355" duration="478000" />
+      <workItem from="1538686800367" duration="1000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24789000" />
+    <option name="totallyTimeSpent" value="25268000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27181688" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27539343" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -630,27 +605,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/beans/Competence.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/beans/Membre.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="17" column="34" lean-forward="true" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wrappers/WrapperCompetenceMembre.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -665,23 +619,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/beans/CompetenceMembre.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/controllers/Controleur.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="1410">
+          <caret line="94" column="57" selection-start-line="94" selection-start-column="25" selection-end-line="94" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/controllers/Controleur.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/beans/Membre.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="214" column="11" lean-forward="true" selection-start-line="214" selection-start-column="11" selection-end-line="214" selection-end-column="11" />
+        <state relative-caret-position="225">
+          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/beans/CompetenceMembre.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/beans/Competence.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/accueil.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
         </state>
       </provider>
     </entry>
