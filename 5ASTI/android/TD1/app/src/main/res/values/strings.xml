@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AndroTest</string>
+    <string name="hello_world">Bonjour Monde !</string>
+    <string-array name="hardcoded_course">
+        <item>Du pain</item>
+        <item>Du fromage</item>
+        <item>Du coca</item>
+        <item>Du beurre</item>
+    </string-array>
+</resources>
