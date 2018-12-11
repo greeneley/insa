@@ -407,3 +407,118 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Generated files
+.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+
+# CMake
+cmake-build-*/
+
+# Mongo Explorer plugin
+.idea/**/mongoSettings.xml
+
+# File-based project format
+*.iws
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Cursive Clojure plugin
+.idea/replstate.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Editor-based Rest Client
+.idea/httpRequests
+
+# Android studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
+
+# Composer
+composer.phar
+*/vendor/
+
+# Yarn
+/lib
+/lib-legacy
+/node_modules
+*.log
+/.nyc_output
+/coverage
+/dist
+/dist-debug
+/artifacts
+/updates
+/resources/winsetup/generated.wxs
+/resources/winsetup/obj
+/resources/winsetup/bin
+/resources/win-chocolatey/tools/chocolateyinstall.ps1
+.vs
+*.msi
+*.nupkg
+test/fixtures/**/.fbkpm
+/tmp/
+/__tests__/fixtures/**/_*
+/__tests__/fixtures/request-cache/GET/localhost/.bin
+.idea
+.yarn-meta
+.pnp.js
+.pnp
+/packages/lockfile/index.js
+.vscode/
+
+# QUnit
+dist
+#node_modules # ignored via yarn
+build/report
+browserstack-run.pid
+temp/
+docs/_site/
+
+# Grunt
+#node_modules # ignored via yarn
+.npm-debug.log
+tmp
+dist/*.min.js
+
