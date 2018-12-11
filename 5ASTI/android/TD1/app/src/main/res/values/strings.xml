@@ -7,4 +7,15 @@
         <item>Du coca</item>
         <item>Du beurre</item>
     </string-array>
+
+    <!-- Strings related to Preferences -->
+    <string name="title_activity_preferences">Preferences</string>
+
+        <!-- Example General settings -->
+    <string name="pref_header_general_title">General</string>
+
+    <string name="pref_header_general_summary">Préférences basiques</string>
+    <string name="pref_title_login">Saved login</string>
+    <string name="pref_title_default_login">Login</string>
+    <string name="pref_saved_login">Login</string>
 </resources>

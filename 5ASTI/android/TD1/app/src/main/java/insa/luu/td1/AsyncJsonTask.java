@@ -61,10 +61,11 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
 
                     // Création du json et traitement du résultat
                     JSONObject json = new JSONObject(buffer.toString());
-                    this.array      = json.getJSONArray(params[1]);
-
-                default:
-                    return null;
+                    if(json.has(params[1]))
+                    {
+                        this.array = json.getJSONArray(params[1]);
+                    }
+                    break;
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -76,7 +77,7 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         if(this.array != null)
         {
-            Log.i("DebugTD1", "AsyncJsonTask.onPostExecute");
+            Log.i("DebugTD1", "AsyncJsonTask.onPostExecute:OK");
 
             // Vérification de la Liste Activity
             ListView listView    = (ListView) this.weakReferenceActivity.get().findViewById(R.id.listViewActivityListe);
@@ -97,13 +98,16 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
         }
         else
         {
+            Log.i("DebugTD1", "AsyncJsonTask.onPostExecute:ERROR");
+
             // Vérification de la Liste Activity
-            ListView listView    = (ListView) this.weakReferenceActivity.get().findViewById(R.id.listViewActivityListe);
+            ListView listView = (ListView) this.weakReferenceActivity.get().findViewById(R.id.listViewActivityListe);
             if(listView == null) return;
 
             // Courses par defaut
             List<String>         courses = Arrays.asList(this.weakReferenceActivity.get().getResources().getStringArray(R.array.hardcoded_course));
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.weakReferenceActivity.get(), android.R.layout.simple_list_item_1, courses);
+            listView.setAdapter(adapter);
         }
     }
 }
