@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="13" assertions="14" errors="0" failures="0" skipped="0" time="0.014155">
+    <testsuite name="exceptions" tests="6" assertions="6" errors="0" failures="0" skipped="0" time="0.004063">
+      <testsuite name="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" tests="6" assertions="6" errors="0" failures="0" skipped="0" time="0.004063">
+        <testcase name="testRemovePoneysFromFieldArgumentNegatif" class="PoneysExceptionTest" classname="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" line="11" assertions="1" time="0.003272"/>
+        <testcase name="testRemovePoneysFromFieldCountNegatif" class="PoneysExceptionTest" classname="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" line="21" assertions="1" time="0.000207"/>
+        <testcase name="testAddPoneysIntoFieldCountMax" class="PoneysExceptionTest" classname="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" line="31" assertions="1" time="0.000163"/>
+        <testcase name="testAddPoneysIntoFieldArgumentNegatif" class="PoneysExceptionTest" classname="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" line="41" assertions="1" time="0.000146"/>
+        <testcase name="testSetCountMax" class="PoneysExceptionTest" classname="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" line="51" assertions="1" time="0.000141"/>
+        <testcase name="testSetCountNegatif" class="PoneysExceptionTest" classname="PoneysExceptionTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysExceptionTest.php" line="60" assertions="1" time="0.000134"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="methodes" tests="7" assertions="8" errors="0" failures="0" skipped="0" time="0.010092">
+      <testsuite name="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" tests="7" assertions="8" errors="0" failures="0" skipped="0" time="0.010092">
+        <testcase name="testSetCount" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="30" assertions="1" time="0.000353"/>
+        <testsuite name="PoneysTest::testRemovePoneyFromField" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.000286">
+          <testcase name="testRemovePoneyFromField with data set #0" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="42" assertions="1" time="0.000155"/>
+          <testcase name="testRemovePoneyFromField with data set #1" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="42" assertions="1" time="0.000131"/>
+        </testsuite>
+        <testcase name="testAddPoneysIntoField" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="64" assertions="1" time="0.000127"/>
+        <testcase name="testGetNames" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="73" assertions="2" time="0.008835"/>
+        <testsuite name="PoneysTest::testHasRoom" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.000491">
+          <testcase name="testHasRoom with data set #0" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="92" assertions="1" time="0.000213"/>
+          <testcase name="testHasRoom with data set #1" class="PoneysTest" classname="PoneysTest" file="/Users/ikau/projet/qualite_logicielle/poneys/tests/PoneysTest.php" line="92" assertions="1" time="0.000278"/>
+        </testsuite>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,20 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                git 'https://github.com/Ikau/qualite_logicielle.git'
+                dir('poneys') {
+                    sh 'composer install'
+                }
+            }
+        }
+        stage('Test') { 
+            steps {
+                dir('poneys') {
+                    sh 'phpunit -c ./phpunit.xml'
+                }
+            }
+        }
+    }
+}
