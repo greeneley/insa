@@ -20,16 +20,22 @@
             android:text="@string/main_show_results" />
 
         <Button
+            android:id="@+id/buttonTitles"
+            android:onClick="onClickButtonTitles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/main_show_img_names"/>
 
         <Button
+            android:id="@+id/buttonImages"
+            android:onClick="onClickButtonImages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/main_show_img"/>
 
         <Button
+            android:id="@+id/buttonAdvanced"
+            android:onClick="onClickButtonAdvanced"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/main_show_advanced"/>
