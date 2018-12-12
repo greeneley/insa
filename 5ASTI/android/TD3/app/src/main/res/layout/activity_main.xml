@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,6 +13,8 @@
         android:layout_margin="30px">
 
         <Button
+            android:id="@+id/buttonResults"
+            android:onClick="onClickButtonResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/main_show_results" />
