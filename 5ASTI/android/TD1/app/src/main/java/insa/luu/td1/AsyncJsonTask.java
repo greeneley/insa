@@ -22,20 +22,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Tâche asynchrone effectuant la requête GET pour afficher les courses de la
+ * ListView dans ListeActivity via une WeakReference.
+ */
 public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
 
+    /**
+     * Reference vers ListeActivity où l'on a cliqué sur l'item.
+     */
     private WeakReference<Activity> weakReferenceActivity;
+
+    /**
+     * Résultat de doInBackground.
+     */
     private JSONArray array;
 
+    /**
+     * Constructeur recevant une référence de l'activité source.
+     * @param activity
+     */
     public AsyncJsonTask(Activity activity)
     {
         this.weakReferenceActivity = new WeakReference<Activity>(activity);
         this.array = null;
     }
 
+    /**
+     * Effectue la requête GET pour obtenir le JSON puis récupère l'array correspondant au login.
+     * @param params param[0] == url (String), param[1] == login (String).
+     * @return JSONArray correspondant au login.
+     */
     @Override
     protected Void doInBackground(String... params)
     {
+        // Vérification des params
+        if(params.length < 2) return null;
+
         try {
             // Récupération et GET de la première URL
             URL url = new URL(params[0]);
@@ -44,13 +67,12 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
 
             // Vérification de l'état
             int responseCode = ((HttpURLConnection) connection).getResponseCode();
-
             switch (responseCode)
             {
                 case HttpURLConnection.HTTP_OK:
-                    Log.i("DebugTD1", "HttpURLConnection.HTTP_OK");
+                    Log.i("DebugTD1", "AsyncJsonTask.doInBackground.HttpURLConnection.HTTP_OK");
 
-                    // Récupération du contenu
+                    // Récupération et lecture du contenu
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     StringBuffer buffer = new StringBuffer();
                     String line = "";
@@ -61,21 +83,29 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
 
                     // Création du json et traitement du résultat
                     JSONObject json = new JSONObject(buffer.toString());
-                    if(json.has(params[1]))
+                    String login = params[1];
+                    if(json.has(login))
                     {
-                        this.array = json.getJSONArray(params[1]);
+                        this.array = json.getJSONArray(login);
                     }
                     break;
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+
+        Log.i("DebugTD1", "AsyncJsonTask.doInBackground.Error");
         return null;
     }
 
+    /**
+     * Modification de la vue après traitement de la tâche.
+     * @param aVoid
+     */
     @Override
-    protected void onPostExecute(Void aVoid) {
-        if(this.array != null)
+    protected void onPostExecute(Void aVoid)
+    {
+        if(this.array != null) // GET OK
         {
             Log.i("DebugTD1", "AsyncJsonTask.onPostExecute:OK");
 
@@ -93,10 +123,12 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
                     e.printStackTrace();
                 }
             }
+
+            // Création de l'adaptater pour la ListView
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.weakReferenceActivity.get(), android.R.layout.simple_list_item_1, courses);
             listView.setAdapter(adapter);
         }
-        else
+        else // GET erreur ou login introuvable
         {
             Log.i("DebugTD1", "AsyncJsonTask.onPostExecute:ERROR");
 
@@ -104,7 +136,7 @@ public class AsyncJsonTask extends AsyncTask<String, Void, Void> {
             ListView listView = (ListView) this.weakReferenceActivity.get().findViewById(R.id.listViewActivityListe);
             if(listView == null) return;
 
-            // Courses par defaut
+            // Adaptater par défaut
             List<String>         courses = Arrays.asList(this.weakReferenceActivity.get().getResources().getStringArray(R.array.hardcoded_course));
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.weakReferenceActivity.get(), android.R.layout.simple_list_item_1, courses);
             listView.setAdapter(adapter);
