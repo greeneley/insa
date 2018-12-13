@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onClickButtonImages(View v)
     {
-        // TODO
+        String urlString = "https://www.flickr.com/services/feeds/photos_public.gne?tags=cats&format=json";
+        new AsyncFlickrTask(this).execute(urlString, ActionsEnum.IMAGES);
     }
 
     protected void onClickButtonAdvanced(View v)
