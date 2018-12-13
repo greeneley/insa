@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onClickButtonResults(View v)
     {
+        // Déclaration de l'url
         String urlString = "https://www.flickr.com/services/feeds/photos_public.gne?tags=cats&format=json";
         new AsyncFlickrTask(this).execute(urlString, ActionsEnum.PLAIN_JSON);
     }
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO
     }
 
-    private void setMainFragment(Fragment fragment)
+    public void setMainFragment(Fragment fragment)
     {
         getSupportFragmentManager()
             .beginTransaction()
