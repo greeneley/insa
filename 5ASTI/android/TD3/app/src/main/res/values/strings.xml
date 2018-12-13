@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">TD3</string>
 
+    <!-- MainActivity buttons text -->
     <string name="main_show_results">Résultat de la requête</string>
     <string name="main_show_img_names">Nom des images</string>
     <string name="main_show_img">Afficher les images</string>
     <string name="main_show_advanced">Affichage avancé</string>
+
+    <!-- Placeholder Fragment -->
+    <string name="fragment_placeholder_text">Le contenu sera affiché ici</string>
 </resources>
