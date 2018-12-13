@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="30px">
+        android:layout_margin="10sp">
 
         <Button
             android:id="@+id/buttonResults"
@@ -43,9 +43,10 @@
         <LinearLayout
             android:id="@+id/layoutFragment"
             android:orientation="vertical"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="30px">
+            android:layout_margin="10sp">
         </LinearLayout>
 
     </LinearLayout>
