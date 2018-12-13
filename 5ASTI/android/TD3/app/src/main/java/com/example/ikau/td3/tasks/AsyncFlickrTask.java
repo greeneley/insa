@@ -15,7 +15,9 @@ import com.example.ikau.td3.activities.MainActivity;
 import com.example.ikau.td3.enums.ActionsEnum;
 import com.example.ikau.td3.fragments.PlaceholderFragment;
 import com.example.ikau.td3.fragments.PlainJSONFragment;
+import com.example.ikau.td3.fragments.TitleFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -106,12 +109,25 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
-        if(jsonObject == null) return;
+        if(jsonObject == null)
+        {
+            Log.e("TLT", "[ERR] AsyncFlickrTask.onPostExecute: result is null");
+            return;
+        }
+        if(this.activityWkRef.get() == null)
+        {
+            Log.e("TLT", "[ERR] AsyncFlickrTask.onPostExecute: MainActivity is null");
+            return;
+        }
 
         switch(this.action)
         {
             case PLAIN_JSON:
                 this.showPlainJSON(jsonObject);
+                break;
+
+            case TITLES:
+                this.showTitles(jsonObject);
                 break;
 
             case IMAGES:
@@ -122,24 +138,8 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
         }
     }
 
-    private View getViewContainer()
-    {
-        return null;
-    }
-
     private void showPlainJSON(JSONObject jsonObject)
     {
-        // Vérification de l'état de l'activité
-        MainActivity activity = (MainActivity) this.activityWkRef.get();
-        if(activity == null)
-        {
-            Log.e("TLT", "[ERR] AsyncFlickrTask.showPlainJSON: MainActivity is null");
-            return;
-        }
-
-        // Récupération du container pour le fragment
-        LinearLayout container = (LinearLayout) activity.findViewById(R.id.layoutFragment);
-
         // Création du bundle du fragment
         Bundle args = new Bundle();
         args.putString("json", jsonObject.toString());
@@ -149,6 +149,7 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
         fragment.setArguments(args);
 
         // Modification du fragment dans MainActivity
+        MainActivity activity = (MainActivity)this.activityWkRef.get();
         activity.setMainFragment(fragment);
 
         Log.i("TLT", "[OK] AsyncFlickrTask.showPlainJSON");
@@ -156,10 +157,29 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
 
     private void showTitles(JSONObject jsonObject)
     {
-        // TODO
-        //List<String> courses = Arrays.asList(this.activityWkRef.get().getResources().getStringArray(R.array.hardcoded_course));
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.activityWkRef.get(), android.R.layout.simple_list_item_1, courses);
-        //listView.setAdapter(adapter);
+        // Création de la liste de titres
+        ArrayList<String> titles = new ArrayList<String>();
+        try {
+            JSONArray items = jsonObject.getJSONArray("items");
+            for(int i=0; i<items.length(); i++)
+            {
+                titles.add(items.getJSONObject(i).getString("title"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Création du bundle du fragment
+        Bundle args = new Bundle();
+        args.putStringArrayList("titles", titles);
+
+        // Création du fragment
+        TitleFragment fragment = new TitleFragment();
+        fragment.setArguments(args);
+
+        // Modification du fragment dans MainActivity
+        MainActivity activity = (MainActivity)this.activityWkRef.get();
+        activity.setMainFragment(fragment);
     }
 
     private void showAdvanced(JSONObject jsonObject)
