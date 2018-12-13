@@ -105,11 +105,6 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
         }
     }
 
-    private void showProgressSpinner()
-    {
-        // TODO
-    }
-
     private void showPlainJSON(JSONObject jsonObject)
     {
         // TODO
