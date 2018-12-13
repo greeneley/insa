@@ -3,17 +3,11 @@ package com.example.ikau.td3.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 
-import com.example.ikau.td3.R;
 import com.example.ikau.td3.activities.MainActivity;
 import com.example.ikau.td3.enums.ActionsEnum;
-import com.example.ikau.td3.fragments.PlaceholderFragment;
+import com.example.ikau.td3.fragments.GridViewFragment;
 import com.example.ikau.td3.fragments.PlainJSONFragment;
 import com.example.ikau.td3.fragments.TitleFragment;
 
@@ -29,8 +23,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
 
@@ -131,6 +123,7 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
                 break;
 
             case IMAGES:
+                this.showImages(jsonObject);
                 break;
 
             case ADVANCED:
@@ -176,6 +169,16 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
         // Création du fragment
         TitleFragment fragment = new TitleFragment();
         fragment.setArguments(args);
+
+        // Modification du fragment dans MainActivity
+        MainActivity activity = (MainActivity)this.activityWkRef.get();
+        activity.setMainFragment(fragment);
+    }
+
+    private void showImages(JSONObject jsonObject)
+    {
+        // Affichage test des fragments de chargement
+        GridViewFragment fragment = new GridViewFragment();
 
         // Modification du fragment dans MainActivity
         MainActivity activity = (MainActivity)this.activityWkRef.get();
