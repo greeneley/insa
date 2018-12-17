@@ -24,7 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
+public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObject> {
 
     private ActionsEnum action;
     private WeakReference<Activity> activityWkRef;
@@ -80,23 +80,6 @@ public class AsyncFlickrTask extends AsyncTask<Object, Integer, JSONObject> {
         }
 
         return null;
-    }
-
-    private JSONObject getJsonFromFlickr(URLConnection openedConnection) throws IOException, JSONException
-    {
-        // Récupération et lecture du contenu
-        BufferedReader reader = new BufferedReader(new InputStreamReader(openedConnection.getInputStream()));
-        StringBuffer   buffer = new StringBuffer();
-        String line = "";
-
-        while ((line = reader.readLine()) != null) {
-            buffer.append(line+"\n");
-        }
-
-        // Création du json : on doit enlever jsonFlickrFeed() du résultat
-        String jsonString = buffer.toString().substring(15, buffer.length()-1);
-
-        return new JSONObject(jsonString);
     }
 
     @Override
