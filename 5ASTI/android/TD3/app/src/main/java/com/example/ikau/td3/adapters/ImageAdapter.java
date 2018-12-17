@@ -6,6 +6,8 @@ import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -44,22 +46,24 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        ImageView imageView;
         View v;
 
         if (convertView == null)
         {
             v = this.items.get(position);
-//            // if it's not recycled, initialize some attributes
-//            imageView = new ImageView(this.activity);
-//            imageView.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
-//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setPadding(8, 8, 8, 8);
+            v.setLayoutParams(new GridView.LayoutParams(240, 240));
+            v.setPadding(8, 8, 8, 8);
         }
         else
         {
-            v = (ProgressBar) convertView;
+            v = convertView;
         }
         return v;
+    }
+
+    public void replaceView(int index, View newView)
+    {
+        this.items.remove(index);
+        this.items.add(index, newView);
     }
 }

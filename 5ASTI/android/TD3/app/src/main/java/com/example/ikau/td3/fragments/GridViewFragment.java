@@ -12,13 +12,12 @@ import android.widget.ProgressBar;
 
 import com.example.ikau.td3.R;
 import com.example.ikau.td3.adapters.ImageAdapter;
+import com.example.ikau.td3.tasks.AsyncDownloadTask;
 
 import java.util.ArrayList;
 
 public class GridViewFragment extends Fragment
 {
-    public ArrayList<View> images;
-
     public GridViewFragment()
     {
     }
@@ -33,13 +32,25 @@ public class GridViewFragment extends Fragment
 
     private void populateGrid(View v)
     {
-        this.images = new ArrayList<>();
-        for(int i=0; i<9; i++)
+        // Création des items de base
+        ArrayList<View> views = new ArrayList<>();
+        for(int i=0; i<20; i++)
         {
-            this.images.add(new ProgressBar(this.getContext()));
+            views.add(new ProgressBar(this.getContext()));
         }
 
+        // Création de l'adapter
+        ImageAdapter adapter = new ImageAdapter(views);
+
+        // Création de la GridView
         GridView gridView = v.findViewById(R.id.gridViewImages);
-        gridView.setAdapter(new ImageAdapter(this.images));
+        gridView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        for (int i = 0; i < 20; i++)
+            new AsyncDownloadTask(v).execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=cats&format=json", i);
     }
 }
