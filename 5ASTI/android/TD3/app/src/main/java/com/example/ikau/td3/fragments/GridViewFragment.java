@@ -51,6 +51,6 @@ public class GridViewFragment extends Fragment
     public void onStart() {
         super.onStart();
         for (int i = 0; i < 20; i++)
-            new AsyncDownloadTask(v).execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=cats&format=json", i);
+            new AsyncDownloadTask(this.getView()).execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=cats&format=json", i);
     }
 }

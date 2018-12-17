@@ -50,13 +50,13 @@ public class ImageAdapter extends BaseAdapter {
 
         if (convertView == null)
         {
+            this.items.get(position).setLayoutParams(new GridView.LayoutParams(300, 300));
+            this.items.get(position).setPadding(8, 8, 8, 8);
             v = this.items.get(position);
-            v.setLayoutParams(new GridView.LayoutParams(240, 240));
-            v.setPadding(8, 8, 8, 8);
         }
         else
         {
-            v = convertView;
+            v = this.items.get(position);
         }
         return v;
     }
