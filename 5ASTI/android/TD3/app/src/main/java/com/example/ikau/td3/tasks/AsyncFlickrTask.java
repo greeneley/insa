@@ -160,8 +160,29 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
 
     private void showImages(JSONObject jsonObject)
     {
-        // Affichage test des fragments de chargement
+        // Récupération de la liste des URL des images
+        ArrayList<String> urls = new ArrayList<>();
+        try {
+            JSONArray items = jsonObject.getJSONArray("items");
+            for(int i=0; i<items.length(); i++)
+            {
+                urls.add(items.getJSONObject(i)
+                              .getJSONObject("media")
+                              .getString("m")
+
+                );
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Création du bundle du fragment
+        Bundle args = new Bundle();
+        args.putStringArrayList("urls", urls);
+
+        // Création du fragment
         GridViewFragment fragment = new GridViewFragment();
+        fragment.setArguments(args);
 
         // Modification du fragment dans MainActivity
         MainActivity activity = (MainActivity)this.activityWkRef.get();
