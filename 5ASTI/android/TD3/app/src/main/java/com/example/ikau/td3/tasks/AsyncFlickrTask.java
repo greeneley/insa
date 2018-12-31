@@ -9,6 +9,7 @@ import com.example.ikau.td3.activities.MainActivity;
 import com.example.ikau.td3.enums.ActionsEnum;
 import com.example.ikau.td3.fragments.GridViewFragment;
 import com.example.ikau.td3.fragments.PlainJSONFragment;
+import com.example.ikau.td3.fragments.RecyclerViewFragment;
 import com.example.ikau.td3.fragments.TitleFragment;
 
 import org.json.JSONArray;
@@ -196,7 +197,7 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         Bundle args = new Bundle();
 
         // Création du fragment
-        GridViewFragment fragment = new GridViewFragment();
+        RecyclerViewFragment fragment = new RecyclerViewFragment();
         fragment.setArguments(args);
 
         // Modification du fragment dans MainActivity
