@@ -12,7 +12,8 @@ import android.widget.ProgressBar;
 
 import com.example.ikau.td3.R;
 import com.example.ikau.td3.adapters.ImageAdapter;
-import com.example.ikau.td3.tasks.AsyncGridViewTask;
+import com.example.ikau.td3.enums.DownloadAction;
+import com.example.ikau.td3.tasks.AsyncDownloadBitmapTask;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,7 @@ public class GridViewFragment extends Fragment
         ArrayList<String> urls = this.getArguments().getStringArrayList("urls");
         for(int i=0; i<urls.size(); i++)
         {
-            new AsyncGridViewTask(this.getView()).execute(urls.get(i), i);
+            new AsyncDownloadBitmapTask(this.getView()).execute(urls.get(i), i, DownloadAction.GridView);
         }
 
     }

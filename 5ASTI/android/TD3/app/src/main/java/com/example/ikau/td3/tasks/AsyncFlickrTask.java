@@ -193,8 +193,37 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
 
     private void showAdvanced(JSONObject jsonObject)
     {
+        // Récupération de l'url de l'image, l'auteur et le titre
+        ArrayList<String> authors = new ArrayList<>();
+        ArrayList<String> titles  = new ArrayList<>();
+        ArrayList<String> urls    = new ArrayList<>();
+        try {
+            JSONArray items = jsonObject.getJSONArray("items");
+            for(int i=0; i<items.length(); i++)
+            {
+                String author = items.getJSONObject(i)
+                                     .getString("author");
+                authors.add(author.substring(author.indexOf("(\"")+2, author.indexOf("\")")));
+
+                titles.add(items.getJSONObject(i)
+                                .getString("title")
+                );
+
+                urls.add(items.getJSONObject(i)
+                              .getJSONObject("media")
+                              .getString("m")
+
+                );
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         // Création du bundle du fragment
         Bundle args = new Bundle();
+        args.putStringArrayList("authors", authors);
+        args.putStringArrayList("titles", titles);
+        args.putStringArrayList("urls", urls);
 
         // Création du fragment
         RecyclerViewFragment fragment = new RecyclerViewFragment();
