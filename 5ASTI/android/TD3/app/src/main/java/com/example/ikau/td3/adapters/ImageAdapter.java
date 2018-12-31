@@ -1,19 +1,9 @@
 package com.example.ikau.td3.adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-
-import com.example.ikau.td3.R;
-import com.example.ikau.td3.fragments.ImageFragment;
-import com.example.ikau.td3.fragments.ProgressSpinnerFragment;
 
 import java.util.ArrayList;
 
