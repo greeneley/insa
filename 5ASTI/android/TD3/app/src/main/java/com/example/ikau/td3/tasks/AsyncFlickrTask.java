@@ -110,6 +110,7 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
                 break;
 
             case ADVANCED:
+                this.showAdvanced(jsonObject);
                 break;
         }
     }
@@ -191,6 +192,15 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
 
     private void showAdvanced(JSONObject jsonObject)
     {
-        // TODO
+        // Création du bundle du fragment
+        Bundle args = new Bundle();
+
+        // Création du fragment
+        GridViewFragment fragment = new GridViewFragment();
+        fragment.setArguments(args);
+
+        // Modification du fragment dans MainActivity
+        MainActivity activity = (MainActivity)this.activityWkRef.get();
+        activity.setMainFragment(fragment);
     }
 }
