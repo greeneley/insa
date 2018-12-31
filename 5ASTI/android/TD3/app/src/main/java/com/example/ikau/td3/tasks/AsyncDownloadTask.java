@@ -44,18 +44,13 @@ public class AsyncDownloadTask extends AbstractAsyncTask<Object, Void, Bitmap>
             return null;
         }
 
+        // Index où afficher l'image
+        this.index = (int) params[1];
+
         // Récupération de l'url et de la position de l'image à afficher
         try {
-            URL url    = new URL((String) params[0]);
-            this.index = (int) params[1];
+            return this.getBitmapFromFlickr((String) params[0], this.index);
 
-
-            // Ouverture de la connection;
-            URLConnection connection = url.openConnection();
-            connection.connect();
-
-            // Récupération du JSON
-            return this.getBitmapFromFlickr(connection, this.index);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -94,23 +89,15 @@ public class AsyncDownloadTask extends AbstractAsyncTask<Object, Void, Bitmap>
     }
 
     /**
-     * https://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap
-     * @param connection
+     * Crédits https://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap
+     * @param urlImage
      * @param index
      * @return
      * @throws IOException
      * @throws JSONException
      */
-    private Bitmap getBitmapFromFlickr(URLConnection connection, int index) throws IOException, JSONException {
-        // Récupération du json via méthode abstraite
-        JSONObject json   = this.getJsonFromFlickr(connection);
-
-        // Récupération de l'adresse d'image
-        String urlImage = json.getJSONArray("items")
-                                  .getJSONObject(index)
-                                  .getJSONObject("media")
-                                  .getString("m");
-
+    private Bitmap getBitmapFromFlickr(String urlImage, int index) throws IOException, JSONException
+    {
         // Ouverture de la connexion
         URL url                       = new URL(urlImage);
         URLConnection connectionImage = url.openConnection();

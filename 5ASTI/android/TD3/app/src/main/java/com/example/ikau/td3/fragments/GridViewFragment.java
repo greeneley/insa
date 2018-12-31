@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,9 +49,14 @@ public class GridViewFragment extends Fragment
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
-        for (int i = 0; i < 20; i++)
-            new AsyncDownloadTask(this.getView()).execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=cats&format=json", i);
+        ArrayList<String> urls = this.getArguments().getStringArrayList("urls");
+        for(int i=0; i<urls.size(); i++)
+        {
+            new AsyncDownloadTask(this.getView()).execute(urls.get(i), i);
+        }
+
     }
 }
