@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 
 import com.example.ikau.td3.R;
-import com.example.ikau.td3.adapters.ImageAdapter;
+import com.example.ikau.td3.adapters.GridViewAdapter;
 import com.example.ikau.td3.enums.DownloadAction;
 import com.example.ikau.td3.tasks.AsyncDownloadBitmapTask;
 
@@ -41,7 +41,7 @@ public class GridViewFragment extends Fragment
         }
 
         // Création de l'adapter
-        ImageAdapter adapter = new ImageAdapter(views);
+        GridViewAdapter adapter = new GridViewAdapter(views);
 
         // Création de la GridView
         GridView gridView = v.findViewById(R.id.gridViewImages);

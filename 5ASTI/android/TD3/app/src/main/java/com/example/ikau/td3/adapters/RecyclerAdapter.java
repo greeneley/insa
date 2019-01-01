@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -28,11 +29,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
+        private RecyclerAdapter adapter;
         public View view;
-        public ViewHolder(View v)
+        public ViewHolder(View v, RecyclerAdapter adapter)
         {
             super(v);
-            this.view = v;
+            this.view    = v;
+            this.adapter = adapter;
         }
 
         public void setTexts(String title, String author)
@@ -42,6 +45,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
             tx = (TextView) this.view.findViewById(R.id.recyclerItemTextViewAuthor);
             tx.setText(author);
+
+            ImageButton imageButton = (ImageButton) this.view.findViewById(R.id.recyclerItemImageButton);
+            imageButton.setOnClickListener(saveToFavorites);
         }
 
         public void setImage(Bitmap image)
@@ -49,6 +55,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             ImageView v = (ImageView) this.view.findViewById(R.id.recyclerItemImageView);
             v.setImageBitmap(image);
         }
+
+        private View.OnClickListener saveToFavorites = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                adapter.saveItemToFavorite(getAdapterPosition());
+            }
+        };
     }
 
     public RecyclerAdapter(ArrayList<String> titles, ArrayList<String> authors)
@@ -73,7 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                .inflate(R.layout.fragment_recycler_adapter_item, viewGroup, false);
 
         // Enregistrement du nouvel ViewHolder
-        return new ViewHolder(v);
+        return new ViewHolder(v, this);
     }
 
     @Override
@@ -97,6 +111,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public int getItemCount() {
         return this.titles.size();
+    }
+
+    public void saveItemToFavorite(int index)
+    {
+        Log.i("INSA", "Position fired :"+String.valueOf(index));
     }
 
     public void updateBitmap(int index, Bitmap bitmap)

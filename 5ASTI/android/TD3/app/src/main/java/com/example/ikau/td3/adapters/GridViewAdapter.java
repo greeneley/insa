@@ -7,11 +7,11 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
-public class ImageAdapter extends BaseAdapter {
+public class GridViewAdapter extends BaseAdapter {
 
     private ArrayList<View> items;
 
-    public ImageAdapter(ArrayList<View> items)
+    public GridViewAdapter(ArrayList<View> items)
     {
         this.items    = items;
     }

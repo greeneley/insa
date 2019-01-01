@@ -8,7 +8,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.example.ikau.td3.R;
-import com.example.ikau.td3.adapters.ImageAdapter;
+import com.example.ikau.td3.adapters.GridViewAdapter;
 import com.example.ikau.td3.adapters.RecyclerAdapter;
 import com.example.ikau.td3.enums.DownloadAction;
 
@@ -93,7 +93,7 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
         imageView.setImageBitmap(bitmap);
 
         // Modification de l'adapter
-        ImageAdapter adapter = (ImageAdapter) gridView.getAdapter();
+        GridViewAdapter adapter = (GridViewAdapter) gridView.getAdapter();
         adapter.replaceView(this.index, imageView);
         adapter.notifyDataSetChanged();
     }
