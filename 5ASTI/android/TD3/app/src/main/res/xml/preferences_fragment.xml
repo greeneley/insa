@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/preferences_fragment_title">
+
+    <PreferenceCategory
+        android:title="Générale">
+
+    <EditTextPreference
+        android:id="@+id/fragment_preference_key_keyword"
+        android:key="keyword"
+        android:title="@string/preferences_research_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

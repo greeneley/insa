@@ -1,12 +1,26 @@
 <resources>
     <string name="app_name">TD3</string>
 
-    <!-- MainActivity buttons text -->
+    <!-- Autres -->
+    <string name="fichier_preference">com.example.INSA.td3.prenom</string>
+
+    <!-- MainActivity texte boutons -->
     <string name="main_show_results">Résultat de la requête</string>
     <string name="main_show_img_names">Nom des images</string>
     <string name="main_show_img">Afficher les images</string>
     <string name="main_show_advanced">Affichage avancé</string>
 
+    <!-- Actionbar texte -->
+    <string name="actionbar_favorite">Favoris</string>
+    <string name="actionbar_preferences">Préférences</string>
+
+    <!-- Préférences -->
+    <string name="preferences_fragment_title">Préférences</string>
+    <string name="preferences_research_title">Mot-clé de recherche</string>
+    <string name="preferences_research_summary">Indique sur quel mot concentrer la recherche d\'images</string>
+
     <!-- Placeholder Fragment -->
     <string name="fragment_placeholder_text">Le contenu sera affiché ici</string>
+    <string name="title_activity_my_preference">MyPreferenceActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>
