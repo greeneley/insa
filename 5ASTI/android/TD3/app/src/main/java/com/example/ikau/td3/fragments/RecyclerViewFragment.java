@@ -16,6 +16,13 @@ import com.example.ikau.td3.tasks.AsyncDownloadBitmapTask;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment contenant un RecyclerView.
+ *
+ * Utilisé par MainActivity sur ActionsEnum.ADVANCED et ActionsEnum.FAVORITES.
+ * Les tâches asynchrones l'utilisant sont AsyncFlickrTask/AsyncFavoritesTask pour l'init
+ * et AsyncDownloadBitmapTask pour le téléchargement des images.
+ */
 public class RecyclerViewFragment extends Fragment
 {
     public RecyclerViewFragment(){}
@@ -25,7 +32,7 @@ public class RecyclerViewFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        this.populateRecycler(v);
+        this.populateRecycler(v); // Init de la view du grament.
         return v;
     }
 
@@ -45,6 +52,10 @@ public class RecyclerViewFragment extends Fragment
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Lorsque l'on est sûr que le fragment est visuellement prêt, on exécute les tâches asynchrones
+     * pour télécharger les images.
+     */
     @Override
     public void onStart()
     {

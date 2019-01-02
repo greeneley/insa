@@ -17,6 +17,13 @@ import com.example.ikau.td3.tasks.AsyncDownloadBitmapTask;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment affiché par le bouton 'Afficher les images'.
+ *
+ * C'est un fragment contenant une GridView en 3xK de layout fragment_gridview.xml.
+ * Le fragment utilise un adapter personnalisé : GridViewAdapter.
+ * Il est créé par AsyncFlickTask à la fin de la tâche asynchrone.
+ */
 public class GridViewFragment extends Fragment
 {
     public GridViewFragment()
@@ -27,15 +34,19 @@ public class GridViewFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gridview, container, false);
-        this.populateGrid(v);
+        this.populateGrid(v); // On init l'adapter
         return v;
     }
 
+    /**
+     * On initialise l'adapter une fois que la vue est créée et avant de l'afficher.
+     * @param v La view du fragment.
+     */
     private void populateGrid(View v)
     {
-        // Création des items de base
+        // Création des items de base (ici des ProgressBar).
         ArrayList<View> views = new ArrayList<>();
-        for(int i=0; i<20; i++)
+        for(int i=0; i<this.getArguments().getStringArrayList("urls").size(); i++)
         {
             views.add(new ProgressBar(this.getContext()));
         }
@@ -48,10 +59,16 @@ public class GridViewFragment extends Fragment
         gridView.setAdapter(adapter);
     }
 
+    /**
+     * Une fois que l'on est sûr que la vue est disponible, on demande à des tâches
+     * asynchrones de télécharger les images.
+     */
     @Override
     public void onStart()
     {
         super.onStart();
+
+        // Pour chaque urls, on demande à une tâche de télécharger l'image.
         ArrayList<String> urls = this.getArguments().getStringArrayList("urls");
         for(int i=0; i<urls.size(); i++)
         {

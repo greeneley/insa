@@ -14,8 +14,23 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * Classe abstraite personnalisée qui me permet de mettre en commun des fonctions utilisées par plusieurs
+ * tâche aynshrone.
+ *
+ * @param <Params>
+ * @param <Progress>
+ * @param <Result>
+ */
 abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result>
 {
+    /**
+     * Récupère un JSON quelconque d'une connexion quelconque.
+     * @param openedConnection La connexion préalablement ouverte.
+     * @return Renvoie le JSON contenant dans la cible de la connexion.
+     * @throws IOException
+     * @throws JSONException
+     */
     JSONObject getJsonFromURL(URLConnection openedConnection) throws IOException, JSONException
     {
         // Récupération et lecture du contenu
@@ -30,6 +45,13 @@ abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Par
         return new JSONObject(buffer.toString());
     }
 
+    /**
+     * Récupère le JSON depuis l'adresse feed de Flickr en ayant traié la page cible.
+     * @param openedConnection La connexion préalablement ouverte.
+     * @return Renvoie le JSON déduite du feed Flickr.
+     * @throws IOException
+     * @throws JSONException
+     */
     JSONObject getJsonFromFlickr(URLConnection openedConnection) throws IOException, JSONException
     {
         // Récupération et lecture du contenu
@@ -49,13 +71,14 @@ abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Par
 
     /**
      * Crédits https://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap
-     * @param urlImage
-     * @param index
-     * @return
+     * Récupère l'image de l'url sous format Bitmap.
+     *
+     * @param urlImage L'url de l'image à récupérer.
+     * @return Le bitmap de l'image du lien.
      * @throws IOException
      * @throws JSONException
      */
-    Bitmap getBitmapFromUrlString(String urlImage, int index) throws IOException, JSONException
+    Bitmap getBitmapFromUrlString(String urlImage) throws IOException, JSONException
     {
         // Ouverture de la connexion
         URL url                       = new URL(urlImage);

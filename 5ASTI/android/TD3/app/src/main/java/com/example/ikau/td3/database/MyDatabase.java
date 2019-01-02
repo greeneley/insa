@@ -6,19 +6,48 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MyDatabase extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION   = 2;
+/**
+ * https://developer.android.com/training/data-storage/sqlite
+ * Classe personnalisée représentant une BDD SQLite à base niveau avec une unique table 'favorites'.
+ */
+public class MyDatabase extends SQLiteOpenHelper
+{
+
+    /* ==============================================================
+     *                          Propriétés
+     * ==============================================================
+     */
+    /**
+     * La version de la BDD. À incrémenter chaque fois que des changements nécessitent un drop table.
+     */
+    public static final int DATABASE_VERSION   = 7; // > 1 et ne doit pas décrémenter
+
+    /**
+     * Le nom de la base de données.
+     */
     public static final String DATABASE_NAME   = "Favorites.db";
+
+    // Variables arbitraires pour faciliter l'accès à une table.
     public static final String TABLE_NAME      = "favorites";
     public static final String PKEY            = "id";
     public static final String COLUMN_SECRET   = "secret";
     public static final String COLUMN_PHOTO_ID = "photo_id";
 
+
+    /* ==============================================================
+     *                         Constructeur
+     * ==============================================================
+     */
     public MyDatabase(Context context)
     {
+        // Factory indique si la BDD est créée via une classe de haut niveau
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /* ==============================================================
+     *                          Overrides
+     * ==============================================================
+     */
     @Override
     public void onCreate(SQLiteDatabase db)
     {
@@ -27,6 +56,12 @@ public class MyDatabase extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * Automatiquement appelée lorsque le numéro de version change.
+     * @param db Instance utilisable de la BDD.
+     * @param oldVersion Ancienne version.
+     * @param newVersion Nouvelle version.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
@@ -34,6 +69,18 @@ public class MyDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /* ==============================================================
+     *                       Méthodes publiques
+     * ==============================================================
+     */
+
+    /**
+     * Insère une nouvelle ligne dans les favoris si elle n'existe pas déjà.
+     * @param db Une instance ouverte de la BDD.
+     * @param photo_id L'id de la photo.
+     * @param secret Le secret associé à la photo et son id.
+     * @return Le numéro de la ligne nouvellement insérée.
+     */
     public long insertNewFavorite(SQLiteDatabase db, String photo_id, String secret)
     {
         if(this.contains(db, photo_id, secret)) return -1;
@@ -47,6 +94,13 @@ public class MyDatabase extends SQLiteOpenHelper {
         return db.insert(MyDatabase.TABLE_NAME, null, values);
     }
 
+    /**
+     * Supprime une ligne dans les favoris si elle existe.
+     * @param db Une instance ouverte de la BDD.
+     * @param photo_id L'id de la photo.
+     * @param secret Le secret associé à la photo et son id.
+     * @return Le numéro de la ligne supprimée.
+     */
     public int deleteFromFavorite(SQLiteDatabase db, String photo_id, String secret)
     {
         if(!this.contains(db, photo_id, secret)) return -1;
@@ -57,6 +111,13 @@ public class MyDatabase extends SQLiteOpenHelper {
         return db.delete(TABLE_NAME, selection, selectionArgs);
     }
 
+    /**
+     * Indique si une ligne avec les données spécifiées existe déjà.
+     * @param db Une instance ouverte de la BDD.
+     * @param photo_id L'id de la photo.
+     * @param secret Le secret associé à la photo et son id.
+     * @return true si une ligne existe, false sinon.
+     */
     public boolean contains(SQLiteDatabase db, String photo_id, String secret)
     {
         // Paramétrages

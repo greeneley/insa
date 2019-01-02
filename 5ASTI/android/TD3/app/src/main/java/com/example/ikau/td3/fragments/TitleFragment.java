@@ -14,6 +14,11 @@ import com.example.ikau.td3.R;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment affichant une Listview contenant la liste des titres des images du feed Flickr.
+ *
+ * Utilisé par MainActivity sur ActionsEnum.TITLES.
+ */
 public class TitleFragment extends Fragment
 {
     public TitleFragment()
@@ -24,7 +29,7 @@ public class TitleFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_titles, container, false);
-        this.insertTitles(v);
+        this.insertTitles(v); // Init des titles
         return v;
     }
 

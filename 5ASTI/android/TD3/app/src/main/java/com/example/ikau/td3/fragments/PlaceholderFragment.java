@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 
 import com.example.ikau.td3.R;
 
+/**
+ * C'est une fragment vide contenant un TextView placeholder.
+ *
+ * Affiché par MainActivity avec ActionsEnum.None.
+ */
 public class PlaceholderFragment extends Fragment
 {
     public PlaceholderFragment()

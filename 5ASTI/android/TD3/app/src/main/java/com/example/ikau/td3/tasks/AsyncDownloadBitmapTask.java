@@ -18,17 +18,55 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 
+/**
+ * Tâche asynchrone permettant de télécharger une image au format bitmap puis d'envoyer
+ * cette image à la classe adéquate le cas échéant.
+ *
+ * Les arguments sont : String URL de l'image, int index associé à l'image, DownloadAction action post-download.
+ */
 public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bitmap>
 {
-    private WeakReference<View> weakViewRef;
-    private DownloadAction      action;
-    private int                 index;
 
+    /* ==============================================================
+     *                          Propriétés
+     * ==============================================================
+     */
+    /**
+     * Une référence faible vrs la vue ayant demandée l'image.
+     */
+    private WeakReference<View> weakViewRef;
+
+    /**
+     * L'action à faire post-download.
+     */
+    private DownloadAction action;
+
+    /**
+     * L'index de l'élément demandant l'image.
+     */
+    private int index;
+
+
+    /* ==============================================================
+     *                          Constructeur
+     * ==============================================================
+     */
     public AsyncDownloadBitmapTask(View v)
     {
         this.weakViewRef = new WeakReference<View>(v);
     }
 
+
+    /* ==============================================================
+     *                          Overrides
+     * ==============================================================
+     */
+
+    /**
+     * Télécharge l'image depuis une ruel.
+     * @param params String URL de l'image, int index associé à l'image, DownloadAction action post-download.
+     * @return Bitmap de l'image téléchargée
+     */
     @Override
     protected Bitmap doInBackground(Object... params)
     {
@@ -47,7 +85,7 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
 
         // Récupération de l'url et de la position de l'image à afficher
         try {
-            return this.getBitmapFromUrlString((String) params[0], this.index);
+            return this.getBitmapFromUrlString((String) params[0]);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -57,7 +95,7 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
             e.printStackTrace();
         }
 
-        // Récupération de l'adresse de l'image
+        // Récupération de l'adresse de l'image en cas d'erreur
         return null;
     }
 
@@ -69,7 +107,7 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
             return;
         }
         if (this.weakViewRef.get() == null) {
-            Log.e("INSA", "[ERR] AsyncDownloadBitmapTask.onPostExecute: GridView is null");
+            Log.e("INSA", "[ERR] AsyncDownloadBitmapTask.onPostExecute: View is null");
             return;
         }
 
@@ -84,7 +122,16 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
         }
     }
 
-    protected void doGridView(Bitmap bitmap)
+    /* ==============================================================
+     *                       Méthodes privées
+     * ==============================================================
+     */
+
+    /**
+     * Crée une ImageView et l'ajoute dans l'adapter du GridViewFragment
+     * @param bitmap L'image récemment téléchargée.
+     */
+    private void doGridView(Bitmap bitmap)
     {
         // Création de l'ImageView
         View view            = this.weakViewRef.get();
@@ -98,7 +145,11 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
         adapter.notifyDataSetChanged();
     }
 
-    protected void doRecyclerView(Bitmap bitmap)
+    /**
+     * Met à jour l'adapter du RecyclerViewFragment pour ajouter le bitmap.
+     * @param bitmap L'image récemment téléchargée.
+     */
+    private void doRecyclerView(Bitmap bitmap)
     {
         // Récupération de l'adapter
         View view                 = this.weakViewRef.get();

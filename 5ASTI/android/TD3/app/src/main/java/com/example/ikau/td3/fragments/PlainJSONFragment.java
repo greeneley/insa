@@ -14,6 +14,11 @@ import com.example.ikau.td3.R;
 
 import org.json.JSONObject;
 
+/**
+ * C'est le fragment qui affiche les données brutes du JSON récupéré par l'url de feed Flickr.
+ *
+ * Affiché par MainActivity avec ActionsEnum.PLAIN_JSON.
+ */
 public class PlainJSONFragment extends Fragment
 {
     public PlainJSONFragment()
@@ -24,14 +29,20 @@ public class PlainJSONFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_plain_json, container, false);
-        this.setPlainJSON(v);
+        this.setPlainJSON(v); // Init de la vue.
         return v;
     }
 
+    /**
+     * Initialisation des données du fragment lorsque l'on es sûr que la vue est prête.
+     * @param v La view du fragment.
+     */
     public void setPlainJSON(View v)
     {
         TextView textView = (TextView) v.findViewById(R.id.textViewPlainJSON);
-        textView.setMovementMethod(new ScrollingMovementMethod());
         textView.setText(getArguments().getString("json"));
+
+        // Permet de rendre le TextView scrollable de manière kinétique (le mouvement est gardé au levé du pouce).
+        textView.setMovementMethod(new ScrollingMovementMethod());
     }
 }

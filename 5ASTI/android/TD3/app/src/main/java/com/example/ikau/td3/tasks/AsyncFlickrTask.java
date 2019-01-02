@@ -25,17 +25,44 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObject> {
+/**
+ * Tâche asynchrone principale récupérant d'abord un feed Flickr puis traitant selon ActionsEnum.
+ *
+ * Utilisée par MainActivity pour moduler son fragment principal.
+ */
+public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObject>
+{
 
+    /* ==============================================================
+     *                          Propriétés
+     * ==============================================================
+     */
+    /**
+     * L'action demandée par MainActivity, précisant le fragment final.
+     */
     private ActionsEnum action;
+
+    /**
+     * Référence faible vers MainActivity.
+     */
     private WeakReference<Activity> activityWkRef;
 
+
+    /* ==============================================================
+     *                          Constructeur
+     * ==============================================================
+     */
     public AsyncFlickrTask(Activity activity)
     {
         this.activityWkRef = new WeakReference<Activity>(activity);
         this.action        = ActionsEnum.NONE;
     }
 
+
+    /* ==============================================================
+     *                          Overrides
+     * ==============================================================
+     */
     @Override
     protected void onPreExecute()
     {
@@ -47,6 +74,11 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         }
     }
 
+    /**
+     * On télécharge d'abord le feed Flickr contenant les 20 dernières images.
+     * @param params String URL du feed Flickr, ActionsEnum post-traitement voulu.
+     * @return JSON issu du feed Flickr.
+     */
     @Override
     protected JSONObject doInBackground(Object... params)
     {
@@ -116,6 +148,16 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         }
     }
 
+
+    /* ==============================================================
+     *                        Méthodes privées
+     * ==============================================================
+     */
+
+    /**
+     * Affiche le contenu brut de la requête JSON dans PlainJSONFragment.
+     * @param jsonObject JSON issu du feed Flickr.
+     */
     private void showPlainJSON(JSONObject jsonObject)
     {
         // Création du bundle du fragment
@@ -133,6 +175,10 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         Log.i("TLT", "[OK] AsyncFlickrTask.showPlainJSON");
     }
 
+    /**
+     * Affiche la liste des titres des images dans TitlesFragment.
+     * @param jsonObject JSON issu du feed Flickr.
+     */
     private void showTitles(JSONObject jsonObject)
     {
         // Création de la liste de titres
@@ -160,6 +206,10 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         activity.setMainFragment(fragment);
     }
 
+    /**
+     * Affiche l'ensemble des images dans GridViewFragment et son adapter.
+     * @param jsonObject JSON issu du feed Flickr.
+     */
     private void showImages(JSONObject jsonObject)
     {
         // Récupération de la liste des URL des images
@@ -191,6 +241,10 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         activity.setMainFragment(fragment);
     }
 
+    /**
+     * Affiche une vue personnalisée dans RecyclerViewFragment et son adapter.
+     * @param jsonObject JSON issu du feed Flickr.
+     */
     private void showAdvanced(JSONObject jsonObject)
     {
         // Récupération de l'url de l'image, l'auteur et le titre

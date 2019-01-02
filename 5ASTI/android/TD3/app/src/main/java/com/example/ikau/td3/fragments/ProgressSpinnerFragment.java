@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 
 import com.example.ikau.td3.R;
 
+/**
+ * Fragment contenant un bête Progress Bar de forme spinner.
+ *
+ * Appelé par les tâches asynchrones et affiché par MainActivity.
+ */
 public class ProgressSpinnerFragment extends Fragment
 {
 
