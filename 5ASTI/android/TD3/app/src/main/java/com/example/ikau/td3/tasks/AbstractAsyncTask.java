@@ -3,6 +3,7 @@ package com.example.ikau.td3.tasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Par
             buffer.append(line+"\n");
         }
 
+        Log.d("INSA", this.getClass().getSimpleName()+".getJsonFromURL: [OK] JSON retrieved");
         return new JSONObject(buffer.toString());
     }
 
@@ -66,6 +68,7 @@ abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Par
         // Création du json : on doit enlever jsonFlickrFeed() du résultat
         String jsonString = buffer.toString().substring(15, buffer.length()-1);
 
+        Log.d("INSA", this.getClass().getSimpleName()+".getJsonFromFlickr: [OK] JSON retrieved");
         return new JSONObject(jsonString);
     }
 
@@ -89,6 +92,8 @@ abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Par
         // Récupération du bitmap
         InputStream input = connectionImage.getInputStream();
         Bitmap myBitmap   = BitmapFactory.decodeStream(input);
+
+        Log.d("INSA", this.getClass().getSimpleName()+".getBitmapFromUrlString: [OK] Bitmap retrieved");
         return myBitmap;
     }
 }

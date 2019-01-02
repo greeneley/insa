@@ -85,7 +85,7 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         // Vérification des paramètres
         if(params.length < 2)
         {
-            Log.i("TLT", "[ERR] AsyncFlickrTask.doInBackground: param missing");
+            Log.e("INSA", this.getClass().getSimpleName()+".doInBackground: [ERR] Params missing");
             return null;
         }
 
@@ -119,12 +119,12 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
     protected void onPostExecute(JSONObject jsonObject) {
         if(jsonObject == null)
         {
-            Log.e("TLT", "[ERR] AsyncFlickrTask.onPostExecute: result is null");
+            Log.e("INSA", this.getClass().getSimpleName()+".onPostExecute: [ERR] doInBackground has failed");
             return;
         }
         if(this.activityWkRef.get() == null)
         {
-            Log.e("TLT", "[ERR] AsyncFlickrTask.onPostExecute: MainActivity is null");
+            Log.e("INSA", this.getClass().getSimpleName()+".onPostExecute: [ERR] MainActivity is null");
             return;
         }
 
@@ -172,7 +172,7 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         MainActivity activity = (MainActivity)this.activityWkRef.get();
         activity.setMainFragment(fragment);
 
-        Log.i("TLT", "[OK] AsyncFlickrTask.showPlainJSON");
+        Log.d("INSA", this.getClass().getSimpleName()+".showPlainJSON: [OK] PlainJSONFragment created");
     }
 
     /**
@@ -204,6 +204,8 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         // Modification du fragment dans MainActivity
         MainActivity activity = (MainActivity)this.activityWkRef.get();
         activity.setMainFragment(fragment);
+
+        Log.d("INSA", this.getClass().getSimpleName()+".showTitles: [OK] TitleFragment created");
     }
 
     /**
@@ -239,6 +241,8 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         // Modification du fragment dans MainActivity
         MainActivity activity = (MainActivity)this.activityWkRef.get();
         activity.setMainFragment(fragment);
+
+        Log.d("INSA", this.getClass().getSimpleName()+".showImages: [OK] GridViewFragment created");
     }
 
     /**
@@ -286,5 +290,7 @@ public class AsyncFlickrTask extends AbstractAsyncTask<Object, Integer, JSONObje
         // Modification du fragment dans MainActivity
         MainActivity activity = (MainActivity)this.activityWkRef.get();
         activity.setMainFragment(fragment);
+
+        Log.d("INSA", this.getClass().getSimpleName()+".showAdvanced: [OK] RecyclerViewFragment created");
     }
 }

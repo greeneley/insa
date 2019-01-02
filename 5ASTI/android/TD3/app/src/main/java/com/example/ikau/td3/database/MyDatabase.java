@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * https://developer.android.com/training/data-storage/sqlite
@@ -54,6 +55,7 @@ public class MyDatabase extends SQLiteOpenHelper
         String query = String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, %s TEXT, %s TEXT)",
                 TABLE_NAME, PKEY, COLUMN_PHOTO_ID, COLUMN_SECRET);
         db.execSQL(query);
+        Log.d("INSA", this.getClass().getSimpleName()+".onCreate: [OK] New table {"+TABLE_NAME+"}");
     }
 
     /**
@@ -67,6 +69,7 @@ public class MyDatabase extends SQLiteOpenHelper
     {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
         onCreate(db);
+        Log.d("INSA", this.getClass().getSimpleName()+".onUpgrade: [OK] v"+oldVersion+" -> v"+newVersion);
     }
 
     /* ==============================================================
@@ -91,6 +94,7 @@ public class MyDatabase extends SQLiteOpenHelper
         values.put(MyDatabase.COLUMN_SECRET, secret);
 
         // Insertion + retour de l'id de la ligne insérée
+        Log.d("INSA", this.getClass().getSimpleName()+".insertNewFavorite: [OK] New line {"+photo_id+", "+secret+"}");
         return db.insert(MyDatabase.TABLE_NAME, null, values);
     }
 
@@ -108,6 +112,9 @@ public class MyDatabase extends SQLiteOpenHelper
         // Paramétrages
         String selection       =  String.format("%s = ? AND %s = ?", COLUMN_PHOTO_ID, COLUMN_SECRET);
         String[] selectionArgs = { photo_id, secret };
+
+        // Suppression
+        Log.d("INSA", this.getClass().getSimpleName()+".deleteFromFavorite: [OK] Deleted line {"+photo_id+", "+secret+"}");
         return db.delete(TABLE_NAME, selection, selectionArgs);
     }
 

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class RecyclerViewFragment extends Fragment
         // Récupération et initialisation du recyclerview
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
+        Log.d("INSA", this.getClass().getSimpleName()+".populateRecycler: [OK] Adapter ready");
     }
 
     /**
@@ -60,10 +62,12 @@ public class RecyclerViewFragment extends Fragment
     public void onStart()
     {
         super.onStart();
+
         ArrayList<String> urls = this.getArguments().getStringArrayList("urls");
         for(int i=0; i<urls.size(); i++)
         {
             new AsyncDownloadBitmapTask(this.getView()).execute(urls.get(i), i, DownloadAction.RecyclerView);
         }
+        Log.d("INSA", this.getClass().getSimpleName()+".onStart: [OK] Async downloads starting");
     }
 }

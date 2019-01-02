@@ -80,7 +80,7 @@ public class AsyncFavoritesTask extends AbstractAsyncTask<Void, Integer, Boolean
     {
         if(this.activityWeakReference.get() == null)
         {
-            Log.i("INSA", "AsyncFavoritesTask.doInBackground: ref is null");
+            Log.e("INSA", this.getClass().getSimpleName()+".doInBackground: [ERR] Ref is null");
             return false;
         }
 
@@ -107,7 +107,6 @@ public class AsyncFavoritesTask extends AbstractAsyncTask<Void, Integer, Boolean
         }
         cursor.close();
         db.close();
-
         return true;
     }
 
@@ -120,12 +119,12 @@ public class AsyncFavoritesTask extends AbstractAsyncTask<Void, Integer, Boolean
     {
         if(!aBoolean)
         {
-            Log.i("INSA", "AsyncFavoritesTask.onPostExecute: doInBackground has failed");
+            Log.e("INSA", this.getClass().getSimpleName()+".onPostExecute: [ERR] doInBackground has failed");
             return;
         }
         if(this.activityWeakReference.get() == null)
         {
-            Log.i("INSA", "AsyncFavoritesTask.onPostExecute: ref is null");
+            Log.e("INSA", this.getClass().getSimpleName()+".onPostExecute: [ERR] Ref is null");
             return;
         }
 

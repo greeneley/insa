@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class GridViewFragment extends Fragment
         // Création de la GridView
         GridView gridView = v.findViewById(R.id.gridViewImages);
         gridView.setAdapter(adapter);
+        Log.d("INSA", this.getClass().getSimpleName()+".populateGrid: [OK] Adapter ready");
     }
 
     /**
@@ -74,6 +76,7 @@ public class GridViewFragment extends Fragment
         {
             new AsyncDownloadBitmapTask(this.getView()).execute(urls.get(i), i, DownloadAction.GridView);
         }
+        Log.d("INSA", this.getClass().getSimpleName()+".onStart: [OK] Async downloads starting");
 
     }
 }

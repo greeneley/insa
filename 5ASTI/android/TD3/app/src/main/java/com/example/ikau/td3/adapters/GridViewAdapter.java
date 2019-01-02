@@ -1,5 +1,6 @@
 package com.example.ikau.td3.adapters;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -111,6 +112,7 @@ public class GridViewAdapter extends BaseAdapter
         this.items.remove(index);
         this.items.add(index, newView);
         this.setParams(index);
+        Log.d("INSA", this.getClass().getSimpleName()+".replaceView: [OK] Item {"+index+"} updated");
     }
 
     /* ==============================================================

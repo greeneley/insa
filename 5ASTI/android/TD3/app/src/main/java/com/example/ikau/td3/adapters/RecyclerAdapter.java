@@ -271,6 +271,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void updateBitmap(int index, Bitmap bitmap)
     {
         this.images.set(index, bitmap);
+        Log.d("INSA", this.getClass().getSimpleName()+".updateBitmap: [OK] Bitmap updated at {"+index+"}");
     }
 
     /* ==============================================================
@@ -297,7 +298,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         // Optimisation : fermer sur le onDestroy du fragment contenant l'adapter
         db.close();
 
-        Log.i("INSA", "Position fired :"+String.valueOf(index));
+        Log.d("INSA", this.getClass().getSimpleName()+".saveItemToFavorite: [OK] Favorite saved at {"+index+"}");
     }
 
     /**
@@ -319,7 +320,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         // Optimisation : fermer sur le onDestroy du fragment contenant l'adapter
         db.close();
 
-        Log.i("INSA", "Position fired :"+String.valueOf(index));
+        Log.d("INSA", this.getClass().getSimpleName()+".deleteItemFromFavorite: [OK] Favorite deleted at {"+index+"}");
     }
 
     /**
@@ -364,6 +365,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         result[0] = photo_id;
         result[1] = secret;
 
+        Log.d("INSA", this.getClass().getSimpleName()+".getIdAndSecret: [OK] ID {"+photo_id+"} ; Secret {"+secret+"}");
         return result;
     }
 }

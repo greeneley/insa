@@ -73,7 +73,7 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
         // Vérification des paramètres
         if(params.length < 3)
         {
-            Log.e("INSA", "[ERR] AsyncDownloadBitmapTask.doInBackground: param missing");
+            Log.e("INSA", this.getClass().getSimpleName()+".doInBackground: [ERR] param missing");
             return null;
         }
 
@@ -103,11 +103,11 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
     protected void onPostExecute(Bitmap bitmap)
     {
         if (bitmap == null) {
-            Log.e("INSA", "[ERR] AsyncDownloadBitmapTask.onPostExecute: result is null");
+            Log.e("INSA", this.getClass().getSimpleName()+".onPostExecute: [ERR] Result is null");
             return;
         }
         if (this.weakViewRef.get() == null) {
-            Log.e("INSA", "[ERR] AsyncDownloadBitmapTask.onPostExecute: View is null");
+            Log.e("INSA", this.getClass().getSimpleName()+".onPostExecute: [ERR] View is null");
             return;
         }
 
@@ -143,6 +143,8 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
         GridViewAdapter adapter = (GridViewAdapter) gridView.getAdapter();
         adapter.replaceView(this.index, imageView);
         adapter.notifyDataSetChanged();
+
+        Log.d("INSA", this.getClass().getSimpleName()+".doGridView: [OK] GridViewFragment updated");
     }
 
     /**
@@ -159,5 +161,7 @@ public class AsyncDownloadBitmapTask extends AbstractAsyncTask<Object, Void, Bit
         // Modification de l'image
         adapter.updateBitmap(this.index, bitmap);
         adapter.notifyItemChanged(this.index);
+
+        Log.d("INSA", this.getClass().getSimpleName()+".doRecyclerView: [OK] RecyclerViewFragment updated");
     }
 }

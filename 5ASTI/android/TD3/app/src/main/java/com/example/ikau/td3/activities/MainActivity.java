@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
             editor.putString("keyword", "cats");
             editor.apply();
         }
+        Log.d("INSA", this.getClass().getSimpleName()+".onCreate: [OK] Ready");
     }
 
     @Override
@@ -77,11 +78,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.menu_preferences:
                 Intent intent = new Intent(this, MyPreferenceActivity.class);
                 this.startActivity(intent);
-                Log.d("INSA", this.getClass().getName()+".onOptionsItemSelected: [OK] Bouton préférence");
+                Log.d("INSA", this.getClass().getSimpleName()+".onOptionsItemSelected: [OK] Bouton préférence");
                 return true;
 
             default:
-                Log.d("INSA", this.getClass().getName()+".onOptionsItemSelected: [ERR] Bouton inconnu");
+                Log.d("INSA", this.getClass().getSimpleName()+".onOptionsItemSelected: [ERR] Bouton inconnu");
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity
         this.expectedAction = ActionsEnum.PLAIN_JSON;
         String urlString = this.getSearchUrl();
         new AsyncFlickrTask(this).execute(urlString, ActionsEnum.PLAIN_JSON);
+        Log.d("INSA", this.getClass().getSimpleName()+".onClickButtonResults: [OK] Fired");
     }
 
     /**
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity
         this.expectedAction = ActionsEnum.TITLES;
         String urlString = this.getSearchUrl();
         new AsyncFlickrTask(this).execute(urlString, ActionsEnum.TITLES);
+        Log.d("INSA", this.getClass().getSimpleName()+".onClickButtonTitles: [OK] Fired");
     }
 
     /**
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity
         this.expectedAction = ActionsEnum.IMAGES;
         String urlString = this.getSearchUrl();
         new AsyncFlickrTask(this).execute(urlString, ActionsEnum.IMAGES);
+        Log.d("INSA", this.getClass().getSimpleName()+".onClickButtonImages: [OK] Fired");
     }
 
     /**
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity
         this.expectedAction = ActionsEnum.ADVANCED;
         String urlString = this.getSearchUrl();
         new AsyncFlickrTask(this).execute(urlString, ActionsEnum.ADVANCED);
+        Log.d("INSA", this.getClass().getSimpleName()+".onClickButtonAdvanced: [OK] Fired");
     }
 
     /**
@@ -155,6 +160,7 @@ public class MainActivity extends AppCompatActivity
 
         // La clé de l'API est arbitrarement celle du site et peut donc expirer
         new AsyncFavoritesTask(this, "2f7b3ca61bf5bbdbbe5928eb5ce05f3c").execute();
+        Log.d("INSA", this.getClass().getSimpleName()+".onClickButtonFavorites: [OK] Fired");
     }
 
 
