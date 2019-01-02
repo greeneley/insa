@@ -16,6 +16,20 @@ import java.net.URLConnection;
 
 abstract class AbstractAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result>
 {
+    JSONObject getJsonFromURL(URLConnection openedConnection) throws IOException, JSONException
+    {
+        // Récupération et lecture du contenu
+        BufferedReader reader = new BufferedReader(new InputStreamReader(openedConnection.getInputStream()));
+        StringBuffer   buffer = new StringBuffer();
+        String line = "";
+
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line+"\n");
+        }
+
+        return new JSONObject(buffer.toString());
+    }
+
     JSONObject getJsonFromFlickr(URLConnection openedConnection) throws IOException, JSONException
     {
         // Récupération et lecture du contenu

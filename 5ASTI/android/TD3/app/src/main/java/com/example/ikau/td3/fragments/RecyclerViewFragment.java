@@ -33,7 +33,12 @@ public class RecyclerViewFragment extends Fragment
     {
         // Création de l'adapter
         Bundle args = this.getArguments();
-        RecyclerAdapter adapter = new RecyclerAdapter(args.getStringArrayList("titles"), args.getStringArrayList("authors"));
+        RecyclerAdapter adapter = new RecyclerAdapter(
+                this.getContext(),
+                args.getStringArrayList("titles"),
+                args.getStringArrayList("authors"),
+                args.getStringArrayList("urls")
+        );
 
         // Récupération et initialisation du recyclerview
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);

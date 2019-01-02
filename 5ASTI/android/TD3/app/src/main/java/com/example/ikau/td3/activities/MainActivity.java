@@ -14,6 +14,7 @@ import com.example.ikau.td3.R;
 import com.example.ikau.td3.enums.ActionsEnum;
 import com.example.ikau.td3.fragments.PlaceholderFragment;
 import com.example.ikau.td3.fragments.ProgressSpinnerFragment;
+import com.example.ikau.td3.tasks.AsyncFavoritesTask;
 import com.example.ikau.td3.tasks.AsyncFlickrTask;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
-            case R.id.menu_favorite:
-                return true;
-
             case R.id.menu_preferences:
                 Intent intent = new Intent(this, MyPreferenceActivity.class);
                 this.startActivity(intent);
@@ -85,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         new AsyncFlickrTask(this).execute(urlString, ActionsEnum.ADVANCED);
     }
 
+    protected void onClickButtonFavorites(View v)
+    {
+        // La clé de l'API est arbitrarement celle du site et peut donc expirer
+        new AsyncFavoritesTask(this, "2f7b3ca61bf5bbdbbe5928eb5ce05f3c").execute();
+    }
+
     public void setMainFragment(Fragment fragment)
     {
         getSupportFragmentManager()
@@ -108,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         String keyword = prefs.getString("keyword", "cats");
 
         // Création du string
+        // Oui c'est moche mais c'est pas censé être sécurisé
         return "https://www.flickr.com/services/feeds/photos_public.gne?format=json&tags="+keyword;
     }
 }

@@ -9,6 +9,7 @@
     <string name="main_show_img_names">Nom des images</string>
     <string name="main_show_img">Afficher les images</string>
     <string name="main_show_advanced">Affichage avancé</string>
+    <string name="main_show_favorites">Mes favoris</string>
 
     <!-- Actionbar texte -->
     <string name="actionbar_favorite">Favoris</string>
